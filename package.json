@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "import:products": "tsx scripts/import-products.ts",
+    "import:images": "tsx scripts/import-images.ts",
     "db:types": "echo 'Defina SUPABASE_PROJECT_ID e rode: npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/database.ts'"
   },
   "dependencies": {

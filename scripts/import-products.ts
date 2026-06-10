@@ -16,13 +16,13 @@
  *          width_cm=10, height_cm=20, length_cm=10
  *    where status='draft';
  */
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
+loadEnv({ path: [".env.local", ".env"] });
 import * as XLSX from "xlsx";
 import { createClient } from "@supabase/supabase-js";
 import { resolve } from "node:path";
 
-const DEFAULT_XLSX =
-  "C:\\Users\\admme\\Documents\\Codex\\2026-06-08\\https-danifernandes-com-br-todos-os\\outputs\\produtos_dani_fernandes_243.xlsx";
+const DEFAULT_XLSX = "data/produtos_dani_fernandes_243.xlsx";
 
 function parsePriceToCents(input: unknown): number {
   if (typeof input === "number") return Math.round(input * 100);
