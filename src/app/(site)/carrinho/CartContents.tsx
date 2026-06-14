@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { useCart } from "@/lib/cart/store";
@@ -97,11 +98,16 @@ export function CartContents({ catalog }: { catalog: Record<string, CatalogProdu
             >
               <Link
                 href={`/produtos/${p.slug}`}
-                className="h-28 w-28 flex-shrink-0 rounded-xl bg-cream overflow-hidden"
+                className="relative h-28 w-28 flex-shrink-0 rounded-xl bg-cream overflow-hidden"
               >
                 {p.cover_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.cover_url} alt={p.name} className="h-full w-full object-cover" />
+                  <Image
+                    src={p.cover_url}
+                    alt={p.name}
+                    fill
+                    sizes="112px"
+                    className="object-cover"
+                  />
                 ) : null}
               </Link>
               <div className="flex-1 min-w-0 space-y-1">

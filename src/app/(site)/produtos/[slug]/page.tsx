@@ -64,6 +64,31 @@ export default async function ProductPage({
     product.compare_at_price_cents > product.price_cents;
   const outOfStock = product.stock_quantity <= 0;
 
+  // JSON-LD pra Google Rich Results / Google Shopping
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description:
+      product.description ?? `${product.name} — Luperfumes, perfumaria de ambiente.`,
+    image: images.map((i) => i.url),
+    sku: product.id,
+    brand: { "@type": "Brand", name: "Luperfumes" },
+    category: product.category?.name,
+    offers: {
+      "@type": "Offer",
+      url: `${baseUrl}/produtos/${product.slug}`,
+      priceCurrency: "BRL",
+      price: (product.price_cents / 100).toFixed(2),
+      availability: outOfStock
+        ? "https://schema.org/OutOfStock"
+        : "https://schema.org/InStock",
+      seller: { "@type": "Organization", name: "Luperfumes" },
+    },
+  };
+
   // Sugestões: outros da mesma categoria
   let related: ProductCardData[] = [];
   if (product.category_id) {
@@ -91,6 +116,10 @@ export default async function ProductPage({
 
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="mx-auto max-w-7xl px-6 py-8">
         <nav className="text-xs text-ink-mute mb-6 flex flex-wrap items-center gap-2" aria-label="breadcrumb">
           <Link href="/" className="hover:text-coral-deep transition">Início</Link>

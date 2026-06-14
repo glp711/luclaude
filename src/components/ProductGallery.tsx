@@ -1,10 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
-type Image = { url: string; alt: string | null };
+type GalleryImage = { url: string; alt: string | null };
 
-export function ProductGallery({ images, productName }: { images: Image[]; productName: string }) {
+export function ProductGallery({ images, productName }: { images: GalleryImage[]; productName: string }) {
   const [active, setActive] = useState(0);
 
   if (images.length === 0) {
@@ -19,12 +20,14 @@ export function ProductGallery({ images, productName }: { images: Image[]; produ
 
   return (
     <div className="space-y-3">
-      <div className="aspect-square rounded-3xl bg-cream-soft border border-cream-deep overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+      <div className="relative aspect-square rounded-3xl bg-cream-soft border border-cream-deep overflow-hidden">
+        <Image
           src={main.url}
           alt={main.alt ?? productName}
-          className="h-full w-full object-cover"
+          fill
+          priority
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className="object-cover"
         />
       </div>
       {images.length > 1 && (
@@ -34,13 +37,18 @@ export function ProductGallery({ images, productName }: { images: Image[]; produ
               key={img.url}
               type="button"
               onClick={() => setActive(i)}
-              className={`aspect-square rounded-xl overflow-hidden border-2 transition ${
+              className={`relative aspect-square rounded-xl overflow-hidden border-2 transition ${
                 i === active ? "border-coral" : "border-cream-deep hover:border-coral-soft"
               }`}
               aria-label={`Imagem ${i + 1}`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img.url} alt={img.alt ?? ""} className="h-full w-full object-cover" />
+              <Image
+                src={img.url}
+                alt={img.alt ?? ""}
+                fill
+                sizes="80px"
+                className="object-cover"
+              />
             </button>
           ))}
         </div>

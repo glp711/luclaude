@@ -14,6 +14,16 @@ const STATUS_LABEL: Record<string, string> = {
   refunded: "Reembolsado",
 };
 
+const STATUS_STYLE: Record<string, string> = {
+  pending: "bg-cream-deep text-ink-soft",
+  paid: "bg-sage-soft text-ink",
+  preparing: "bg-sage-soft text-ink",
+  shipped: "bg-coral-soft text-coral-deep",
+  delivered: "bg-sage-soft text-ink",
+  canceled: "bg-coral-soft/40 text-ink-mute",
+  refunded: "bg-cream-deep text-ink-soft",
+};
+
 export default async function OrdersListPage({
   searchParams,
 }: {
@@ -38,34 +48,39 @@ export default async function OrdersListPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Pedidos</h1>
-          <p className="text-sm text-neutral-500">
-            {count != null ? `${count} pedido${count === 1 ? "" : "s"}` : "—"}
+          <h1 className="font-display text-3xl text-ink">Pedidos</h1>
+          <p className="text-sm text-ink-soft mt-0.5">
+            {count != null ? `${count} pedido${count === 1 ? "" : "s"} no filtro atual` : "—"}
           </p>
         </div>
       </div>
 
       <div className="flex gap-2 flex-wrap">
-        <StatusTab label="Todos" value="all" active={status} count={null} />
+        <StatusTab label="Todos" value="all" active={status} />
         {Object.entries(STATUS_LABEL).map(([k, label]) => (
-          <StatusTab key={k} label={label} value={k} active={status} count={null} />
+          <StatusTab key={k} label={label} value={k} active={status} />
         ))}
       </div>
 
       {error ? (
-        <div className="rounded-md bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-2xl bg-coral-soft/50 border border-coral-soft px-4 py-3 text-sm text-coral-deep">
           Erro: {error.message}
         </div>
       ) : !orders || orders.length === 0 ? (
-        <div className="rounded-md border border-dashed border-neutral-300 bg-white p-12 text-center text-neutral-500">
-          Nenhum pedido {status !== "all" ? `com status "${STATUS_LABEL[status] ?? status}"` : ""}.
+        <div className="rounded-3xl border border-dashed border-cream-deep bg-cream-soft p-16 text-center">
+          <p className="font-display text-2xl text-ink">Nada por aqui</p>
+          <p className="mt-2 text-sm text-ink-soft">
+            {status !== "all"
+              ? `Nenhum pedido com status "${STATUS_LABEL[status] ?? status}".`
+              : "Quando chegar o primeiro pedido, ele aparece aqui."}
+          </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border bg-white">
-          <table className="min-w-full divide-y divide-neutral-200 text-sm">
-            <thead className="bg-neutral-50 text-neutral-600">
+        <div className="overflow-x-auto rounded-2xl border border-cream-deep bg-cream-soft">
+          <table className="min-w-full divide-y divide-cream-deep text-sm">
+            <thead className="bg-cream text-sage-deep">
               <tr>
                 <Th>#</Th>
                 <Th>Cliente</Th>
@@ -76,22 +91,25 @@ export default async function OrdersListPage({
                 <Th></Th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-cream-deep/50">
               {orders.map((o) => (
-                <tr key={o.id} className="hover:bg-neutral-50">
-                  <Td className="font-mono">#{o.order_number}</Td>
+                <tr key={o.id} className="hover:bg-coral-soft/20 transition">
+                  <Td className="font-mono text-xs text-ink">#{o.order_number}</Td>
                   <Td>{o.guest_email ?? o.customer_id?.slice(0, 8) ?? "—"}</Td>
                   <Td>
-                    <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs">
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider ${STATUS_STYLE[o.status] ?? "bg-cream-deep text-ink-soft"}`}>
                       {STATUS_LABEL[o.status] ?? o.status}
                     </span>
                   </Td>
-                  <Td className="font-mono text-xs">{o.tracking_code ?? "—"}</Td>
+                  <Td className="font-mono text-xs text-ink-mute">{o.tracking_code ?? "—"}</Td>
                   <Td className="text-right tabular-nums">{formatBRL(o.total_cents)}</Td>
-                  <Td className="text-neutral-500">{new Date(o.created_at).toLocaleString("pt-BR")}</Td>
+                  <Td className="text-ink-mute text-xs">{new Date(o.created_at).toLocaleString("pt-BR")}</Td>
                   <Td>
-                    <Link href={`/admin/pedidos/${o.id}`} className="text-neutral-600 hover:text-neutral-900">
-                      Abrir
+                    <Link
+                      href={`/admin/pedidos/${o.id}`}
+                      className="text-sm text-ink-soft hover:text-coral-deep transition"
+                    >
+                      Abrir →
                     </Link>
                   </Td>
                 </tr>
@@ -112,15 +130,16 @@ function StatusTab({
   label: string;
   value: string;
   active: string;
-  count: number | null;
 }) {
   const isActive = active === value;
   const href = value === "all" ? "/admin/pedidos" : `/admin/pedidos?status=${value}`;
   return (
     <Link
       href={href}
-      className={`rounded-full px-3 py-1 text-xs font-medium ${
-        isActive ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+      className={`rounded-full px-4 py-1.5 text-xs font-medium transition ${
+        isActive
+          ? "bg-ink text-cream-soft"
+          : "bg-cream-soft border border-cream-deep text-ink-soft hover:border-coral hover:text-coral-deep"
       }`}
     >
       {label}
@@ -130,7 +149,7 @@ function StatusTab({
 
 function Th({ children, className }: { children?: React.ReactNode; className?: string }) {
   return (
-    <th className={`px-4 py-2 text-left text-xs font-medium uppercase tracking-wide ${className ?? ""}`}>
+    <th className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-widest ${className ?? ""}`}>
       {children}
     </th>
   );

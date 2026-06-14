@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { formatBRL } from "@/lib/money";
 
@@ -24,11 +25,12 @@ export function ProductCard({ product }: { product: ProductCardData }) {
     >
       <div className="aspect-square bg-cream relative overflow-hidden">
         {product.cover_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={product.cover_url}
             alt={product.name}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover transition duration-500 group-hover:scale-[1.04]"
           />
         ) : (
           <div className="flex h-full items-center justify-center text-ink-mute text-sm">
@@ -36,12 +38,12 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           </div>
         )}
         {hasPromo && (
-          <span className="absolute left-3 top-3 rounded-full bg-coral-deep px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-white shadow-sm">
+          <span className="absolute left-3 top-3 z-10 rounded-full bg-coral-deep px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-white shadow-sm">
             Promoção
           </span>
         )}
         {outOfStock && (
-          <span className="absolute right-3 top-3 rounded-full bg-ink/85 px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-cream-soft shadow-sm">
+          <span className="absolute right-3 top-3 z-10 rounded-full bg-ink/85 px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-cream-soft shadow-sm">
             Esgotado
           </span>
         )}

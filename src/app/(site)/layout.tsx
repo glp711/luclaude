@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CartLink } from "@/components/CartLink";
 import { MobileNav } from "@/components/MobileNav";
+import { Newsletter } from "@/components/Newsletter";
 import { PromoBar } from "@/components/PromoBar";
 import { getCurrentUser } from "@/lib/auth/guards";
 
@@ -100,7 +101,11 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
       <div id="main" className="flex-1">{children}</div>
 
-      <footer className="mt-24 border-t border-cream-deep/60 bg-cream-soft">
+      <section className="mx-auto max-w-7xl px-6 mt-20">
+        <Newsletter />
+      </section>
+
+      <footer className="mt-16 border-t border-cream-deep/60 bg-cream-soft">
         <div className="mx-auto max-w-7xl px-6 py-14 grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3">

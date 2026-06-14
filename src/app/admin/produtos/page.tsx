@@ -29,37 +29,37 @@ export default async function ProductsListPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-semibold">Produtos</h1>
-          <p className="text-sm text-neutral-500">
-            {count != null ? `${count} produto${count === 1 ? "" : "s"}` : "—"}
+          <h1 className="font-display text-3xl text-ink">Produtos</h1>
+          <p className="text-sm text-ink-soft mt-0.5">
+            {count != null ? `${count} produto${count === 1 ? "" : "s"} no total` : "—"}
           </p>
         </div>
         <Link
           href="/admin/produtos/novo"
-          className="rounded-md bg-neutral-900 px-4 py-2 text-sm text-white hover:bg-neutral-700"
+          className="rounded-full bg-coral px-5 py-2.5 text-sm font-medium text-white hover:bg-coral-deep transition shadow-sm"
         >
-          Novo produto
+          + Novo produto
         </Link>
       </div>
 
-      <form className="flex flex-wrap items-end gap-3" action="/admin/produtos">
-        <label className="flex flex-col">
-          <span className="text-xs text-neutral-600">Buscar</span>
+      <form className="flex flex-wrap items-end gap-3 rounded-2xl border border-cream-deep bg-cream-soft p-4" action="/admin/produtos">
+        <label className="flex flex-col flex-1 min-w-[200px]">
+          <span className="text-xs uppercase tracking-widest text-sage-deep">Buscar</span>
           <input
             name="q"
             defaultValue={q}
             placeholder="Nome do produto"
-            className="mt-1 rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1 rounded-full border border-cream-deep bg-cream px-4 py-2 text-sm focus:border-coral focus:outline-none transition"
           />
         </label>
         <label className="flex flex-col">
-          <span className="text-xs text-neutral-600">Status</span>
+          <span className="text-xs uppercase tracking-widest text-sage-deep">Status</span>
           <select
             name="status"
             defaultValue={status}
-            className="mt-1 rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1 rounded-full border border-cream-deep bg-cream px-4 py-2 text-sm focus:border-coral focus:outline-none transition"
           >
             <option value="all">Todos</option>
             <option value="active">Ativos</option>
@@ -69,28 +69,31 @@ export default async function ProductsListPage({
         </label>
         <button
           type="submit"
-          className="rounded-md border border-neutral-300 px-4 py-2 text-sm hover:bg-neutral-100"
+          className="rounded-full bg-ink text-cream-soft px-5 py-2 text-sm hover:bg-coral-deep transition"
         >
           Filtrar
         </button>
       </form>
 
       {error ? (
-        <div className="rounded-md bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-2xl bg-coral-soft/50 border border-coral-soft px-4 py-3 text-sm text-coral-deep">
           Erro: {error.message}. Configurou o Supabase?{" "}
-          <Link href="/admin" className="underline">
+          <Link href="/admin" className="underline underline-offset-4">
             Voltar
           </Link>
         </div>
       ) : !products || products.length === 0 ? (
-        <div className="rounded-md border border-dashed border-neutral-300 bg-white p-12 text-center text-neutral-500">
-          Nenhum produto. <Link href="/admin/produtos/novo" className="underline">Criar o primeiro</Link>{" "}
-          ou rode <code className="text-neutral-700">npm run import:products</code>.
+        <div className="rounded-3xl border border-dashed border-cream-deep bg-cream-soft p-12 text-center text-ink-soft">
+          Nenhum produto.{" "}
+          <Link href="/admin/produtos/novo" className="text-coral-deep underline underline-offset-4">
+            Criar o primeiro
+          </Link>{" "}
+          ou rode <code className="bg-cream px-1.5 py-0.5 rounded text-xs">npm run import:products</code>.
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border bg-white">
-          <table className="min-w-full divide-y divide-neutral-200 text-sm">
-            <thead className="bg-neutral-50 text-neutral-600">
+        <div className="overflow-x-auto rounded-2xl border border-cream-deep bg-cream-soft">
+          <table className="min-w-full divide-y divide-cream-deep text-sm">
+            <thead className="bg-cream text-sage-deep">
               <tr>
                 <Th>Nome</Th>
                 <Th>SKU</Th>
@@ -100,24 +103,24 @@ export default async function ProductsListPage({
                 <Th></Th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-cream-deep/50">
               {products.map((p) => (
-                <tr key={p.id} className="hover:bg-neutral-50">
+                <tr key={p.id} className="hover:bg-coral-soft/20 transition">
                   <Td>
-                    <Link href={`/admin/produtos/${p.id}`} className="text-neutral-900 hover:underline">
+                    <Link href={`/admin/produtos/${p.id}`} className="text-ink hover:text-coral-deep transition font-medium">
                       {p.name}
                     </Link>
                   </Td>
-                  <Td className="text-neutral-500">{p.sku ?? "—"}</Td>
+                  <Td className="text-ink-mute text-xs">{p.sku ?? "—"}</Td>
                   <Td className="text-right tabular-nums">{formatBRL(p.price_cents)}</Td>
                   <Td className="text-right tabular-nums">
                     <span
                       className={
                         p.stock_quantity === 0
-                          ? "text-red-600"
+                          ? "text-coral-deep font-medium"
                           : p.stock_quantity <= 3
-                          ? "text-amber-600"
-                          : ""
+                          ? "text-coral-deep"
+                          : "text-ink"
                       }
                     >
                       {p.stock_quantity}
@@ -129,9 +132,9 @@ export default async function ProductsListPage({
                   <Td>
                     <Link
                       href={`/admin/produtos/${p.id}`}
-                      className="text-sm text-neutral-600 hover:text-neutral-900"
+                      className="text-sm text-ink-soft hover:text-coral-deep transition"
                     >
-                      Editar
+                      Editar →
                     </Link>
                   </Td>
                 </tr>
@@ -150,7 +153,7 @@ export default async function ProductsListPage({
 
 function Th({ children, className }: { children?: React.ReactNode; className?: string }) {
   return (
-    <th className={`px-4 py-2 text-left text-xs font-medium uppercase tracking-wide ${className ?? ""}`}>
+    <th className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-widest ${className ?? ""}`}>
       {children}
     </th>
   );
@@ -163,13 +166,13 @@ function Td({ children, className }: { children?: React.ReactNode; className?: s
 function StatusBadge({ status }: { status: string }) {
   const styles =
     status === "active"
-      ? "bg-green-100 text-green-800"
+      ? "bg-sage-soft text-ink"
       : status === "draft"
-      ? "bg-neutral-200 text-neutral-700"
-      : "bg-amber-100 text-amber-800";
+      ? "bg-cream-deep text-ink-soft"
+      : "bg-coral-soft text-coral-deep";
   const label = status === "active" ? "Ativo" : status === "draft" ? "Rascunho" : "Arquivado";
   return (
-    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${styles}`}>{label}</span>
+    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider ${styles}`}>{label}</span>
   );
 }
 
@@ -193,25 +196,25 @@ function Pagination({
     return u.toString() ? `?${u.toString()}` : "";
   };
   return (
-    <div className="flex items-center justify-between text-sm text-neutral-600">
+    <div className="flex items-center justify-between text-sm text-ink-soft pt-2">
       <span>
-        Página {page} de {lastPage}
+        Página <strong className="text-ink">{page}</strong> de <strong className="text-ink">{lastPage}</strong>
       </span>
       <div className="flex gap-2">
         {page > 1 && (
           <Link
             href={`/admin/produtos${qs(page - 1)}`}
-            className="rounded-md border border-neutral-300 px-3 py-1 hover:bg-neutral-50"
+            className="rounded-full border border-cream-deep bg-cream px-4 py-1.5 hover:border-coral hover:text-coral-deep transition"
           >
-            Anterior
+            ← Anterior
           </Link>
         )}
         {page < lastPage && (
           <Link
             href={`/admin/produtos${qs(page + 1)}`}
-            className="rounded-md border border-neutral-300 px-3 py-1 hover:bg-neutral-50"
+            className="rounded-full bg-ink text-cream-soft px-4 py-1.5 hover:bg-coral-deep transition"
           >
-            Próxima
+            Próxima →
           </Link>
         )}
       </div>

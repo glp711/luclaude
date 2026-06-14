@@ -42,8 +42,24 @@ export default async function HomePage() {
       cover_url: pickCover(p.product_images),
     }));
 
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    name: "Luperfumes",
+    description: "Perfumaria de ambiente — difusores, sabonetes e home spray escolhidos a dedo pela LU.",
+    url: baseUrl,
+    logo: `${baseUrl}/logo-mark.svg`,
+    sameAs: ["https://www.instagram.com/perfumesdeambientedecor/"],
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden bg-cream-soft">
         <div className="mx-auto max-w-7xl px-6 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center">
