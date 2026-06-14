@@ -1,72 +1,98 @@
 import Link from "next/link";
 import { signUp } from "./actions";
 
+export const metadata = { title: "Criar conta" };
+
 export default function SignUpPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string; sent?: string }>;
 }) {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-neutral-50">
-      <form
-        action={signUp}
-        className="w-full max-w-sm rounded-lg border bg-white p-8 shadow-sm space-y-5"
-      >
-        <div>
-          <h1 className="text-2xl font-light">Criar conta</h1>
-          <p className="text-sm text-neutral-500">Luperfumes</p>
-        </div>
+    <main className="min-h-screen flex items-center justify-center bg-cream-soft px-6 py-12">
+      <div className="w-full max-w-md">
+        <Link href="/" className="flex items-center justify-center gap-3 mb-8 group">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-mark.svg" alt="" className="h-12 w-12 transition group-hover:-rotate-3" />
+          <span className="font-display text-3xl tracking-tight text-ink">
+            Lu<span className="text-coral-deep">perfumes</span>
+          </span>
+        </Link>
 
-        <SignUpFeedback searchParams={searchParams} />
-
-        <label className="block">
-          <span className="text-sm text-neutral-700">Nome completo</span>
-          <input
-            name="full_name"
-            type="text"
-            required
-            autoComplete="name"
-            className="mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
-          />
-        </label>
-
-        <label className="block">
-          <span className="text-sm text-neutral-700">E-mail</span>
-          <input
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            className="mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
-          />
-        </label>
-
-        <label className="block">
-          <span className="text-sm text-neutral-700">Senha (mín. 8 chars)</span>
-          <input
-            name="password"
-            type="password"
-            required
-            minLength={8}
-            autoComplete="new-password"
-            className="mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none"
-          />
-        </label>
-
-        <button
-          type="submit"
-          className="w-full rounded-md bg-neutral-900 py-2 text-sm text-white hover:bg-neutral-700"
+        <form
+          action={signUp}
+          className="rounded-3xl border border-cream-deep bg-cream p-8 shadow-[0_1px_2px_rgba(45,41,36,0.04)] space-y-5"
         >
-          Criar conta
-        </button>
+          <div className="text-center">
+            <h1 className="font-display text-3xl text-ink">Criar conta</h1>
+            <p className="text-sm text-ink-soft mt-1">É rapidinho. Pode preparar uma xícara de café.</p>
+          </div>
 
-        <p className="pt-4 text-sm text-neutral-600 border-t">
-          Já tem conta?{" "}
-          <Link href="/login" className="text-neutral-900 hover:underline">
-            Entrar
-          </Link>
-        </p>
-      </form>
+          <SignUpFeedback searchParams={searchParams} />
+
+          <label className="block">
+            <span className="text-xs font-medium uppercase tracking-widest text-sage-deep">
+              Nome completo
+            </span>
+            <input
+              name="full_name"
+              type="text"
+              required
+              autoComplete="name"
+              className="mt-1.5 block w-full rounded-full border border-cream-deep bg-cream-soft px-4 py-2.5 text-sm focus:border-coral focus:outline-none transition"
+            />
+          </label>
+
+          <label className="block">
+            <span className="text-xs font-medium uppercase tracking-widest text-sage-deep">
+              E-mail
+            </span>
+            <input
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              className="mt-1.5 block w-full rounded-full border border-cream-deep bg-cream-soft px-4 py-2.5 text-sm focus:border-coral focus:outline-none transition"
+            />
+          </label>
+
+          <label className="block">
+            <span className="text-xs font-medium uppercase tracking-widest text-sage-deep">
+              Senha
+            </span>
+            <input
+              name="password"
+              type="password"
+              required
+              minLength={8}
+              autoComplete="new-password"
+              className="mt-1.5 block w-full rounded-full border border-cream-deep bg-cream-soft px-4 py-2.5 text-sm focus:border-coral focus:outline-none transition"
+            />
+            <span className="mt-1 block text-xs text-ink-mute">Mínimo 8 caracteres.</span>
+          </label>
+
+          <button
+            type="submit"
+            className="w-full rounded-full bg-coral py-3 text-sm font-medium text-white hover:bg-coral-deep transition"
+          >
+            Criar conta
+          </button>
+
+          <p className="pt-4 border-t border-cream-deep text-sm text-ink-soft text-center">
+            Já tem conta?{" "}
+            <Link href="/login" className="text-coral-deep hover:underline underline-offset-4">
+              Entrar
+            </Link>
+          </p>
+        </form>
+
+        <Link
+          href="/"
+          className="mt-6 block text-center text-xs text-ink-mute hover:text-coral-deep transition"
+        >
+          ← Voltar pra loja
+        </Link>
+      </div>
     </main>
   );
 }
@@ -79,14 +105,14 @@ async function SignUpFeedback({
   const { error, sent } = await searchParams;
   if (sent) {
     return (
-      <div className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-800">
-        Conta criada. Confirme seu e-mail para entrar.
+      <div className="rounded-2xl bg-sage-soft/60 border border-sage-soft px-4 py-2.5 text-sm text-ink">
+        ✓ Conta criada. Confirme seu e-mail para entrar.
       </div>
     );
   }
   if (error) {
     return (
-      <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+      <div className="rounded-2xl bg-coral-soft/50 border border-coral-soft px-4 py-2.5 text-sm text-coral-deep">
         {error === "exists"
           ? "Este e-mail já está cadastrado."
           : error === "weak"

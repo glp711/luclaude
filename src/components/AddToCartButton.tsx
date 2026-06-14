@@ -26,7 +26,7 @@ export function AddToCartButton({
       }}
       className={
         className ??
-        "rounded-md bg-neutral-900 px-5 py-2.5 text-sm text-white hover:bg-neutral-700 disabled:cursor-not-allowed disabled:bg-neutral-300"
+        "rounded-full bg-coral px-7 py-3 text-sm font-medium text-white shadow-sm hover:bg-coral-deep transition disabled:cursor-not-allowed disabled:bg-cream-deep disabled:text-ink-mute"
       }
     >
       {disabled ? "Indisponível" : added ? "Adicionado ✓" : "Adicionar ao carrinho"}

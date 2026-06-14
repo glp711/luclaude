@@ -3,6 +3,11 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { ProductCard, type ProductCardData } from "@/components/ProductCard";
 import { SortSelect } from "@/components/SortSelect";
 
+export const metadata = {
+  title: "Catálogo",
+  description: "Difusores, sabonetes, home spray e mais — perfumaria de ambiente escolhida a dedo pela LU.",
+};
+
 const PAGE_SIZE = 24;
 
 export default async function CatalogPage({
@@ -72,89 +77,131 @@ export default async function CatalogPage({
       cover_url: pickCover(p.product_images),
     }));
 
-  return (
-    <main className="mx-auto max-w-7xl px-6 py-10">
-      <header className="mb-8">
-        <h1 className="text-3xl font-light">
-          {categoryRow.data?.name ?? (q ? `Resultados para "${q}"` : "Catálogo")}
-        </h1>
-        <p className="text-sm text-neutral-500 mt-1">
-          {count != null ? `${count} produto${count === 1 ? "" : "s"}` : ""}
-        </p>
-      </header>
+  const title = categoryRow.data?.name ?? (q ? `Resultados para "${q}"` : "Catálogo");
+  const subtitle = categoryRow.data?.name
+    ? "Selecionados a dedo pra sua casa."
+    : q
+      ? "Veja o que encontramos pra você."
+      : "Tudo o que a Lu trouxe pro seu cantinho.";
 
-      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8">
-        <aside className="space-y-6">
-          <div>
-            <h2 className="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-2">
-              Categorias
-            </h2>
-            <ul className="space-y-1 text-sm">
-              <li>
-                <Link
-                  href="/produtos"
-                  className={!categoriaSlug ? "font-medium text-neutral-900" : "text-neutral-600 hover:text-neutral-900"}
-                >
-                  Todas
-                </Link>
-              </li>
-              {(categories ?? []).map((c) => (
-                <li key={c.id}>
+  return (
+    <main>
+      {/* Cabeçalho editorial */}
+      <section className="bg-cream-soft border-b border-cream-deep/60">
+        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
+          <nav className="text-xs text-ink-mute mb-3 flex items-center gap-2" aria-label="breadcrumb">
+            <Link href="/" className="hover:text-coral-deep transition">Início</Link>
+            <span>/</span>
+            <span className="text-ink-soft">{title}</span>
+          </nav>
+          <h1 className="font-display text-5xl md:text-6xl text-ink">{title}</h1>
+          <p className="mt-2 text-ink-soft">{subtitle}</p>
+          {count != null && (
+            <p className="mt-4 text-xs uppercase tracking-widest text-sage-deep">
+              {count} {count === 1 ? "produto" : "produtos"}
+            </p>
+          )}
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-10">
+          {/* Sidebar */}
+          <aside className="space-y-8">
+            <div>
+              <h2 className="text-xs font-medium uppercase tracking-widest text-sage-deep mb-3">
+                Categorias
+              </h2>
+              <ul className="space-y-1.5 text-sm">
+                <li>
                   <Link
-                    href={`/produtos?categoria=${c.slug}`}
+                    href="/produtos"
                     className={
-                      categoriaSlug === c.slug
-                        ? "font-medium text-neutral-900"
-                        : "text-neutral-600 hover:text-neutral-900"
+                      !categoriaSlug
+                        ? "font-medium text-coral-deep"
+                        : "text-ink-soft hover:text-coral-deep transition"
                     }
                   >
-                    {c.name}
+                    Todas
                   </Link>
                 </li>
-              ))}
-            </ul>
-          </div>
+                {(categories ?? []).map((c) => (
+                  <li key={c.id}>
+                    <Link
+                      href={`/produtos?categoria=${c.slug}`}
+                      className={
+                        categoriaSlug === c.slug
+                          ? "font-medium text-coral-deep"
+                          : "text-ink-soft hover:text-coral-deep transition"
+                      }
+                    >
+                      {c.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <form className="space-y-2" action="/produtos">
-            <h2 className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-              Buscar
-            </h2>
-            {categoriaSlug && (
-              <input type="hidden" name="categoria" value={categoriaSlug} />
+            <form className="space-y-2" action="/produtos">
+              <h2 className="text-xs font-medium uppercase tracking-widest text-sage-deep">
+                Buscar
+              </h2>
+              {categoriaSlug && (
+                <input type="hidden" name="categoria" value={categoriaSlug} />
+              )}
+              <input
+                name="q"
+                defaultValue={q}
+                placeholder="Nome do produto"
+                className="w-full rounded-full border border-cream-deep bg-cream-soft px-4 py-2 text-sm placeholder:text-ink-mute focus:outline-none focus:border-coral transition"
+              />
+              <button className="w-full rounded-full bg-ink px-4 py-2 text-sm text-cream-soft hover:bg-coral-deep transition">
+                Buscar
+              </button>
+            </form>
+          </aside>
+
+          {/* Lista */}
+          <div className="space-y-5">
+            <div className="flex items-center justify-between gap-4">
+              <div className="text-sm text-ink-soft">
+                {count != null && (
+                  <span>
+                    Mostrando{" "}
+                    <strong className="text-ink">{cards.length}</strong> de{" "}
+                    <strong className="text-ink">{count}</strong>
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <label className="text-ink-soft">Ordenar:</label>
+                <SortSelect current={sort} />
+              </div>
+            </div>
+
+            {cards.length === 0 ? (
+              <div className="rounded-3xl border border-dashed border-cream-deep bg-cream-soft p-16 text-center">
+                <p className="font-display text-2xl text-ink">Nada por aqui.</p>
+                <p className="mt-2 text-sm text-ink-soft">
+                  Tenta ajustar o filtro ou{" "}
+                  <Link href="/produtos" className="text-coral-deep underline underline-offset-4">
+                    ver tudo
+                  </Link>
+                  .
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-5">
+                {cards.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
             )}
-            <input
-              name="q"
-              defaultValue={q}
-              placeholder="Nome do produto"
-              className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-            />
-            <button className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-50">
-              Buscar
-            </button>
-          </form>
-        </aside>
 
-        <div className="space-y-4">
-          <div className="flex items-center justify-end gap-2 text-sm">
-            <label className="text-neutral-600">Ordenar:</label>
-            <SortSelect current={sort} />
+            {count != null && count > PAGE_SIZE && (
+              <Pagination page={page} total={count} sp={sp} />
+            )}
           </div>
-
-          {cards.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-12 text-center text-neutral-500">
-              Nenhum produto encontrado.
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
-              {cards.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          )}
-
-          {count != null && count > PAGE_SIZE && (
-            <Pagination page={page} total={count} sp={sp} />
-          )}
         </div>
       </div>
     </main>
@@ -181,25 +228,26 @@ function Pagination({
     return s ? `?${s}` : "";
   };
   return (
-    <div className="flex items-center justify-between text-sm text-neutral-600 pt-4">
+    <div className="flex items-center justify-between text-sm text-ink-soft pt-6 border-t border-cream-deep">
       <span>
-        Página {page} de {last}
+        Página <strong className="text-ink">{page}</strong> de{" "}
+        <strong className="text-ink">{last}</strong>
       </span>
       <div className="flex gap-2">
         {page > 1 && (
           <Link
             href={`/produtos${qs(page - 1)}`}
-            className="rounded-md border border-neutral-300 px-3 py-1 hover:bg-neutral-50"
+            className="rounded-full border border-cream-deep px-4 py-1.5 hover:bg-cream-soft hover:border-coral transition"
           >
-            Anterior
+            ← Anterior
           </Link>
         )}
         {page < last && (
           <Link
             href={`/produtos${qs(page + 1)}`}
-            className="rounded-md border border-neutral-300 px-3 py-1 hover:bg-neutral-50"
+            className="rounded-full bg-ink text-cream-soft px-4 py-1.5 hover:bg-coral-deep transition"
           >
-            Próxima
+            Próxima →
           </Link>
         )}
       </div>

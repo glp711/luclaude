@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { CartContents } from "./CartContents";
 
@@ -39,9 +40,21 @@ export default async function CarrinhoPage() {
   const catalog = Object.fromEntries(productsByIdEntries);
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-10">
-      <h1 className="text-3xl font-light mb-8">Carrinho</h1>
-      <CartContents catalog={catalog} />
+    <main>
+      <section className="bg-cream-soft border-b border-cream-deep/60">
+        <div className="mx-auto max-w-6xl px-6 py-10">
+          <nav className="text-xs text-ink-mute mb-3 flex items-center gap-2" aria-label="breadcrumb">
+            <Link href="/" className="hover:text-coral-deep transition">Início</Link>
+            <span>/</span>
+            <span className="text-ink-soft">Carrinho</span>
+          </nav>
+          <h1 className="font-display text-5xl text-ink">Seu carrinho</h1>
+          <p className="mt-2 text-ink-soft">Revise os itens e siga pro checkout.</p>
+        </div>
+      </section>
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <CartContents catalog={catalog} />
+      </div>
     </main>
   );
 }

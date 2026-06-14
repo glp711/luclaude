@@ -30,7 +30,11 @@ export function CartContents({ catalog }: { catalog: Record<string, CatalogProdu
   const remove = useCart((s) => s.remove);
 
   if (!hydrated) {
-    return <div className="text-sm text-neutral-500">Carregando carrinho…</div>;
+    return (
+      <div className="rounded-3xl border border-dashed border-cream-deep bg-cream-soft p-12 text-center text-ink-mute">
+        Carregando carrinho…
+      </div>
+    );
   }
 
   // Reconcilia carrinho: remove silenciosamente produtos inexistentes/inativos
@@ -44,16 +48,22 @@ export function CartContents({ catalog }: { catalog: Record<string, CatalogProdu
 
   if (valid.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-12 text-center">
-        <p className="text-neutral-600">Seu carrinho está vazio.</p>
+      <div className="rounded-3xl border border-dashed border-cream-deep bg-cream-soft p-16 text-center">
+        <div className="mx-auto h-16 w-16 rounded-full bg-coral-soft flex items-center justify-center mb-4">
+          <span className="text-2xl">🛒</span>
+        </div>
+        <p className="font-display text-3xl text-ink">Carrinho vazio</p>
+        <p className="mt-2 text-sm text-ink-soft max-w-sm mx-auto">
+          Que tal dar uma olhada no catálogo? A LU separou difusores, sabonetes e home sprays cheios de carinho.
+        </p>
         <Link
           href="/produtos"
-          className="mt-4 inline-block rounded-md bg-neutral-900 px-5 py-2 text-sm text-white hover:bg-neutral-700"
+          className="mt-6 inline-block rounded-full bg-coral px-7 py-3 text-sm font-medium text-white hover:bg-coral-deep transition"
         >
           Ver catálogo
         </Link>
         {removedCount > 0 && (
-          <p className="mt-4 text-xs text-neutral-500">
+          <p className="mt-6 text-xs text-ink-mute">
             {removedCount} item{removedCount > 1 ? "s" : ""} indisponível{removedCount > 1 ? "is" : ""}{" "}
             removido{removedCount > 1 ? "s" : ""}.
           </p>
@@ -66,12 +76,13 @@ export function CartContents({ catalog }: { catalog: Record<string, CatalogProdu
     const p = catalog[i.product_id]!;
     return s + p.price_cents * i.quantity;
   }, 0);
+  const itemCount = valid.reduce((s, i) => s + i.quantity, 0);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8">
       <div className="space-y-3">
         {removedCount > 0 && (
-          <div className="rounded-md bg-amber-50 px-4 py-2 text-sm text-amber-800">
+          <div className="rounded-2xl bg-coral-soft/50 border border-coral-soft px-4 py-3 text-sm text-coral-deep">
             {removedCount} item{removedCount > 1 ? "s" : ""} não está mais disponível e foi removido.
           </div>
         )}
@@ -80,28 +91,37 @@ export function CartContents({ catalog }: { catalog: Record<string, CatalogProdu
           const lineTotal = p.price_cents * i.quantity;
           const exceedsStock = i.quantity > p.stock_quantity;
           return (
-            <div key={i.product_id} className="flex gap-4 rounded-lg border bg-white p-4">
-              <div className="h-24 w-24 flex-shrink-0 rounded-md bg-neutral-100 overflow-hidden">
+            <div
+              key={i.product_id}
+              className="flex gap-4 rounded-2xl border border-cream-deep bg-cream-soft p-4 hover:border-coral-soft transition"
+            >
+              <Link
+                href={`/produtos/${p.slug}`}
+                className="h-28 w-28 flex-shrink-0 rounded-xl bg-cream overflow-hidden"
+              >
                 {p.cover_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={p.cover_url} alt={p.name} className="h-full w-full object-cover" />
                 ) : null}
-              </div>
-              <div className="flex-1 space-y-1">
-                <Link href={`/produtos/${p.slug}`} className="font-medium hover:underline">
+              </Link>
+              <div className="flex-1 min-w-0 space-y-1">
+                <Link
+                  href={`/produtos/${p.slug}`}
+                  className="font-display text-lg leading-tight text-ink hover:text-coral-deep transition line-clamp-2"
+                >
                   {p.name}
                 </Link>
-                <div className="text-sm text-neutral-500 tabular-nums">{formatBRL(p.price_cents)}</div>
+                <div className="text-sm text-ink-soft tabular-nums">{formatBRL(p.price_cents)}</div>
                 {exceedsStock && (
-                  <p className="text-xs text-amber-600">
-                    Só {p.stock_quantity} em estoque
+                  <p className="text-xs text-coral-deep">
+                    ⚠ Só {p.stock_quantity} em estoque
                   </p>
                 )}
                 <div className="flex items-center gap-3 pt-2">
-                  <div className="flex items-center rounded-md border">
+                  <div className="flex items-center rounded-full border border-cream-deep bg-cream">
                     <button
                       onClick={() => update(i.product_id, i.quantity - 1)}
-                      className="px-2 py-1 text-neutral-600 hover:text-neutral-900"
+                      className="px-3 py-1 text-ink-soft hover:text-coral-deep transition"
                       aria-label="Diminuir"
                     >
                       −
@@ -110,7 +130,7 @@ export function CartContents({ catalog }: { catalog: Record<string, CatalogProdu
                     <button
                       onClick={() => update(i.product_id, i.quantity + 1)}
                       disabled={i.quantity >= 10 || i.quantity >= p.stock_quantity}
-                      className="px-2 py-1 text-neutral-600 hover:text-neutral-900 disabled:text-neutral-300"
+                      className="px-3 py-1 text-ink-soft hover:text-coral-deep transition disabled:text-cream-deep"
                       aria-label="Aumentar"
                     >
                       +
@@ -118,42 +138,57 @@ export function CartContents({ catalog }: { catalog: Record<string, CatalogProdu
                   </div>
                   <button
                     onClick={() => remove(i.product_id)}
-                    className="text-xs text-red-600 hover:text-red-800"
+                    className="text-xs text-ink-mute hover:text-coral-deep transition"
                   >
                     Remover
                   </button>
                 </div>
               </div>
-              <div className="text-right font-medium tabular-nums">{formatBRL(lineTotal)}</div>
+              <div className="text-right font-display text-xl tabular-nums text-coral-deep">
+                {formatBRL(lineTotal)}
+              </div>
             </div>
           );
         })}
       </div>
 
-      <aside className="rounded-lg border bg-white p-5 h-fit lg:sticky lg:top-6 space-y-4">
-        <h2 className="text-lg font-medium">Resumo</h2>
-        <dl className="space-y-1 text-sm">
+      <aside className="rounded-2xl border border-cream-deep bg-cream-soft p-6 h-fit lg:sticky lg:top-24 space-y-4">
+        <h2 className="font-display text-2xl text-ink">Resumo</h2>
+        <dl className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <dt className="text-neutral-600">Subtotal</dt>
+            <dt className="text-ink-soft">Itens</dt>
+            <dd className="tabular-nums">{itemCount}</dd>
+          </div>
+          <div className="flex justify-between">
+            <dt className="text-ink-soft">Subtotal</dt>
             <dd className="tabular-nums">{formatBRL(subtotal)}</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-neutral-600">Frete</dt>
-            <dd className="text-neutral-500">calculado no checkout</dd>
+            <dt className="text-ink-soft">Frete</dt>
+            <dd className="text-ink-mute italic text-xs">calculado no checkout</dd>
+          </div>
+          <div className="pt-3 border-t border-cream-deep flex justify-between items-baseline">
+            <dt className="font-display text-lg text-ink">Total</dt>
+            <dd className="font-display text-2xl text-coral-deep tabular-nums">{formatBRL(subtotal)}</dd>
           </div>
         </dl>
         <Link
           href="/checkout"
-          className="block w-full rounded-md bg-neutral-900 py-3 text-center text-sm text-white hover:bg-neutral-700"
+          className="block w-full rounded-full bg-coral py-3 text-center text-sm font-medium text-white hover:bg-coral-deep transition shadow-sm"
         >
           Finalizar compra
         </Link>
         <Link
           href="/produtos"
-          className="block text-center text-sm text-neutral-600 hover:text-neutral-900"
+          className="block text-center text-sm text-ink-soft hover:text-coral-deep transition"
         >
-          Continuar comprando
+          ← Continuar comprando
         </Link>
+        <div className="pt-3 border-t border-cream-deep text-xs text-ink-mute space-y-1.5">
+          <p className="flex items-center gap-2"><span className="text-sage-deep">●</span> Pix, cartão ou boleto</p>
+          <p className="flex items-center gap-2"><span className="text-sage-deep">●</span> Trocas em até 7 dias</p>
+          <p className="flex items-center gap-2"><span className="text-sage-deep">●</span> Envio pelos Correios e Jadlog</p>
+        </div>
       </aside>
     </div>
   );

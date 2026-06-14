@@ -3,6 +3,8 @@ import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { formatBRL } from "@/lib/money";
 import { AddToCartButton } from "@/components/AddToCartButton";
+import { ProductGallery } from "@/components/ProductGallery";
+import { ProductCard, type ProductCardData } from "@/components/ProductCard";
 
 type ProductPageData = {
   id: string;
@@ -12,6 +14,7 @@ type ProductPageData = {
   price_cents: number;
   compare_at_price_cents: number | null;
   stock_quantity: number;
+  category_id: string | null;
   category: { name: string; slug: string } | null;
   product_images: { url: string; alt: string | null; position: number }[];
 };
@@ -32,7 +35,7 @@ export async function generateMetadata({
   if (!data) return { title: "Produto não encontrado" };
   return {
     title: data.name,
-    description: data.description ?? `${data.name} — Luperfumes.`,
+    description: data.description ?? `${data.name} — Luperfumes, perfumaria de ambiente.`,
   };
 }
 
@@ -47,7 +50,7 @@ export default async function ProductPage({
   const { data: product } = await supabase
     .from("products")
     .select(
-      "id, slug, name, description, price_cents, compare_at_price_cents, stock_quantity, category:categories(name, slug), product_images(url, alt, position)"
+      "id, slug, name, description, price_cents, compare_at_price_cents, stock_quantity, category_id, category:categories(name, slug), product_images(url, alt, position)"
     )
     .eq("slug", slug)
     .eq("status", "active")
@@ -56,99 +59,160 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const images = [...(product.product_images ?? [])].sort((a, b) => a.position - b.position);
-  const cover = images[0];
   const hasPromo =
     product.compare_at_price_cents != null &&
     product.compare_at_price_cents > product.price_cents;
   const outOfStock = product.stock_quantity <= 0;
 
+  // Sugestões: outros da mesma categoria
+  let related: ProductCardData[] = [];
+  if (product.category_id) {
+    const { data: relatedRaw } = await supabase
+      .from("products")
+      .select(
+        "id, slug, name, price_cents, compare_at_price_cents, stock_quantity, product_images(url, position)"
+      )
+      .eq("status", "active")
+      .eq("category_id", product.category_id)
+      .neq("id", product.id)
+      .limit(4);
+    related = (relatedRaw ?? []).map((p: {
+      id: string; slug: string; name: string; price_cents: number;
+      compare_at_price_cents: number | null; stock_quantity: number;
+      product_images: { url: string; position: number }[];
+    }) => ({
+      id: p.id, slug: p.slug, name: p.name,
+      price_cents: p.price_cents,
+      compare_at_price_cents: p.compare_at_price_cents,
+      stock_quantity: p.stock_quantity,
+      cover_url: pickCover(p.product_images),
+    }));
+  }
+
   return (
-    <main className="mx-auto max-w-7xl px-6 py-10">
-      <nav className="text-sm text-neutral-500 mb-6 space-x-2">
-        <Link href="/" className="hover:text-neutral-900">Início</Link>
-        <span>/</span>
-        <Link href="/produtos" className="hover:text-neutral-900">Catálogo</Link>
-        {product.category && (
-          <>
-            <span>/</span>
-            <Link
-              href={`/produtos?categoria=${product.category.slug}`}
-              className="hover:text-neutral-900"
-            >
-              {product.category.name}
-            </Link>
-          </>
-        )}
-      </nav>
+    <main>
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <nav className="text-xs text-ink-mute mb-6 flex flex-wrap items-center gap-2" aria-label="breadcrumb">
+          <Link href="/" className="hover:text-coral-deep transition">Início</Link>
+          <span>/</span>
+          <Link href="/produtos" className="hover:text-coral-deep transition">Catálogo</Link>
+          {product.category && (
+            <>
+              <span>/</span>
+              <Link
+                href={`/produtos?categoria=${product.category.slug}`}
+                className="hover:text-coral-deep transition"
+              >
+                {product.category.name}
+              </Link>
+            </>
+          )}
+          <span>/</span>
+          <span className="text-ink-soft truncate max-w-[40ch]">{product.name}</span>
+        </nav>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <div className="space-y-3">
-          <div className="aspect-square rounded-lg bg-white border overflow-hidden">
-            {cover ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={cover.url}
-                alt={cover.alt ?? product.name}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center text-neutral-300 text-sm">
-                Sem imagem
-              </div>
-            )}
-          </div>
-          {images.length > 1 && (
-            <div className="grid grid-cols-5 gap-2">
-              {images.map((img) => (
-                <div
-                  key={img.url}
-                  className="aspect-square rounded-md bg-white border overflow-hidden"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <ProductGallery images={images} productName={product.name} />
+
+          <div className="space-y-6">
+            <div>
+              {product.category && (
+                <Link
+                  href={`/produtos?categoria=${product.category.slug}`}
+                  className="text-xs uppercase tracking-widest text-sage-deep hover:text-coral-deep transition"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={img.url} alt={img.alt ?? ""} className="h-full w-full object-cover" />
-                </div>
-              ))}
+                  {product.category.name}
+                </Link>
+              )}
+              <h1 className="mt-2 font-display text-4xl md:text-5xl leading-tight text-ink">
+                {product.name}
+              </h1>
             </div>
-          )}
-        </div>
 
-        <div className="space-y-5">
-          <div>
-            <h1 className="text-3xl font-light">{product.name}</h1>
-            {product.category && (
-              <p className="text-sm text-neutral-500 mt-1">{product.category.name}</p>
-            )}
-          </div>
-
-          <div className="flex items-baseline gap-3">
-            {hasPromo && (
-              <span className="text-base text-neutral-400 line-through">
-                {formatBRL(product.compare_at_price_cents!)}
+            <div className="flex items-baseline gap-3">
+              {hasPromo && (
+                <span className="text-lg text-ink-mute line-through tabular-nums">
+                  {formatBRL(product.compare_at_price_cents!)}
+                </span>
+              )}
+              <span className="font-display text-4xl text-coral-deep tabular-nums">
+                {formatBRL(product.price_cents)}
               </span>
-            )}
-            <span className="text-3xl font-light tabular-nums">
-              {formatBRL(product.price_cents)}
-            </span>
-          </div>
-
-          {outOfStock ? (
-            <p className="text-sm font-medium text-red-600">Produto esgotado</p>
-          ) : product.stock_quantity <= 3 ? (
-            <p className="text-sm text-amber-600">
-              Últimas unidades — só {product.stock_quantity} em estoque
-            </p>
-          ) : null}
-
-          <AddToCartButton productId={product.id} disabled={outOfStock} />
-
-          {product.description && (
-            <div className="pt-4 border-t">
-              <h2 className="text-sm font-medium mb-2">Sobre o produto</h2>
-              <p className="text-sm text-neutral-700 whitespace-pre-line">{product.description}</p>
+              {hasPromo && (
+                <span className="rounded-full bg-coral-soft px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-coral-deep font-medium">
+                  Promoção
+                </span>
+              )}
             </div>
-          )}
+
+            {outOfStock ? (
+              <p className="text-sm font-medium text-coral-deep">
+                😔 Esgotado por enquanto. Volte em breve.
+              </p>
+            ) : product.stock_quantity <= 3 ? (
+              <p className="text-sm text-coral-deep">
+                ⚡ Últimas unidades — só {product.stock_quantity} em estoque.
+              </p>
+            ) : null}
+
+            <AddToCartButton productId={product.id} disabled={outOfStock} />
+
+            <div className="pt-5 border-t border-cream-deep">
+              <h2 className="font-display text-2xl text-ink mb-3">Sobre o produto</h2>
+              {product.description ? (
+                <p className="text-sm text-ink-soft whitespace-pre-line leading-relaxed">
+                  {product.description}
+                </p>
+              ) : (
+                <p className="text-sm text-ink-soft italic leading-relaxed">
+                  Aroma escolhido a dedo pela LU pra deixar seu cantinho ainda mais aconchegante.
+                  Em breve trazemos a descrição completa.
+                </p>
+              )}
+            </div>
+
+            {/* Benefícios da loja */}
+            <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-5 border-t border-cream-deep text-xs text-ink-soft">
+              <li className="flex items-start gap-2">
+                <span className="text-coral-deep mt-0.5">●</span>
+                <span><strong className="text-ink">Frete pelos Correios</strong><br />calculado no checkout</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-coral-deep mt-0.5">●</span>
+                <span><strong className="text-ink">Pix, cartão ou boleto</strong><br />parcele em até 3x</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-coral-deep mt-0.5">●</span>
+                <span><strong className="text-ink">Trocas em 7 dias</strong><br />pelo Código de Defesa do Consumidor</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
+
+      {/* Relacionados */}
+      {related.length > 0 && (
+        <section className="bg-cream-soft border-t border-cream-deep mt-16">
+          <div className="mx-auto max-w-7xl px-6 py-16">
+            <div className="text-center mb-10">
+              <p className="text-xs uppercase tracking-widest text-sage-deep">você também pode gostar</p>
+              <h2 className="mt-2 font-display text-3xl md:text-4xl text-ink">
+                Da mesma família
+              </h2>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+              {related.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
+}
+
+function pickCover(images: { url: string; position: number }[] | null | undefined): string | null {
+  if (!images || images.length === 0) return null;
+  return [...images].sort((a, b) => a.position - b.position)[0].url;
 }

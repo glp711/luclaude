@@ -20,41 +20,43 @@ export function ProductCard({ product }: { product: ProductCardData }) {
   return (
     <Link
       href={`/produtos/${product.slug}`}
-      className="group rounded-lg border border-neutral-200 bg-white overflow-hidden transition hover:border-neutral-400 hover:shadow-sm"
+      className="group rounded-2xl border border-cream-deep bg-cream-soft overflow-hidden transition hover:border-coral hover:shadow-[0_8px_24px_-12px_rgba(228,139,125,0.35)]"
     >
-      <div className="aspect-square bg-neutral-100 relative overflow-hidden">
+      <div className="aspect-square bg-cream relative overflow-hidden">
         {product.cover_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={product.cover_url}
             alt={product.name}
-            className="h-full w-full object-cover transition group-hover:scale-105"
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-neutral-300 text-sm">
+          <div className="flex h-full items-center justify-center text-ink-mute text-sm">
             sem imagem
           </div>
         )}
         {hasPromo && (
-          <span className="absolute left-2 top-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-medium text-white">
+          <span className="absolute left-3 top-3 rounded-full bg-coral-deep px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-white shadow-sm">
             Promoção
           </span>
         )}
         {outOfStock && (
-          <span className="absolute right-2 top-2 rounded-full bg-neutral-900/80 px-2 py-0.5 text-xs font-medium text-white">
+          <span className="absolute right-3 top-3 rounded-full bg-ink/85 px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-cream-soft shadow-sm">
             Esgotado
           </span>
         )}
       </div>
-      <div className="p-4 space-y-1">
-        <h3 className="text-sm text-neutral-800 line-clamp-2 min-h-[2.5rem]">{product.name}</h3>
+      <div className="p-4 space-y-2">
+        <h3 className="font-display text-base leading-snug text-ink line-clamp-2 min-h-[2.6rem]">
+          {product.name}
+        </h3>
         <div className="flex items-baseline gap-2">
           {hasPromo && (
-            <span className="text-xs text-neutral-400 line-through">
+            <span className="text-xs text-ink-mute line-through">
               {formatBRL(product.compare_at_price_cents!)}
             </span>
           )}
-          <span className="text-base font-medium tabular-nums">
+          <span className="text-lg font-medium tabular-nums text-coral-deep">
             {formatBRL(product.price_cents)}
           </span>
         </div>

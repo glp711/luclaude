@@ -25,7 +25,7 @@ export function SortSelect({ current }: { current: string }) {
         const qs = next.toString();
         router.push(`${pathname}${qs ? `?${qs}` : ""}`);
       }}
-      className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm"
+      className="rounded-full border border-cream-deep bg-cream-soft px-3 py-1.5 text-sm text-ink focus:outline-none focus:border-coral transition"
     >
       {OPTIONS.map((o) => (
         <option key={o.value} value={o.value}>

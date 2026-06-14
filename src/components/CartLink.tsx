@@ -19,11 +19,26 @@ export function CartLink() {
   return (
     <Link
       href="/carrinho"
-      className="relative inline-flex items-center gap-2 rounded-full border border-neutral-300 px-4 py-1.5 text-sm hover:bg-neutral-50"
+      className="relative inline-flex items-center gap-2 rounded-full border border-cream-deep bg-cream-soft px-4 py-1.5 text-sm text-ink hover:border-coral hover:bg-coral-soft/40 transition"
     >
-      <span>Carrinho</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-4 w-4"
+        aria-hidden="true"
+      >
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+        <path d="M3 6h18" />
+        <path d="M16 10a4 4 0 0 1-8 0" />
+      </svg>
+      <span className="hidden sm:inline">Carrinho</span>
       {mounted && totalItems > 0 && (
-        <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-neutral-900 px-1.5 text-xs font-medium text-white">
+        <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-coral px-1.5 text-xs font-medium text-white">
           {totalItems}
         </span>
       )}

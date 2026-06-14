@@ -1,26 +1,37 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Paleta Luperfumes — extraída do selo da marca */
+  --color-cream: #f5ecdc;
+  --color-cream-soft: #faf4e9;
+  --color-cream-deep: #ebe0cc;
+  --color-coral: #efa89c;
+  --color-coral-deep: #e48b7d;
+  --color-coral-soft: #f8d3cb;
+  --color-sage: #a8c5bc;
+  --color-sage-deep: #87b1a4;
+  --color-sage-soft: #d4e3dd;
+  --color-ink: #2d2924;
+  --color-ink-soft: #6e655a;
+  --color-ink-mute: #a89e91;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background: var(--color-cream);
+  --color-foreground: var(--color-ink);
+
+  --font-sans: var(--font-sans), "Inter", system-ui, sans-serif;
+  --font-display: var(--font-display), "Cormorant Garamond", Georgia, serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tipografia de exibição (títulos editorias) */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
