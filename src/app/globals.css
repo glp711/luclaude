@@ -22,6 +22,10 @@
   --font-display: var(--font-display), "Cormorant Garamond", Georgia, serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--color-cream);
   color: var(--color-ink);
@@ -34,4 +38,57 @@ body {
   font-family: var(--font-display);
   font-weight: 400;
   letter-spacing: -0.01em;
+}
+
+/* Seleção com cor da marca */
+::selection {
+  background: var(--color-coral-soft);
+  color: var(--color-ink);
+}
+
+/* Focus visível com anel coral em qualquer elemento focável */
+:focus-visible {
+  outline: 2px solid var(--color-coral);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove o outline do focus em mouse — só aparece em navegação por teclado */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Skip link pra acessibilidade — aparece só no foco */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: var(--color-ink);
+  color: var(--color-cream-soft);
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Scrollbar mais discreta no Chrome/Edge */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-cream-soft);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-cream-deep);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-mute);
+  }
 }

@@ -6,6 +6,8 @@ const CATEGORIES = [
   { slug: "difusores", name: "Difusores", desc: "Aroma que permanece, dia após dia." },
   { slug: "home-spray", name: "Home Spray", desc: "Um borrifo, um respiro de calma." },
   { slug: "sabonetes", name: "Sabonetes", desc: "Cuidado que abraça a pele." },
+  { slug: "agua-perfumada", name: "Água Perfumada", desc: "Perfume leve pra tecidos e ambientes." },
+  { slug: "cremes", name: "Cremes", desc: "Hidratação com perfume marcante." },
   { slug: "kits", name: "Kits", desc: "Presentes que viram lembrança." },
 ];
 
@@ -98,19 +100,19 @@ export default async function HomePage() {
           <p className="text-xs uppercase tracking-widest text-sage-deep">o que você procura</p>
           <h2 className="mt-2 font-display text-4xl text-ink">Categorias</h2>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {CATEGORIES.map((c) => (
             <Link
               key={c.slug}
               href={`/produtos?categoria=${c.slug}`}
-              className="group rounded-2xl bg-cream-soft border border-cream-deep p-6 hover:border-coral hover:bg-coral-soft/40 transition"
+              className="group rounded-2xl bg-cream-soft border border-cream-deep p-5 hover:border-coral hover:bg-coral-soft/40 transition"
             >
-              <div className="h-12 w-12 rounded-full bg-sage-soft flex items-center justify-center mb-4 group-hover:bg-coral-soft transition">
-                <span className="h-3 w-3 rounded-full bg-sage-deep group-hover:bg-coral-deep transition" />
+              <div className="h-10 w-10 rounded-full bg-sage-soft flex items-center justify-center mb-3 group-hover:bg-coral-soft transition">
+                <span className="h-2.5 w-2.5 rounded-full bg-sage-deep group-hover:bg-coral-deep transition" />
               </div>
-              <h3 className="font-display text-2xl text-ink">{c.name}</h3>
-              <p className="mt-1 text-sm text-ink-soft leading-relaxed">{c.desc}</p>
-              <span className="mt-4 inline-block text-xs text-coral-deep">Ver →</span>
+              <h3 className="font-display text-xl text-ink leading-tight">{c.name}</h3>
+              <p className="mt-1 text-xs text-ink-soft leading-relaxed">{c.desc}</p>
+              <span className="mt-3 inline-block text-xs text-coral-deep">Ver →</span>
             </Link>
           ))}
         </div>
@@ -142,6 +144,51 @@ export default async function HomePage() {
             ))}
           </div>
         )}
+      </section>
+
+      {/* Por que Luperfumes */}
+      <section className="border-t border-cream-deep/40 bg-cream">
+        <div className="mx-auto max-w-7xl px-6 py-20">
+          <div className="text-center mb-12">
+            <p className="text-xs uppercase tracking-widest text-sage-deep">o que faz diferente</p>
+            <h2 className="mt-2 font-display text-4xl text-ink">Por que Luperfumes</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              {
+                icon: "🌿",
+                title: "Curadoria pessoal",
+                text: "Cada produto passa pelas mãos da LU antes de entrar no catálogo.",
+              },
+              {
+                icon: "📦",
+                title: "Envio em 24h",
+                text: "Postamos no próximo dia útil. Você acompanha tudo por rastreio.",
+              },
+              {
+                icon: "🔄",
+                title: "Trocas em 7 dias",
+                text: "Pelo Código de Defesa do Consumidor — sem letrinha miúda.",
+              },
+              {
+                icon: "💬",
+                title: "Atendimento humano",
+                text: "Dúvida? A LU responde no WhatsApp, e-mail ou Instagram.",
+              },
+            ].map((p) => (
+              <div
+                key={p.title}
+                className="rounded-2xl border border-cream-deep bg-cream-soft p-6 hover:border-coral-soft transition"
+              >
+                <div className="h-12 w-12 rounded-full bg-coral-soft/60 flex items-center justify-center text-xl mb-3">
+                  {p.icon}
+                </div>
+                <h3 className="font-display text-xl text-ink">{p.title}</h3>
+                <p className="mt-1 text-sm text-ink-soft leading-relaxed">{p.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Sobre a LU — placeholder pra preencher com foto */}

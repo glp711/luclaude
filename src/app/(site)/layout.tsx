@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CartLink } from "@/components/CartLink";
 import { MobileNav } from "@/components/MobileNav";
+import { PromoBar } from "@/components/PromoBar";
 import { getCurrentUser } from "@/lib/auth/guards";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -41,6 +42,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
   return (
     <>
+      <a href="#main" className="skip-link">Pular para o conteúdo</a>
+      <PromoBar />
       <header className="sticky top-0 z-30 border-b border-cream-deep/60 bg-cream-soft/85 backdrop-blur">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2.5 group min-w-0">
@@ -55,11 +58,13 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             </span>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-6 text-sm text-ink-soft">
+          <nav className="hidden lg:flex items-center gap-5 text-sm text-ink-soft">
             <Link href="/produtos" className="hover:text-coral-deep transition">Catálogo</Link>
             <Link href="/produtos?categoria=difusores" className="hover:text-coral-deep transition">Difusores</Link>
             <Link href="/produtos?categoria=home-spray" className="hover:text-coral-deep transition">Home Spray</Link>
             <Link href="/produtos?categoria=sabonetes" className="hover:text-coral-deep transition">Sabonetes</Link>
+            <Link href="/produtos?categoria=agua-perfumada" className="hover:text-coral-deep transition">Água Perfumada</Link>
+            <Link href="/produtos?categoria=cremes" className="hover:text-coral-deep transition">Cremes</Link>
             <Link href="/produtos?categoria=kits" className="hover:text-coral-deep transition">Kits</Link>
           </nav>
 
@@ -93,7 +98,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         </div>
       </header>
 
-      <div className="flex-1">{children}</div>
+      <div id="main" className="flex-1">{children}</div>
 
       <footer className="mt-24 border-t border-cream-deep/60 bg-cream-soft">
         <div className="mx-auto max-w-7xl px-6 py-14 grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
