@@ -1,6 +1,18 @@
+import Image from "next/image";
 import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { formatBRL } from "@/lib/money";
+
+type AdminProductRow = {
+  id: string;
+  name: string;
+  slug: string;
+  price_cents: number;
+  stock_quantity: number;
+  status: string;
+  sku: string | null;
+  product_images: { url: string; position: number }[] | null;
+};
 
 const PAGE_SIZE = 50;
 
@@ -18,7 +30,10 @@ export default async function ProductsListPage({
 
   let query = supabase
     .from("products")
-    .select("id, name, slug, price_cents, stock_quantity, status, sku", { count: "exact" })
+    .select(
+      "id, name, slug, price_cents, stock_quantity, status, sku, product_images(url, position)",
+      { count: "exact" }
+    )
     .order("created_at", { ascending: false })
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
 
@@ -95,6 +110,7 @@ export default async function ProductsListPage({
           <table className="min-w-full divide-y divide-cream-deep text-sm">
             <thead className="bg-cream text-sage-deep">
               <tr>
+                <Th></Th>
                 <Th>Nome</Th>
                 <Th>SKU</Th>
                 <Th className="text-right">Preço</Th>
@@ -104,8 +120,20 @@ export default async function ProductsListPage({
               </tr>
             </thead>
             <tbody className="divide-y divide-cream-deep/50">
-              {products.map((p) => (
+              {(products as AdminProductRow[]).map((p) => {
+                const cover = [...(p.product_images ?? [])].sort((a, b) => a.position - b.position)[0]?.url;
+                return (
                 <tr key={p.id} className="hover:bg-coral-soft/20 transition">
+                  <Td className="w-14">
+                    <Link
+                      href={`/admin/produtos/${p.id}`}
+                      className="relative block h-12 w-12 rounded-lg overflow-hidden bg-cream border border-cream-deep"
+                    >
+                      {cover && (
+                        <Image src={cover} alt="" fill sizes="48px" className="object-cover" />
+                      )}
+                    </Link>
+                  </Td>
                   <Td>
                     <Link href={`/admin/produtos/${p.id}`} className="text-ink hover:text-coral-deep transition font-medium">
                       {p.name}
@@ -138,7 +166,8 @@ export default async function ProductsListPage({
                     </Link>
                   </Td>
                 </tr>
-              ))}
+              );
+              })}
             </tbody>
           </table>
         </div>

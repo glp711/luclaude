@@ -13,7 +13,7 @@ export function WhatsappFab() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Falar com a Luperfumes no WhatsApp"
-      className="fixed bottom-5 right-5 z-40 group inline-flex items-center gap-2 rounded-full bg-sage-deep text-white shadow-lg hover:bg-sage-deep/90 transition pr-5 pl-4 py-3"
+      className="fixed bottom-24 lg:bottom-5 right-5 z-40 group inline-flex items-center gap-2 rounded-full bg-sage-deep text-white shadow-lg hover:bg-sage-deep/90 transition pr-5 pl-4 py-3"
     >
       <svg
         viewBox="0 0 24 24"

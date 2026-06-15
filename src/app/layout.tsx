@@ -33,12 +33,30 @@ export const viewport = {
   initialScale: 1,
 };
 
+function getStorageHost(): string | null {
+  try {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    return url ? new URL(url).origin : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const storageHost = getStorageHost();
   return (
     <html
       lang="pt-BR"
       className={`${cormorant.variable} ${inter.variable} h-full antialiased`}
     >
+      <head>
+        {storageHost && (
+          <>
+            <link rel="preconnect" href={storageHost} crossOrigin="anonymous" />
+            <link rel="dns-prefetch" href={storageHost} />
+          </>
+        )}
+      </head>
       <body className="min-h-full flex flex-col bg-cream text-ink">
         {children}
       </body>

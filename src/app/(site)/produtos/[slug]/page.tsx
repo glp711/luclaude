@@ -5,6 +5,7 @@ import { formatBRL } from "@/lib/money";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ProductGallery } from "@/components/ProductGallery";
 import { ProductCard, type ProductCardData } from "@/components/ProductCard";
+import { StickyBuyBar } from "@/components/StickyBuyBar";
 
 type ProductPageData = {
   id: string;
@@ -245,6 +246,13 @@ export default async function ProductPage({
           </div>
         </div>
       </div>
+
+      <StickyBuyBar
+        productId={product.id}
+        productName={product.name}
+        priceCents={product.price_cents}
+        outOfStock={outOfStock}
+      />
 
       {/* Relacionados */}
       {related.length > 0 && (
