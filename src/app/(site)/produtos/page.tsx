@@ -101,6 +101,25 @@ export default async function CatalogPage({
               {count} {count === 1 ? "produto" : "produtos"}
             </p>
           )}
+          {(categoriaSlug || q) && (
+            <div className="mt-5 flex flex-wrap gap-2">
+              {categoriaSlug && (
+                <FilterChip
+                  label={categoryRow.data?.name ?? categoriaSlug}
+                  removeHref={qWithout(sp, "categoria")}
+                />
+              )}
+              {q && (
+                <FilterChip label={`"${q}"`} removeHref={qWithout(sp, "q")} />
+              )}
+              <Link
+                href="/produtos"
+                className="text-xs text-ink-mute hover:text-coral-deep transition self-center underline underline-offset-4"
+              >
+                limpar todos
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -206,6 +225,29 @@ export default async function CatalogPage({
       </div>
     </main>
   );
+}
+
+function FilterChip({ label, removeHref }: { label: string; removeHref: string }) {
+  return (
+    <Link
+      href={removeHref}
+      className="group inline-flex items-center gap-1.5 rounded-full bg-coral-soft px-3 py-1 text-xs text-coral-deep hover:bg-coral hover:text-white transition"
+    >
+      <span>{label}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-3 w-3">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </Link>
+  );
+}
+
+function qWithout(sp: { categoria?: string; q?: string; sort?: string }, removeKey: "categoria" | "q") {
+  const u = new URLSearchParams();
+  if (removeKey !== "categoria" && sp.categoria) u.set("categoria", sp.categoria);
+  if (removeKey !== "q" && sp.q) u.set("q", sp.q);
+  if (sp.sort && sp.sort !== "recent") u.set("sort", sp.sort);
+  const s = u.toString();
+  return s ? `/produtos?${s}` : "/produtos";
 }
 
 function Pagination({

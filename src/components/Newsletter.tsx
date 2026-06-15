@@ -5,22 +5,27 @@ import { useState } from "react";
 export function Newsletter() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || submitting) return;
     setSubmitting(true);
+    setError(null);
     try {
-      // TODO: criar /api/newsletter que salva em tabela newsletter_subscriptions
-      // e dispara confirmação opt-in via Resend. Por enquanto guarda localmente
-      // pra não perder o e-mail enquanto a integração não está pronta.
-      const existing = JSON.parse(localStorage.getItem("luperfumes:newsletter") ?? "[]");
-      localStorage.setItem(
-        "luperfumes:newsletter",
-        JSON.stringify([...existing, { email, at: new Date().toISOString() }])
-      );
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "footer" }),
+      });
+      if (!res.ok) {
+        setError("Não foi possível cadastrar. Tente de novo em instantes.");
+        return;
+      }
       setDone(true);
+    } catch {
+      setError("Sem conexão. Tente de novo.");
     } finally {
       setSubmitting(false);
     }
@@ -60,6 +65,9 @@ export function Newsletter() {
               {submitting ? "Enviando…" : "Quero receber"}
             </button>
           </form>
+        )}
+        {error && !done && (
+          <p className="mt-3 text-xs text-coral-deep">{error}</p>
         )}
       </div>
     </div>
