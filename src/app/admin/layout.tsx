@@ -21,6 +21,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <Link href="/admin/produtos" className="hover:text-coral-deep transition">Produtos</Link>
               <Link href="/admin/pedidos" className="hover:text-coral-deep transition">Pedidos</Link>
               <Link href="/admin/categorias" className="hover:text-coral-deep transition">Categorias</Link>
+              <Link href="/admin/newsletter" className="hover:text-coral-deep transition">Newsletter</Link>
             </nav>
           </div>
           <div className="flex items-center gap-3 text-sm text-ink-soft">
@@ -45,6 +46,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/admin/produtos" className="hover:text-coral-deep transition whitespace-nowrap">Produtos</Link>
           <Link href="/admin/pedidos" className="hover:text-coral-deep transition whitespace-nowrap">Pedidos</Link>
           <Link href="/admin/categorias" className="hover:text-coral-deep transition whitespace-nowrap">Categorias</Link>
+          <Link href="/admin/newsletter" className="hover:text-coral-deep transition whitespace-nowrap">Newsletter</Link>
         </nav>
       </header>
       <main className="mx-auto max-w-7xl px-6 py-8">{children}</main>
