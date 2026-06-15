@@ -5,6 +5,20 @@ import { Newsletter } from "@/components/Newsletter";
 import { PromoBar } from "@/components/PromoBar";
 import { WhatsappFab } from "@/components/WhatsappFab";
 import { INSTAGRAM_HANDLE } from "@/lib/contact";
+
+function TrustItem({ icon, title, sub }: { icon: string; title: string; sub: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="h-10 w-10 rounded-full bg-sage-soft flex items-center justify-center text-lg flex-shrink-0">
+        {icon}
+      </span>
+      <div className="min-w-0">
+        <p className="font-display text-sm text-ink leading-tight">{title}</p>
+        <p className="text-xs text-ink-mute leading-tight">{sub}</p>
+      </div>
+    </div>
+  );
+}
 import { getCurrentUser } from "@/lib/auth/guards";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -109,7 +123,16 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
       <WhatsappFab />
 
-      <footer className="mt-16 border-t border-cream-deep/60 bg-cream-soft">
+      <section className="mt-20 border-t border-cream-deep/60 bg-cream-soft">
+        <div className="mx-auto max-w-7xl px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+          <TrustItem icon="🔐" title="Compra segura" sub="SSL + Mercado Pago" />
+          <TrustItem icon="📦" title="Envio em 24h" sub="Correios + Jadlog" />
+          <TrustItem icon="💳" title="Pix, cartão, boleto" sub="parcele em 3x" />
+          <TrustItem icon="↩️" title="7 dias para troca" sub="conforme o CDC" />
+        </div>
+      </section>
+
+      <footer className="border-t border-cream-deep/60 bg-cream-soft">
         <div className="mx-auto max-w-7xl px-6 py-14 grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3">

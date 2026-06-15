@@ -3,11 +3,12 @@ import { signIn } from "./actions";
 
 export const metadata = { title: "Entrar" };
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string; from?: string }>;
 }) {
+  const { from } = await searchParams;
   return (
     <main className="min-h-screen flex items-center justify-center bg-cream-soft px-6 py-12">
       <div className="w-full max-w-md">
@@ -29,6 +30,8 @@ export default function LoginPage({
           </div>
 
           <LoginError searchParams={searchParams} />
+
+          {from && <input type="hidden" name="from" value={from} />}
 
           <label className="block">
             <span className="text-xs font-medium uppercase tracking-widest text-sage-deep">

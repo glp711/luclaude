@@ -67,7 +67,7 @@ export default async function ProductPage({
   // JSON-LD pra Google Rich Results / Google Shopping
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
-  const jsonLd = {
+  const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
@@ -87,6 +87,29 @@ export default async function ProductPage({
         : "https://schema.org/InStock",
       seller: { "@type": "Organization", name: "Luperfumes" },
     },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Início", item: `${baseUrl}/` },
+      { "@type": "ListItem", position: 2, name: "Catálogo", item: `${baseUrl}/produtos` },
+      ...(product.category
+        ? [{
+            "@type": "ListItem",
+            position: 3,
+            name: product.category.name,
+            item: `${baseUrl}/produtos?categoria=${product.category.slug}`,
+          }]
+        : []),
+      {
+        "@type": "ListItem",
+        position: product.category ? 4 : 3,
+        name: product.name,
+        item: `${baseUrl}/produtos/${product.slug}`,
+      },
+    ],
   };
 
   // Sugestões: outros da mesma categoria
@@ -118,7 +141,11 @@ export default async function ProductPage({
     <main>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <div className="mx-auto max-w-7xl px-6 py-8">
         <nav className="text-xs text-ink-mute mb-6 flex flex-wrap items-center gap-2" aria-label="breadcrumb">
