@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { INSTAGRAM_HANDLE, SUPPORT_EMAIL, WHATSAPP_NUMBER } from "@/lib/contact";
 
 export const metadata = {
   title: "Contato",
@@ -6,6 +7,8 @@ export const metadata = {
 };
 
 export default function ContatoPage() {
+  const whatsapp = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`;
+  const instagramUrl = `https://www.instagram.com/${INSTAGRAM_HANDLE}/`;
   return (
     <main>
       <section className="bg-cream-soft border-b border-cream-deep/60">
@@ -26,7 +29,7 @@ export default function ContatoPage() {
       <section className="mx-auto max-w-4xl px-6 py-16">
         <div className="grid md:grid-cols-3 gap-4">
           <a
-            href="https://wa.me/5500000000000"
+            href={whatsapp}
             target="_blank"
             rel="noopener noreferrer"
             className="group rounded-2xl border border-cream-deep bg-cream-soft p-6 hover:border-coral hover:bg-coral-soft/30 transition"
@@ -42,21 +45,19 @@ export default function ContatoPage() {
           </a>
 
           <a
-            href="mailto:contato@luperfumes.com.br"
+            href={`mailto:${SUPPORT_EMAIL}`}
             className="group rounded-2xl border border-cream-deep bg-cream-soft p-6 hover:border-coral hover:bg-coral-soft/30 transition"
           >
             <div className="h-12 w-12 rounded-full bg-sage-soft flex items-center justify-center mb-4 group-hover:bg-coral-soft transition text-xl">
               ✉️
             </div>
             <h2 className="font-display text-2xl text-ink">E-mail</h2>
-            <p className="mt-1 text-sm text-ink-soft">
-              contato@luperfumes.com.br
-            </p>
+            <p className="mt-1 text-sm text-ink-soft break-all">{SUPPORT_EMAIL}</p>
             <span className="mt-4 inline-block text-xs text-coral-deep">Mandar e-mail →</span>
           </a>
 
           <a
-            href="https://www.instagram.com/perfumesdeambientedecor/"
+            href={instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="group rounded-2xl border border-cream-deep bg-cream-soft p-6 hover:border-coral hover:bg-coral-soft/30 transition"
@@ -65,7 +66,7 @@ export default function ContatoPage() {
               📷
             </div>
             <h2 className="font-display text-2xl text-ink">Instagram</h2>
-            <p className="mt-1 text-sm text-ink-soft">@perfumesdeambientedecor</p>
+            <p className="mt-1 text-sm text-ink-soft">@{INSTAGRAM_HANDLE}</p>
             <span className="mt-4 inline-block text-xs text-coral-deep">Seguir →</span>
           </a>
         </div>

@@ -3,6 +3,8 @@ import { CartLink } from "@/components/CartLink";
 import { MobileNav } from "@/components/MobileNav";
 import { Newsletter } from "@/components/Newsletter";
 import { PromoBar } from "@/components/PromoBar";
+import { WhatsappFab } from "@/components/WhatsappFab";
+import { INSTAGRAM_HANDLE } from "@/lib/contact";
 import { getCurrentUser } from "@/lib/auth/guards";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -105,6 +107,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         <Newsletter />
       </section>
 
+      <WhatsappFab />
+
       <footer className="mt-16 border-t border-cream-deep/60 bg-cream-soft">
         <div className="mx-auto max-w-7xl px-6 py-14 grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
           <div className="col-span-2 md:col-span-1">
@@ -117,12 +121,12 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
               Perfumaria de ambiente, feita pra deixar memória em cada cantinho da sua casa.
             </p>
             <a
-              href="https://www.instagram.com/perfumesdeambientedecor/"
+              href={`https://www.instagram.com/${INSTAGRAM_HANDLE}/`}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 inline-flex items-center gap-2 text-xs text-ink-soft hover:text-coral-deep transition"
             >
-              <span>📷</span> @perfumesdeambientedecor
+              <span>📷</span> @{INSTAGRAM_HANDLE}
             </a>
           </div>
           <div>

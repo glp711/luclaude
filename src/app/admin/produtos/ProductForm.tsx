@@ -38,13 +38,13 @@ export function ProductForm({
   submitLabel?: string;
 }) {
   return (
-    <form action={action} className="space-y-6 max-w-3xl">
+    <form action={action} className="space-y-8 max-w-3xl">
       {error && (
-        <div className="rounded-md bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
+        <div className="rounded-2xl bg-coral-soft/50 border border-coral-soft px-4 py-3 text-sm text-coral-deep">{error}</div>
       )}
 
-      <fieldset className="space-y-4">
-        <legend className="text-sm font-medium text-neutral-700 mb-1">Básico</legend>
+      <fieldset className="space-y-4 rounded-2xl border border-cream-deep bg-cream-soft p-6">
+        <legend className="font-display text-xl text-ink px-2">Básico</legend>
 
         <Field label="Nome *">
           <input name="name" required defaultValue={initial.name ?? ""} className={inputCls} />
@@ -81,8 +81,8 @@ export function ProductForm({
         </Field>
       </fieldset>
 
-      <fieldset className="space-y-4">
-        <legend className="text-sm font-medium text-neutral-700 mb-1">Preço e estoque</legend>
+      <fieldset className="space-y-4 rounded-2xl border border-cream-deep bg-cream-soft p-6">
+        <legend className="font-display text-xl text-ink px-2">Preço e estoque</legend>
 
         <div className="grid grid-cols-2 gap-4">
           <Field label="Preço (R$) *" hint="ex.: 176,90">
@@ -121,8 +121,8 @@ export function ProductForm({
         </div>
       </fieldset>
 
-      <fieldset className="space-y-4">
-        <legend className="text-sm font-medium text-neutral-700 mb-1">Dimensões (para frete)</legend>
+      <fieldset className="space-y-4 rounded-2xl border border-cream-deep bg-cream-soft p-6">
+        <legend className="font-display text-xl text-ink px-2">Dimensões (para frete)</legend>
 
         <div className="grid grid-cols-4 gap-4">
           <Field label="Peso (g)">
@@ -167,16 +167,16 @@ export function ProductForm({
         </div>
       </fieldset>
 
-      <div className="flex items-center gap-3 border-t pt-6">
+      <div className="flex items-center gap-4 border-t border-cream-deep pt-6">
         <button
           type="submit"
-          className="rounded-md bg-neutral-900 px-5 py-2 text-sm text-white hover:bg-neutral-700"
+          className="rounded-full bg-coral px-6 py-2.5 text-sm font-medium text-white hover:bg-coral-deep transition shadow-sm"
         >
           {submitLabel}
         </button>
         <Link
           href="/admin/produtos"
-          className="text-sm text-neutral-600 hover:text-neutral-900"
+          className="text-sm text-ink-soft hover:text-coral-deep transition"
         >
           Cancelar
         </Link>
@@ -186,7 +186,7 @@ export function ProductForm({
 }
 
 const inputCls =
-  "mt-1 block w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none";
+  "mt-1 block w-full rounded-full border border-cream-deep bg-cream px-4 py-2 text-sm focus:border-coral focus:outline-none transition";
 
 function Field({
   label,
@@ -199,8 +199,8 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="text-sm text-neutral-700">{label}</span>
-      {hint && <span className="ml-2 text-xs text-neutral-500">{hint}</span>}
+      <span className="text-xs font-medium uppercase tracking-widest text-sage-deep">{label}</span>
+      {hint && <span className="ml-2 text-xs text-ink-mute normal-case tracking-normal">{hint}</span>}
       {children}
     </label>
   );

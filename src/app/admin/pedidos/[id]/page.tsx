@@ -14,6 +14,16 @@ const STATUS_LABEL: Record<string, string> = {
   refunded: "Reembolsado",
 };
 
+const STATUS_STYLE: Record<string, string> = {
+  pending: "bg-cream-deep text-ink-soft",
+  paid: "bg-sage-soft text-ink",
+  preparing: "bg-sage-soft text-ink",
+  shipped: "bg-coral-soft text-coral-deep",
+  delivered: "bg-sage-soft text-ink",
+  canceled: "bg-coral-soft/40 text-ink-mute",
+  refunded: "bg-cream-deep text-ink-soft",
+};
+
 const TRANSITIONS: Record<string, { value: string; label: string; tone: "neutral" | "danger" }[]> = {
   pending: [{ value: "canceled", label: "Cancelar", tone: "danger" }],
   paid: [
@@ -58,34 +68,39 @@ export default async function OrderDetailPage({
 
   return (
     <div className="space-y-8 max-w-5xl">
-      <div className="flex items-start justify-between">
+      <nav className="text-xs text-ink-mute flex items-center gap-2" aria-label="breadcrumb">
+        <Link href="/admin" className="hover:text-coral-deep transition">Admin</Link>
+        <span>/</span>
+        <Link href="/admin/pedidos" className="hover:text-coral-deep transition">Pedidos</Link>
+        <span>/</span>
+        <span className="text-ink-soft">#{order.order_number}</span>
+      </nav>
+
+      <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <Link href="/admin/pedidos" className="text-sm text-neutral-500 hover:text-neutral-900">
-            ← Pedidos
-          </Link>
-          <h1 className="text-2xl font-semibold mt-1">Pedido #{order.order_number}</h1>
-          <p className="text-sm text-neutral-500">
+          <h1 className="font-display text-3xl text-ink">Pedido #{order.order_number}</h1>
+          <p className="text-sm text-ink-soft mt-0.5">
             Criado em {new Date(order.created_at).toLocaleString("pt-BR")}
           </p>
         </div>
-        <span className="rounded-full bg-neutral-100 px-3 py-1 text-sm font-medium">
+        <span className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider ${STATUS_STYLE[order.status] ?? "bg-cream-deep text-ink-soft"}`}>
           {STATUS_LABEL[order.status]}
         </span>
       </div>
 
       {next.length > 0 && (
-        <div className="rounded-lg border bg-white p-4">
-          <h2 className="text-sm font-medium mb-3">Mudar status</h2>
+        <section className="rounded-2xl border border-cream-deep bg-cream-soft p-5">
+          <h2 className="font-display text-lg text-ink mb-3">Mudar status</h2>
           <div className="flex flex-wrap gap-2">
             {next.map((t) => {
               const action = transitionOrder.bind(null, id, t.value);
               return (
                 <form key={t.value} action={action}>
                   <button
-                    className={`rounded-md border px-3 py-1.5 text-sm ${
+                    className={`rounded-full border px-4 py-1.5 text-sm transition ${
                       t.tone === "danger"
-                        ? "border-red-300 text-red-700 hover:bg-red-50"
-                        : "border-neutral-300 hover:bg-neutral-50"
+                        ? "border-coral-soft text-coral-deep hover:bg-coral-soft/30"
+                        : "border-sage-deep text-sage-deep hover:bg-sage-soft"
                     }`}
                   >
                     {t.label}
@@ -94,53 +109,53 @@ export default async function OrderDetailPage({
               );
             })}
           </div>
-        </div>
+        </section>
       )}
 
-      <section className="rounded-lg border bg-white p-4 space-y-3">
-        <h2 className="text-sm font-medium">Rastreio</h2>
+      <section className="rounded-2xl border border-cream-deep bg-cream-soft p-5 space-y-3">
+        <h2 className="font-display text-lg text-ink">Rastreio</h2>
         {order.tracking_code ? (
           <div className="text-sm">
-            <span className="font-mono">{order.tracking_code}</span>
+            <span className="font-mono bg-cream rounded-full px-2.5 py-0.5">{order.tracking_code}</span>
             {order.tracking_carrier && (
-              <span className="ml-2 text-neutral-500">({order.tracking_carrier})</span>
+              <span className="ml-2 text-ink-soft">({order.tracking_carrier})</span>
             )}
           </div>
         ) : (
-          <p className="text-sm text-neutral-500">Sem código de rastreio.</p>
+          <p className="text-sm text-ink-mute">Sem código de rastreio.</p>
         )}
         <form action={trackingAction} className="flex flex-wrap gap-2 items-end">
           <input
             name="tracking_code"
             placeholder="Código (ex.: BR123456789BR)"
             defaultValue={order.tracking_code ?? ""}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm font-mono"
+            className="rounded-full border border-cream-deep bg-cream px-4 py-2 text-sm font-mono focus:border-coral focus:outline-none transition"
           />
           <input
             name="tracking_carrier"
             placeholder="Transportadora"
             defaultValue={order.tracking_carrier ?? ""}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="rounded-full border border-cream-deep bg-cream px-4 py-2 text-sm focus:border-coral focus:outline-none transition"
           />
-          <button className="rounded-md border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-50">
-            Salvar
+          <button className="rounded-full bg-ink text-cream-soft px-4 py-2 text-sm hover:bg-coral-deep transition">
+            Salvar rastreio
           </button>
         </form>
       </section>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="rounded-lg border bg-white p-4 space-y-2">
-          <h2 className="text-sm font-medium">Cliente</h2>
-          <dl className="text-sm space-y-1">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="rounded-2xl border border-cream-deep bg-cream-soft p-5 space-y-2">
+          <h2 className="font-display text-lg text-ink">Cliente</h2>
+          <dl className="text-sm space-y-1.5">
             <Row k="E-mail" v={order.guest_email ?? "(cliente logado)"} />
-            <Row k="ID cliente" v={order.customer_id ?? "convidado"} />
+            <Row k="ID cliente" v={order.customer_id ?? "convidado"} mono />
           </dl>
         </div>
-        <div className="rounded-lg border bg-white p-4 space-y-2">
-          <h2 className="text-sm font-medium">Pagamento</h2>
-          <dl className="text-sm space-y-1">
+        <div className="rounded-2xl border border-cream-deep bg-cream-soft p-5 space-y-2">
+          <h2 className="font-display text-lg text-ink">Pagamento</h2>
+          <dl className="text-sm space-y-1.5">
             <Row k="Método" v={order.payment_method ?? "—"} />
-            <Row k="MP payment ID" v={order.mp_payment_id ?? "—"} />
+            <Row k="MP payment ID" v={order.mp_payment_id ?? "—"} mono />
             <Row
               k="Pago em"
               v={order.paid_at ? new Date(order.paid_at).toLocaleString("pt-BR") : "—"}
@@ -149,48 +164,50 @@ export default async function OrderDetailPage({
         </div>
       </section>
 
-      <section className="rounded-lg border bg-white p-4 space-y-2">
-        <h2 className="text-sm font-medium">Endereço de entrega</h2>
+      <section className="rounded-2xl border border-cream-deep bg-cream-soft p-5 space-y-2">
+        <h2 className="font-display text-lg text-ink">Endereço de entrega</h2>
         <AddressBlock address={order.shipping_address} />
         {order.shipping_service && (
-          <p className="text-sm text-neutral-500">Frete: {order.shipping_service}</p>
+          <p className="text-xs text-ink-mute pt-2">Frete: {order.shipping_service}</p>
         )}
       </section>
 
-      <section className="rounded-lg border bg-white">
-        <div className="p-4 border-b">
-          <h2 className="text-sm font-medium">Itens</h2>
+      <section className="rounded-2xl border border-cream-deep bg-cream-soft overflow-hidden">
+        <div className="p-5 border-b border-cream-deep">
+          <h2 className="font-display text-lg text-ink">Itens</h2>
         </div>
-        <table className="min-w-full divide-y divide-neutral-200 text-sm">
-          <thead className="bg-neutral-50 text-neutral-600 text-xs uppercase">
+        <table className="min-w-full divide-y divide-cream-deep text-sm">
+          <thead className="bg-cream text-sage-deep text-xs uppercase tracking-widest">
             <tr>
-              <th className="px-4 py-2 text-left">Produto</th>
-              <th className="px-4 py-2 text-right">Qtd</th>
-              <th className="px-4 py-2 text-right">Unit.</th>
-              <th className="px-4 py-2 text-right">Total</th>
+              <th className="px-5 py-2.5 text-left">Produto</th>
+              <th className="px-5 py-2.5 text-right">Qtd</th>
+              <th className="px-5 py-2.5 text-right">Unit.</th>
+              <th className="px-5 py-2.5 text-right">Total</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-100">
+          <tbody className="divide-y divide-cream-deep/50">
             {(items ?? []).map((it) => {
               const snap = (it.product_snapshot ?? {}) as { name?: string };
               return (
                 <tr key={it.id}>
-                  <td className="px-4 py-3">{snap.name ?? "—"}</td>
-                  <td className="px-4 py-3 text-right tabular-nums">{it.quantity}</td>
-                  <td className="px-4 py-3 text-right tabular-nums">{formatBRL(it.unit_price_cents)}</td>
-                  <td className="px-4 py-3 text-right tabular-nums">{formatBRL(it.total_cents)}</td>
+                  <td className="px-5 py-3">{snap.name ?? "—"}</td>
+                  <td className="px-5 py-3 text-right tabular-nums">{it.quantity}</td>
+                  <td className="px-5 py-3 text-right tabular-nums text-ink-soft">{formatBRL(it.unit_price_cents)}</td>
+                  <td className="px-5 py-3 text-right tabular-nums">{formatBRL(it.total_cents)}</td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-        <div className="border-t p-4 space-y-1 text-sm">
+        <div className="border-t border-cream-deep p-5 space-y-1.5 text-sm">
           <Row k="Subtotal" v={formatBRL(order.subtotal_cents)} align="right" />
           <Row k="Frete" v={formatBRL(order.shipping_cents)} align="right" />
           {order.discount_cents > 0 && (
             <Row k="Desconto" v={`- ${formatBRL(order.discount_cents)}`} align="right" />
           )}
-          <Row k="Total" v={formatBRL(order.total_cents)} align="right" bold />
+          <div className="pt-2 border-t border-cream-deep">
+            <Row k="Total" v={formatBRL(order.total_cents)} align="right" bold />
+          </div>
         </div>
       </section>
     </div>
@@ -202,31 +219,35 @@ function Row({
   v,
   align = "left",
   bold = false,
+  mono = false,
 }: {
   k: string;
   v: string;
   align?: "left" | "right";
   bold?: boolean;
+  mono?: boolean;
 }) {
   return (
-    <div className={`flex justify-between gap-2 ${align === "right" ? "" : ""}`}>
-      <dt className="text-neutral-500">{k}</dt>
-      <dd className={`${bold ? "font-medium" : ""} ${align === "right" ? "tabular-nums" : ""}`}>{v}</dd>
+    <div className="flex justify-between gap-2">
+      <dt className="text-ink-soft">{k}</dt>
+      <dd className={`${bold ? "font-display text-lg text-coral-deep" : "text-ink"} ${align === "right" ? "tabular-nums" : ""} ${mono ? "font-mono text-xs" : ""}`}>
+        {v}
+      </dd>
     </div>
   );
 }
 
 function AddressBlock({ address }: { address: unknown }) {
   if (!address || typeof address !== "object") {
-    return <p className="text-sm text-neutral-500">—</p>;
+    return <p className="text-sm text-ink-mute">—</p>;
   }
   const a = address as Record<string, string | undefined>;
   return (
-    <div className="text-sm text-neutral-700 space-y-0.5">
-      <div>{a.recipient_name}</div>
+    <div className="text-sm text-ink space-y-0.5">
+      <div className="font-medium">{a.recipient_name}</div>
       <div>{a.street}, {a.number}{a.complement ? ` — ${a.complement}` : ""}</div>
       <div>{a.neighborhood} — {a.city}/{a.state}</div>
-      <div className="text-neutral-500">CEP {a.postal_code}</div>
+      <div className="text-ink-mute">CEP {a.postal_code}</div>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ProductForm } from "../ProductForm";
 import { createProduct } from "../actions";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -16,9 +17,19 @@ export default async function NewProductPage({
 
   return (
     <div className="space-y-6">
+      <nav className="text-xs text-ink-mute flex items-center gap-2" aria-label="breadcrumb">
+        <Link href="/admin" className="hover:text-coral-deep transition">Admin</Link>
+        <span>/</span>
+        <Link href="/admin/produtos" className="hover:text-coral-deep transition">Produtos</Link>
+        <span>/</span>
+        <span className="text-ink-soft">Novo</span>
+      </nav>
+
       <div>
-        <h1 className="text-2xl font-semibold">Novo produto</h1>
-        <p className="text-sm text-neutral-500">Crie um produto. Marque como ativo quando estiver pronto.</p>
+        <h1 className="font-display text-3xl text-ink">Novo produto</h1>
+        <p className="text-sm text-ink-soft mt-0.5">
+          Cria como rascunho e publica quando estiver pronto.
+        </p>
       </div>
 
       <ProductForm

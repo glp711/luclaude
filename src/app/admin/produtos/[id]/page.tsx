@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductForm } from "../ProductForm";
 import { updateProduct, archiveProduct, publishProduct } from "../actions";
@@ -33,22 +34,39 @@ export default async function EditProductPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
+      <nav className="text-xs text-ink-mute flex items-center gap-2" aria-label="breadcrumb">
+        <Link href="/admin" className="hover:text-coral-deep transition">Admin</Link>
+        <span>/</span>
+        <Link href="/admin/produtos" className="hover:text-coral-deep transition">Produtos</Link>
+        <span>/</span>
+        <span className="text-ink-soft truncate max-w-[30ch]">{product.name}</span>
+      </nav>
+
+      <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">{product.name}</h1>
-          <p className="text-sm text-neutral-500">Editar produto</p>
+          <h1 className="font-display text-3xl text-ink">{product.name}</h1>
+          <p className="text-sm text-ink-soft mt-0.5">
+            <StatusPill status={product.status} /> ·{" "}
+            <Link
+              href={`/produtos/${product.slug}`}
+              target="_blank"
+              className="hover:text-coral-deep transition"
+            >
+              ver na loja ↗
+            </Link>
+          </p>
         </div>
         <div className="flex gap-2">
           {product.status !== "active" && (
             <form action={publishWithId}>
-              <button className="rounded-md border border-green-600 px-3 py-1.5 text-sm text-green-700 hover:bg-green-50">
-                Publicar
+              <button className="rounded-full border border-sage-deep px-4 py-1.5 text-sm text-sage-deep hover:bg-sage-soft transition">
+                ✓ Publicar
               </button>
             </form>
           )}
           {product.status !== "archived" && (
             <form action={archiveWithId}>
-              <button className="rounded-md border border-amber-600 px-3 py-1.5 text-sm text-amber-700 hover:bg-amber-50">
+              <button className="rounded-full border border-cream-deep px-4 py-1.5 text-sm text-ink-soft hover:border-coral hover:text-coral-deep transition">
                 Arquivar
               </button>
             </form>
@@ -57,10 +75,14 @@ export default async function EditProductPage({
       </div>
 
       {ok === "updated" && (
-        <div className="rounded-md bg-green-50 px-4 py-2 text-sm text-green-800">Salvo.</div>
+        <div className="rounded-2xl bg-sage-soft/60 border border-sage-soft px-4 py-2.5 text-sm text-ink">
+          ✓ Alterações salvas.
+        </div>
       )}
       {ok === "created" && (
-        <div className="rounded-md bg-green-50 px-4 py-2 text-sm text-green-800">Criado.</div>
+        <div className="rounded-2xl bg-sage-soft/60 border border-sage-soft px-4 py-2.5 text-sm text-ink">
+          ✓ Produto criado.
+        </div>
       )}
 
       <ProductForm
@@ -71,5 +93,20 @@ export default async function EditProductPage({
         submitLabel="Salvar alterações"
       />
     </div>
+  );
+}
+
+function StatusPill({ status }: { status: string }) {
+  const styles =
+    status === "active"
+      ? "bg-sage-soft text-ink"
+      : status === "draft"
+      ? "bg-cream-deep text-ink-soft"
+      : "bg-coral-soft text-coral-deep";
+  const label = status === "active" ? "Ativo" : status === "draft" ? "Rascunho" : "Arquivado";
+  return (
+    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider ${styles}`}>
+      {label}
+    </span>
   );
 }
