@@ -36,15 +36,28 @@ export default async function OrdersListPage({
   const supabase = await createSupabaseServerClient();
   let query = supabase
     .from("orders")
-    .select("id, order_number, status, total_cents, customer_id, guest_email, created_at, tracking_code", {
-      count: "exact",
-    })
+    .select(
+      "id, order_number, status, total_cents, customer_id, guest_email, created_at, tracking_code, customer:profiles(full_name)",
+      { count: "exact" }
+    )
     .order("created_at", { ascending: false })
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
 
   if (status !== "all") query = query.eq("status", status);
 
-  const { data: orders, count, error } = await query;
+  type OrderRow = {
+    id: string;
+    order_number: number;
+    status: string;
+    total_cents: number;
+    customer_id: string | null;
+    guest_email: string | null;
+    created_at: string;
+    tracking_code: string | null;
+    customer: { full_name: string | null } | null;
+  };
+
+  const { data: orders, count, error } = await query.returns<OrderRow[]>();
 
   return (
     <div className="space-y-6">
@@ -95,7 +108,14 @@ export default async function OrdersListPage({
               {orders.map((o) => (
                 <tr key={o.id} className="hover:bg-coral-soft/20 transition">
                   <Td className="font-mono text-xs text-ink">#{o.order_number}</Td>
-                  <Td>{o.guest_email ?? o.customer_id?.slice(0, 8) ?? "—"}</Td>
+                  <Td>
+                    <div className="text-ink">
+                      {o.customer?.full_name ?? o.guest_email ?? "—"}
+                    </div>
+                    {o.customer?.full_name && o.guest_email && (
+                      <div className="text-xs text-ink-mute">{o.guest_email}</div>
+                    )}
+                  </Td>
                   <Td>
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider ${STATUS_STYLE[o.status] ?? "bg-cream-deep text-ink-soft"}`}>
                       {STATUS_LABEL[o.status] ?? o.status}

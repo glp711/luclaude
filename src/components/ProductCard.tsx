@@ -14,6 +14,7 @@ export type ProductCardData = {
 
 export function ProductCard({ product }: { product: ProductCardData }) {
   const outOfStock = product.stock_quantity <= 0;
+  const lowStock = !outOfStock && product.stock_quantity <= 3;
   const hasPromo =
     product.compare_at_price_cents != null &&
     product.compare_at_price_cents > product.price_cents;
@@ -62,6 +63,11 @@ export function ProductCard({ product }: { product: ProductCardData }) {
             {formatBRL(product.price_cents)}
           </span>
         </div>
+        {lowStock && (
+          <p className="text-xs text-coral-deep">
+            ⚡ Últimas {product.stock_quantity} {product.stock_quantity === 1 ? "unidade" : "unidades"}
+          </p>
+        )}
       </div>
     </Link>
   );
