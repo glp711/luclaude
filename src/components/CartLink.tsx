@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useCart } from "@/lib/cart/store";
 
 function useCartHydrated() {
@@ -15,6 +15,18 @@ function useCartHydrated() {
 export function CartLink() {
   const totalItems = useCart((s) => s.totalItems());
   const mounted = useCartHydrated();
+  const [pulse, setPulse] = useState(false);
+  const prevRef = useRef(totalItems);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const increased = totalItems > prevRef.current;
+    prevRef.current = totalItems;
+    if (!increased) return;
+    setPulse(true);
+    const id = window.setTimeout(() => setPulse(false), 400);
+    return () => window.clearTimeout(id);
+  }, [totalItems, mounted]);
 
   return (
     <Link
@@ -38,7 +50,11 @@ export function CartLink() {
       </svg>
       <span className="hidden sm:inline">Carrinho</span>
       {mounted && totalItems > 0 && (
-        <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-coral px-1.5 text-xs font-medium text-white">
+        <span
+          className={`inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-coral px-1.5 text-xs font-medium text-white transition-transform ${
+            pulse ? "scale-125" : "scale-100"
+          }`}
+        >
           {totalItems}
         </span>
       )}

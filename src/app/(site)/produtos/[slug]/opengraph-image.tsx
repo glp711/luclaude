@@ -55,6 +55,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           }}
         >
           {cover ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={cover}
               alt=""
