@@ -8,6 +8,16 @@ import { serverEnv } from "@/lib/env";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+export async function GET() {
+  return NextResponse.json({
+    ok: true,
+    service: "mercadopago-webhook",
+    status: "online",
+    message: "Webhook online. O Mercado Pago usa POST assinado nesta URL; abrir no navegador faz apenas este teste de saude.",
+    accepts: ["POST"],
+  });
+}
+
 // Mapeia status do Mercado Pago → status interno do pedido.
 function mpStatusToOrderStatus(mp: string | null | undefined): string | null {
   switch (mp) {
