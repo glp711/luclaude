@@ -1,5 +1,11 @@
 "use client";
 
+import { initMercadoPago, Payment } from "@mercadopago/sdk-react";
+import type {
+  IPaymentBrickCustomization,
+  IPaymentFormData,
+} from "@mercadopago/sdk-react/esm/bricks/payment/type";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { useCart } from "@/lib/cart/store";
@@ -21,6 +27,41 @@ type ShippingQuote = {
   price: string;
   delivery_time: number;
   company: { name: string };
+};
+
+type CheckoutPayload = {
+  items: { product_id: string; quantity: number }[];
+  shipping_address: {
+    postal_code: string;
+    street: string;
+    number: string;
+    complement: string | null;
+    neighborhood: string;
+    city: string;
+    state: string;
+    recipient_name: string;
+  };
+  shipping_service_id: number;
+  customer: {
+    email: string;
+    cpf: string;
+    phone: string;
+    full_name: string;
+  };
+  payment_method: "pix" | "credit_card" | "boleto";
+};
+
+type TransparentPaymentResult = {
+  order_id: string;
+  order_number: string;
+  payment_id: string;
+  status: string;
+  status_detail?: string;
+  payment_method: "pix" | "credit_card" | "boleto";
+  order_url: string;
+  qr_code?: string;
+  qr_code_base64?: string;
+  ticket_url?: string;
 };
 
 function useCartHydrated() {
@@ -67,10 +108,15 @@ export function CheckoutForm({
 
   // Pagamento
   const [paymentMethod, setPaymentMethod] = useState<"pix" | "credit_card" | "boleto">("pix");
+  const [mpReady, setMpReady] = useState(false);
+  const [paymentResult, setPaymentResult] = useState<TransparentPaymentResult | null>(null);
 
   // Submit
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const mercadoPagoPublicKey = process.env.NEXT_PUBLIC_MP_PUBLIC_KEY ?? "";
+  const transparentCheckoutEnabled = mercadoPagoPublicKey.length > 0;
 
   // Filtra itens válidos
   const validItems = useMemo(
@@ -92,6 +138,49 @@ export function CheckoutForm({
     ? Math.round(parseFloat(selectedQuote.price) * 100)
     : 0;
   const total = subtotal + shippingCents;
+
+  const paymentBrickCustomization = useMemo<IPaymentBrickCustomization>(() => {
+    if (paymentMethod === "pix") {
+      return {
+        paymentMethods: {
+          bankTransfer: "all",
+          types: { included: ["bank_transfer"] },
+        },
+      };
+    }
+
+    if (paymentMethod === "boleto") {
+      return {
+        paymentMethods: {
+          ticket: "all",
+          types: { included: ["ticket"] },
+        },
+      };
+    }
+
+    return {
+      paymentMethods: {
+        creditCard: "all",
+        maxInstallments: 3,
+        types: { included: ["creditCard"] },
+      },
+    };
+  }, [paymentMethod]);
+
+  useEffect(() => {
+    if (!mercadoPagoPublicKey) return;
+    let aborted = false;
+    initMercadoPago(mercadoPagoPublicKey, {
+      locale: "pt-BR",
+      advancedFraudPrevention: true,
+    });
+    void Promise.resolve().then(() => {
+      if (!aborted) setMpReady(true);
+    });
+    return () => {
+      aborted = true;
+    };
+  }, [mercadoPagoPublicKey]);
 
   // Busca endereço via ViaCEP quando CEP completo
   useEffect(() => {
@@ -162,6 +251,68 @@ export function CheckoutForm({
     );
   }
 
+  if (paymentResult) {
+    return (
+      <div className="rounded-3xl border border-cream-deep bg-cream-soft p-8">
+        <p className="font-display text-3xl text-ink">Pedido {paymentResult.order_number}</p>
+        <p className="mt-2 text-sm text-ink-soft">
+          Status do pagamento: <span className="font-medium text-ink">{paymentResult.status}</span>
+        </p>
+
+        {paymentResult.payment_method === "pix" && (
+          <div className="mt-6 grid gap-4 md:grid-cols-[220px_1fr]">
+            {paymentResult.qr_code_base64 && (
+              <Image
+                src={`data:image/png;base64,${paymentResult.qr_code_base64}`}
+                alt="QR Code Pix"
+                width={220}
+                height={220}
+                unoptimized
+                className="w-full max-w-[220px] rounded-2xl border border-cream-deep bg-white p-3"
+              />
+            )}
+            {paymentResult.qr_code && (
+              <div>
+                <p className="text-sm font-medium text-ink">Copia e cola Pix</p>
+                <textarea
+                  readOnly
+                  value={paymentResult.qr_code}
+                  className="mt-2 h-32 w-full resize-none rounded-2xl border border-cream-deep bg-cream px-4 py-3 text-xs text-ink-soft"
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {paymentResult.payment_method === "boleto" && paymentResult.ticket_url && (
+          <a
+            href={paymentResult.ticket_url}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 inline-flex rounded-full bg-coral px-6 py-3 text-sm font-medium text-white hover:bg-coral-deep transition"
+          >
+            Abrir boleto
+          </a>
+        )}
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href={paymentResult.order_url}
+            className="rounded-full bg-ink px-6 py-3 text-sm font-medium text-white hover:bg-ink-soft transition"
+          >
+            Ver pedido
+          </Link>
+          <Link
+            href="/produtos"
+            className="rounded-full border border-cream-deep px-6 py-3 text-sm font-medium text-ink hover:border-coral-soft transition"
+          >
+            Continuar comprando
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (validItems.length === 0) {
     return (
       <div className="rounded-3xl border border-dashed border-cream-deep bg-cream-soft p-16 text-center">
@@ -179,13 +330,57 @@ export function CheckoutForm({
     );
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (submitting) return;
+  function buildCheckoutPayload(): CheckoutPayload | null {
     if (!selectedQuoteId) {
       setError("Escolha uma opção de frete primeiro.");
-      return;
+      return null;
     }
+
+    if (onlyDigits(cep).length !== 8) {
+      setError("Confira o CEP de entrega.");
+      return null;
+    }
+
+    if (!street || !number || !neighborhood || !city || state.length !== 2) {
+      setError("Complete o endereço de entrega.");
+      return null;
+    }
+
+    if (!fullName || !email || onlyDigits(cpf).length !== 11 || onlyDigits(phone).length < 10) {
+      setError("Complete seus dados antes de pagar.");
+      return null;
+    }
+
+    return {
+      items: validItems.map((i) => ({
+        product_id: i.product_id,
+        quantity: i.quantity,
+      })),
+      shipping_address: {
+        postal_code: onlyDigits(cep),
+        street,
+        number,
+        complement: complement || null,
+        neighborhood,
+        city,
+        state: state.toUpperCase(),
+        recipient_name: fullName,
+      },
+      shipping_service_id: selectedQuoteId,
+      customer: {
+        email,
+        cpf: onlyDigits(cpf),
+        phone: onlyDigits(phone),
+        full_name: fullName,
+      },
+      payment_method: paymentMethod,
+    };
+  }
+
+  async function handleClassicCheckout() {
+    if (submitting) return;
+    const payload = buildCheckoutPayload();
+    if (!payload) return;
 
     setSubmitting(true);
     setError(null);
@@ -194,30 +389,7 @@ export function CheckoutForm({
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: validItems.map((i) => ({
-            product_id: i.product_id,
-            quantity: i.quantity,
-          })),
-          shipping_address: {
-            postal_code: onlyDigits(cep),
-            street,
-            number,
-            complement: complement || null,
-            neighborhood,
-            city,
-            state: state.toUpperCase(),
-            recipient_name: fullName,
-          },
-          shipping_service_id: selectedQuoteId,
-          customer: {
-            email,
-            cpf: onlyDigits(cpf),
-            phone: onlyDigits(phone),
-            full_name: fullName,
-          },
-          payment_method: paymentMethod,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -248,8 +420,54 @@ export function CheckoutForm({
     }
   }
 
+  async function handleTransparentSubmit(mpData: IPaymentFormData) {
+    if (submitting) return;
+    const payload = buildCheckoutPayload();
+    if (!payload) throw new Error("checkout_incomplete");
+
+    setSubmitting(true);
+    setError(null);
+    setPaymentResult(null);
+
+    try {
+      const res = await fetch("/api/checkout/transparent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...payload,
+          selected_payment_method: mpData.selectedPaymentMethod,
+          payment_type: mpData.paymentType,
+          payment_data: mpData.formData,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        const message =
+          data.error === "insufficient_stock"
+            ? "Estoque insuficiente para um dos itens."
+            : data.error === "product_unavailable"
+              ? "Um dos produtos saiu de linha."
+              : data.error === "invalid"
+                ? "Confira os dados — algo está incompleto."
+                : data.detail ?? `Erro: ${data.error ?? "tente de novo"}`;
+        setError(message);
+        throw new Error(message);
+      }
+
+      setPaymentResult(data as TransparentPaymentResult);
+      clear();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (e) {
+      if (!error) setError(e instanceof Error ? e.message : "Erro de rede");
+      throw e;
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
       <div className="space-y-6">
         <section className="rounded-2xl border border-cream-deep bg-cream-soft p-6">
           <h2 className="font-display text-2xl text-ink mb-4">Endereço de entrega</h2>
@@ -398,6 +616,49 @@ export function CheckoutForm({
               </label>
             ))}
           </div>
+          {transparentCheckoutEnabled && (
+            <div className="mt-5 rounded-2xl border border-cream-deep bg-cream p-4">
+              {!selectedQuoteId || quotingShipping ? (
+                <p className="text-sm text-ink-mute">Escolha o frete para liberar o pagamento.</p>
+              ) : !mpReady ? (
+                <p className="text-sm text-ink-mute">Carregando pagamento seguro…</p>
+              ) : (
+                <Payment
+                  key={`${paymentMethod}-${total}-${selectedQuoteId}-${email}-${cpf}`}
+                  initialization={{
+                    amount: total / 100,
+                    payer: {
+                      email,
+                      firstName: fullName.split(" ")[0] ?? fullName,
+                      lastName: fullName.split(" ").slice(1).join(" ") || fullName,
+                      identification: {
+                        type: "CPF",
+                        number: onlyDigits(cpf),
+                      },
+                      address: {
+                        zipCode: onlyDigits(cep),
+                        streetName: street,
+                        streetNumber: number,
+                        neighborhood,
+                        city,
+                        federalUnit: state.toUpperCase(),
+                        complement,
+                      },
+                    },
+                  }}
+                  customization={paymentBrickCustomization}
+                  locale="pt-BR"
+                  onSubmit={handleTransparentSubmit}
+                  onError={() => setError("Não foi possível carregar o pagamento. Tente o checkout clássico.")}
+                />
+              )}
+            </div>
+          )}
+          {!transparentCheckoutEnabled && (
+            <p className="mt-4 text-sm text-ink-mute">
+              Pagamento seguro pelo Mercado Pago.
+            </p>
+          )}
         </section>
       </div>
 
@@ -440,17 +701,28 @@ export function CheckoutForm({
           </div>
         )}
         <button
-          type="submit"
+          type="button"
+          onClick={handleClassicCheckout}
           disabled={submitting || !selectedQuoteId || quotingShipping}
-          className="w-full rounded-full bg-coral py-3 text-sm font-medium text-white hover:bg-coral-deep transition shadow-sm disabled:cursor-not-allowed disabled:bg-cream-deep disabled:text-ink-mute"
+          className={`w-full rounded-full py-3 text-sm font-medium transition shadow-sm disabled:cursor-not-allowed disabled:bg-cream-deep disabled:text-ink-mute ${
+            transparentCheckoutEnabled
+              ? "border border-cream-deep bg-transparent text-ink hover:border-coral-soft"
+              : "bg-coral text-white hover:bg-coral-deep"
+          }`}
         >
-          {submitting ? "Processando…" : "Pagar com Mercado Pago"}
+          {submitting
+            ? "Processando…"
+            : transparentCheckoutEnabled
+              ? "Usar checkout clássico"
+              : "Pagar com Mercado Pago"}
         </button>
         <p className="text-xs text-ink-mute text-center">
-          Você vai ser levado pro Mercado Pago pra concluir o pagamento de forma segura.
+          {transparentCheckoutEnabled
+            ? "O checkout clássico abre o ambiente do Mercado Pago em outra tela."
+            : "Você vai ser levado pro Mercado Pago pra concluir o pagamento de forma segura."}
         </p>
       </aside>
-    </form>
+    </div>
   );
 }
 

@@ -13,6 +13,7 @@
     "db:types": "echo 'Defina SUPABASE_PROJECT_ID e rode: npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/database.ts'"
   },
   "dependencies": {
+    "@mercadopago/sdk-react": "^1.0.7",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.108.0",
     "mercadopago": "^3.1.0",
