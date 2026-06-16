@@ -361,6 +361,18 @@ export async function POST(req: NextRequest) {
     const point = readRecord(mpPayment.point_of_interaction);
     const txData = readRecord(point?.transaction_data);
     const txDetails = readRecord(mpPayment.transaction_details);
+    const qrCode = readString(txData, "qr_code");
+    const qrCodeBase64 = readString(txData, "qr_code_base64");
+    const ticketUrl = readString(txData, "ticket_url") ?? readString(txDetails, "external_resource_url");
+
+    if (paymentMethod === "pix" && !qrCode && !qrCodeBase64) {
+      console.warn("MP pix payment created without QR code", {
+        orderId: order.id,
+        mpPaymentId,
+        status: mpPayment.status,
+        statusDetail: mpPayment.status_detail,
+      });
+    }
 
     return NextResponse.json({
       order_id: order.id,
@@ -370,9 +382,9 @@ export async function POST(req: NextRequest) {
       status_detail: mpPayment.status_detail,
       payment_method: paymentMethod,
       order_url: `/pedidos/${order.id}?${orderStatus === "paid" ? "ok=1" : "pending=1"}`,
-      qr_code: readString(txData, "qr_code"),
-      qr_code_base64: readString(txData, "qr_code_base64"),
-      ticket_url: readString(txData, "ticket_url") ?? readString(txDetails, "external_resource_url"),
+      qr_code: qrCode,
+      qr_code_base64: qrCodeBase64,
+      ticket_url: ticketUrl,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);

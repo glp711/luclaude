@@ -466,6 +466,57 @@ export function CheckoutForm({
     }
   }
 
+  async function handlePixSubmit() {
+    if (submitting) return;
+    const payload = buildCheckoutPayload();
+    if (!payload) return;
+
+    setSubmitting(true);
+    setError(null);
+    setPaymentResult(null);
+
+    try {
+      const res = await fetch("/api/checkout/transparent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...payload,
+          payment_method: "pix",
+          selected_payment_method: "bank_transfer",
+          payment_type: "bank_transfer",
+          payment_data: { payment_method_id: "pix" },
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        const message =
+          data.error === "insufficient_stock"
+            ? "Estoque insuficiente para um dos itens."
+            : data.error === "product_unavailable"
+              ? "Um dos produtos saiu de linha."
+              : data.error === "invalid"
+                ? "Confira os dados — algo está incompleto."
+                : data.detail ?? `Erro: ${data.error ?? "tente de novo"}`;
+        setError(message);
+        return;
+      }
+
+      if (!data.qr_code && !data.qr_code_base64) {
+        setError("O Mercado Pago criou o pagamento, mas não retornou o QR Code Pix. Tente o checkout clássico.");
+        return;
+      }
+
+      setPaymentResult(data as TransparentPaymentResult);
+      clear();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Erro de rede");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
       <div className="space-y-6">
@@ -620,6 +671,20 @@ export function CheckoutForm({
             <div className="mt-5 rounded-2xl border border-cream-deep bg-cream p-4">
               {!selectedQuoteId || quotingShipping ? (
                 <p className="text-sm text-ink-mute">Escolha o frete para liberar o pagamento.</p>
+              ) : paymentMethod === "pix" ? (
+                <div className="space-y-3">
+                  <p className="text-sm text-ink-soft">
+                    Clique para gerar o QR Code Pix dentro da loja.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handlePixSubmit}
+                    disabled={submitting}
+                    className="w-full rounded-full bg-coral py-3 text-sm font-medium text-white hover:bg-coral-deep transition shadow-sm disabled:cursor-not-allowed disabled:bg-cream-deep disabled:text-ink-mute"
+                  >
+                    {submitting ? "Gerando QR Code…" : "Gerar QR Code Pix"}
+                  </button>
+                </div>
               ) : !mpReady ? (
                 <p className="text-sm text-ink-mute">Carregando pagamento seguro…</p>
               ) : (

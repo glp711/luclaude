@@ -8,6 +8,29 @@ Foi implementada uma primeira versao do Checkout Transparente com Mercado Pago P
 
 Objetivo do pedido: permitir que o comprador pague dentro da propria loja, sem ser levado para uma tela do Mercado Pago que pode parecer exigir login em conta Mercado Pago.
 
+## Hotfix em 2026-06-16 - Pix sem QR Code
+
+Problema observado pelo usuario: ao clicar para pagar com Pix, o QR Code nao aparecia.
+
+Diagnostico inicial:
+
+- Logs recentes da Vercel nao mostravam `POST /api/checkout/transparent`.
+- Isso indicava que o clique do Pix nao estava chegando na rota backend.
+- Possivel causa: o Payment Brick nao estava disparando `onSubmit` para o fluxo Pix antes de criar o pagamento.
+
+Correcao aplicada:
+
+- Para Pix, a tela agora mostra um botao direto `Gerar QR Code Pix`.
+- Esse botao chama `/api/checkout/transparent` com `payment_method_id: pix`.
+- Cartao e boleto continuam usando o Brick.
+- A rota agora loga aviso se o Mercado Pago criar pagamento Pix sem retornar `qr_code` ou `qr_code_base64`.
+
+Motivo tecnico:
+
+- Pix nao envolve dados sensiveis de cartao no frontend.
+- Portanto, e seguro chamar a API propria da loja diretamente para gerar o pagamento Pix no backend.
+- O backend continua recalculando preco/frete e usando `MP_ACCESS_TOKEN` apenas no servidor.
+
 ## Arquivos alterados
 
 - `package.json`
