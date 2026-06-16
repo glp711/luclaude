@@ -22,19 +22,25 @@ const STEPS = [
     cta: "Ver produtos",
   },
   {
-    title: "4. Acompanhar pedidos",
+    title: "4. Ver financeiro",
+    text: "Em Financeiro, clique no faturamento para abrir grafico do mes, ticket medio, pedidos usados no calculo e aviso sobre lucro real.",
+    href: "/admin/financeiro",
+    cta: "Ver financeiro",
+  },
+  {
+    title: "5. Acompanhar pedidos",
     text: "Em Pedidos, filtre por status, abra o detalhe, confira cliente, endereco, itens, pagamento e salve codigo de rastreio.",
     href: "/admin/pedidos",
     cta: "Ver pedidos",
   },
   {
-    title: "5. Organizar categorias",
+    title: "6. Organizar categorias",
     text: "Em Categorias, crie nomes como Difusores, Kits e Sabonetes. O slug e gerado automaticamente pelo sistema.",
     href: "/admin/categorias",
     cta: "Ver categorias",
   },
   {
-    title: "6. Consultar newsletter",
+    title: "7. Consultar newsletter",
     text: "Em Newsletter, veja os e-mails cadastrados pelo rodape do site e filtre entre ativos ou todos.",
     href: "/admin/newsletter",
     cta: "Ver newsletter",

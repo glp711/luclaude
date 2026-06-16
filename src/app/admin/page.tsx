@@ -67,6 +67,7 @@ export default async function AdminDashboardPage() {
           label="Faturamento do mes"
           value={formatBRL(monthRevenueCents)}
           helper="Pedidos pagos, preparando, enviados ou entregues"
+          href="/admin/financeiro"
           tone="dark"
         />
         <MetricCard
