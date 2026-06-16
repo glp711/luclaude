@@ -94,7 +94,7 @@ export default async function HomePage() {
   const orgJsonLd = {
     "@context": "https://schema.org",
     "@type": "Store",
-    name: "perfumesdeambientedecor",
+    name: "perfumes de ambiente decor",
     description: "Perfumaria de ambiente — difusores, sabonetes e home spray escolhidos a dedo.",
     url: baseUrl,
     logo: `${baseUrl}/logo-mark.svg`,
@@ -142,15 +142,12 @@ export default async function HomePage() {
             className="relative aspect-[4/5] md:aspect-square rounded-3xl overflow-hidden bg-coral-soft/40 border border-cream-deep bg-cover bg-center"
             style={{ backgroundImage: "url(/founder/perfumesdeambientedecor-founder-diffuser.png)" }}
             role="img"
-            aria-label="Fundadora da perfumesdeambientedecor apresentando difusor"
+            aria-label="Fundadora da perfumes de ambiente decor apresentando difusor"
           >
             <div className="absolute inset-0 flex items-end p-6">
               <div className="rounded-2xl bg-cream-soft/95 px-5 py-4 shadow-sm max-w-xs backdrop-blur">
 
-                <p className="font-display italic text-lg text-ink">
-                  &ldquo;Cada aroma escolhido como se fosse pra minha própria casa.&rdquo;
-                </p>
-                <p className="mt-1 text-xs uppercase tracking-wide text-ink-mute">— perfumesdeambientedecor</p>
+                <p className="font-display italic text-xl text-ink">- lu</p>
               </div>
             </div>
           </div>
@@ -209,12 +206,12 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* Por que perfumesdeambientedecor */}
+      {/* Por que perfumes de ambiente decor */}
       <section className="border-t border-cream-deep/40 bg-cream">
         <div className="mx-auto max-w-7xl px-6 py-20">
           <div className="text-center mb-12">
             <p className="text-xs uppercase tracking-widest text-sage-deep">o que faz diferente</p>
-            <h2 className="mt-2 font-display text-4xl text-ink">Por que perfumesdeambientedecor</h2>
+            <h2 className="mt-2 font-display text-4xl text-ink">Por que perfumes de ambiente decor</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {PILLARS.map((p) => (
@@ -240,7 +237,7 @@ export default async function HomePage() {
             className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-cream-soft border border-cream-deep order-2 md:order-1 bg-cover bg-center"
             style={{ backgroundImage: "url(/founder/perfumesdeambientedecor-founder-gift.png)" }}
             role="img"
-            aria-label="Fundadora da perfumesdeambientedecor montando presente"
+            aria-label="Fundadora da perfumes de ambiente decor montando presente"
           />
 
           <div className="order-1 md:order-2">

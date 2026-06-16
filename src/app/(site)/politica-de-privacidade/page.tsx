@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Política de privacidade",
-  description: "Como a perfumesdeambientedecor coleta, usa e protege seus dados pessoais, conforme a LGPD.",
+  description: "Como a perfumes de ambiente decor coleta, usa e protege seus dados pessoais, conforme a LGPD.",
 };
 
 export default function PrivacidadePage() {

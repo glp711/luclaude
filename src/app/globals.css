@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Paleta perfumesdeambientedecor — extraída do selo da marca */
+  /* Paleta perfumes de ambiente decor — extraída do selo da marca */
   --color-cream: #f5ecdc;
   --color-cream-soft: #faf4e9;
   --color-cream-deep: #ebe0cc;

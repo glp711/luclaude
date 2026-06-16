@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Trocas e devoluções",
-  description: "Política de trocas e devoluções da perfumesdeambientedecor, conforme o Código de Defesa do Consumidor.",
+  description: "Política de trocas e devoluções da perfumes de ambiente decor, conforme o Código de Defesa do Consumidor.",
 };
 
 export default function TrocasPage() {

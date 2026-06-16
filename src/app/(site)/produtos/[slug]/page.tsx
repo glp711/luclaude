@@ -36,7 +36,7 @@ export async function generateMetadata({
   if (!data) return { title: "Produto não encontrado" };
   return {
     title: data.name,
-    description: data.description ?? `${data.name} — perfumesdeambientedecor, perfumaria de ambiente.`,
+    description: data.description ?? `${data.name} — perfumes de ambiente decor, perfumaria de ambiente.`,
   };
 }
 
@@ -73,10 +73,10 @@ export default async function ProductPage({
     "@type": "Product",
     name: product.name,
     description:
-      product.description ?? `${product.name} — perfumesdeambientedecor, perfumaria de ambiente.`,
+      product.description ?? `${product.name} — perfumes de ambiente decor, perfumaria de ambiente.`,
     image: images.map((i) => i.url),
     sku: product.id,
-    brand: { "@type": "Brand", name: "perfumesdeambientedecor" },
+    brand: { "@type": "Brand", name: "perfumes de ambiente decor" },
     category: product.category?.name,
     offers: {
       "@type": "Offer",
@@ -86,7 +86,7 @@ export default async function ProductPage({
       availability: outOfStock
         ? "https://schema.org/OutOfStock"
         : "https://schema.org/InStock",
-      seller: { "@type": "Organization", name: "perfumesdeambientedecor" },
+      seller: { "@type": "Organization", name: "perfumes de ambiente decor" },
     },
   };
 

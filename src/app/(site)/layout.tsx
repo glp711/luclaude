@@ -71,7 +71,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
               className="h-10 w-10 flex-shrink-0 transition group-hover:rotate-[-4deg]"
             />
             <span className="font-display text-lg sm:text-xl tracking-tight text-ink truncate">
-              perfumes<span className="text-coral-deep">deambientedecor</span>
+              perfumes de ambiente <span className="text-coral-deep">decor</span>
             </span>
           </Link>
 
@@ -138,7 +138,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             <div className="flex items-center gap-2 mb-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo-mark.svg" alt="" className="h-9 w-9" />
-              <span className="font-display text-xl text-ink">perfumesdeambientedecor</span>
+              <span className="font-display text-xl text-ink">perfumes de ambiente decor</span>
             </div>
             <p className="text-ink-soft leading-relaxed max-w-xs">
               Perfumaria de ambiente, feita pra deixar memória em cada cantinho da sua casa.
@@ -180,7 +180,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         </div>
         <div className="border-t border-cream-deep/60">
           <div className="mx-auto max-w-7xl px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-ink-mute">
-            <span>© {new Date().getFullYear()} perfumesdeambientedecor — Todos os direitos reservados.</span>
+            <span>© {new Date().getFullYear()} perfumes de ambiente decor — Todos os direitos reservados.</span>
             <span className="italic font-display text-base text-coral-deep">@{INSTAGRAM_HANDLE}</span>
           </div>
         </div>

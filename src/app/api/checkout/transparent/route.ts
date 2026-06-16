@@ -344,7 +344,7 @@ export async function POST(req: NextRequest) {
 
   const paymentBody: PaymentCreateRequest = {
     transaction_amount: totalCents / 100,
-    description: `Pedido ${order.order_number} - perfumesdeambientedecor`,
+    description: `Pedido ${order.order_number} - perfumes de ambiente decor`,
     payment_method_id: paymentMethodId,
     token: data.payment_data.token,
     issuer_id: issuerId,

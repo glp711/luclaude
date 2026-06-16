@@ -70,7 +70,7 @@ export function MobileNav({ userArea }: { userArea: React.ReactNode }) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/logo-mark.svg" alt="" className="h-8 w-8" />
                 <span className="font-display text-lg text-ink">
-                  perfumes<span className="text-coral-deep">deambientedecor</span>
+                  perfumes de ambiente <span className="text-coral-deep">decor</span>
                 </span>
               </Link>
               <button

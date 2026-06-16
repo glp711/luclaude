@@ -82,7 +82,7 @@ export default async function CatalogPage({
     ? "Selecionados a dedo pra sua casa."
     : q
       ? "Veja o que encontramos pra você."
-      : "Tudo o que a perfumesdeambientedecor trouxe pro seu cantinho.";
+      : "Tudo o que a perfumes de ambiente decor trouxe pro seu cantinho.";
 
   return (
     <main>

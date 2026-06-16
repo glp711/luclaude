@@ -16,7 +16,7 @@ export default async function LoginPage({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-mark.svg" alt="" className="h-12 w-12 transition group-hover:-rotate-3" />
           <span className="font-display text-3xl tracking-tight text-ink">
-            perfumes<span className="text-coral-deep">deambientedecor</span>
+            perfumes de ambiente <span className="text-coral-deep">decor</span>
           </span>
         </Link>
 

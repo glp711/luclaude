@@ -3,7 +3,7 @@ import { INSTAGRAM_HANDLE, SUPPORT_EMAIL, WHATSAPP_NUMBER } from "@/lib/contact"
 
 export const metadata = {
   title: "Contato",
-  description: "Fale com a perfumesdeambientedecor. Atendimento por WhatsApp, e-mail e Instagram.",
+  description: "Fale com a perfumes de ambiente decor. Atendimento por WhatsApp, e-mail e Instagram.",
 };
 
 export default function ContatoPage() {
@@ -18,7 +18,7 @@ export default function ContatoPage() {
             <span>/</span>
             <span className="text-ink-soft">Contato</span>
           </nav>
-          <h1 className="font-display text-5xl md:text-6xl text-ink">Fale com a perfumesdeambientedecor</h1>
+          <h1 className="font-display text-5xl md:text-6xl text-ink">Fale com a perfumes de ambiente decor</h1>
           <p className="mt-3 text-lg text-ink-soft max-w-2xl">
             Dúvida sobre um produto, pedido ou parceria? Manda mensagem que respondemos
             no horário comercial.

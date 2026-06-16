@@ -55,7 +55,7 @@ export function CartContents({ catalog }: { catalog: Record<string, CatalogProdu
         </div>
         <p className="font-display text-3xl text-ink">Carrinho vazio</p>
         <p className="mt-2 text-sm text-ink-soft max-w-sm mx-auto">
-          Que tal dar uma olhada no catálogo? A perfumesdeambientedecor separou difusores, sabonetes e home sprays cheios de carinho.
+          Que tal dar uma olhada no catálogo? A perfumes de ambiente decor separou difusores, sabonetes e home sprays cheios de carinho.
         </p>
         <Link
           href="/produtos"

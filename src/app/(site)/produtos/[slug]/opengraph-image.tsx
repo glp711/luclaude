@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
-export const alt = "perfumesdeambientedecor";
+export const alt = "perfumes de ambiente decor";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -25,7 +25,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
     ? [...data.product_images].sort((a, b) => a.position - b.position)[0]?.url
     : undefined;
 
-  const name = data?.name ?? "perfumesdeambientedecor";
+  const name = data?.name ?? "perfumes de ambiente decor";
   const price = data?.price_cents
     ? new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
         data.price_cents / 100
@@ -92,7 +92,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               marginBottom: 16,
             }}
           >
-            perfumesdeambientedecor
+            perfumes de ambiente decor
           </div>
           <div
             style={{

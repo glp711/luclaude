@@ -15,11 +15,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: { default: "perfumesdeambientedecor — Perfumaria de ambiente", template: "%s · perfumesdeambientedecor" },
+  title: { default: "perfumes de ambiente decor — Perfumaria de ambiente", template: "%s · perfumes de ambiente decor" },
   description: "Difusores, sabonetes e home spray escolhidos a dedo pra sua casa virar memória.",
   icons: { icon: "/logo-mark.svg" },
   openGraph: {
-    title: "perfumesdeambientedecor",
+    title: "perfumes de ambiente decor",
     description: "Perfumaria de ambiente — aromas que ficam.",
     locale: "pt_BR",
     type: "website",

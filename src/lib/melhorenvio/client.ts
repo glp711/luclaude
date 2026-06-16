@@ -25,7 +25,7 @@ export async function meRequest<T = unknown>(path: string, init: FetchInit = {})
       "Accept": "application/json",
       "Content-Type": "application/json",
       "Authorization": `Bearer ${env.MELHORENVIO_TOKEN}`,
-      "User-Agent": "perfumesdeambientedecor (lopesguilherme2912@gmail.com)",
+      "User-Agent": "perfumes de ambiente decor (lopesguilherme2912@gmail.com)",
     },
     body: init.body ? JSON.stringify(init.body) : undefined,
   });

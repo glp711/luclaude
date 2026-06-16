@@ -13,7 +13,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo-mark.svg" alt="" className="h-8 w-8" />
               <span className="text-ink">
-                perfumes<span className="text-coral-deep">deambientedecor</span>
+                perfumes de ambiente <span className="text-coral-deep">decor</span>
               </span>
               <span className="text-ink-mute text-sm uppercase tracking-widest ml-2">Admin</span>
             </Link>

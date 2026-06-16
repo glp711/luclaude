@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Sobre a marca",
-  description: "A história por trás da perfumesdeambientedecor — perfumaria de ambiente escolhida a dedo.",
+  description: "A história por trás da perfumes de ambiente decor — perfumaria de ambiente escolhida a dedo.",
 };
 
 export default function SobrePage() {
@@ -12,10 +12,10 @@ export default function SobrePage() {
         <div className="mx-auto max-w-4xl px-6 py-16 text-center">
           <p className="text-xs uppercase tracking-widest text-sage-deep">conheça quem faz</p>
           <h1 className="mt-2 font-display text-5xl md:text-6xl text-ink">
-            Atrás de cada frasco, a <em className="text-coral-deep">perfumesdeambientedecor</em>.
+            Atrás de cada frasco, a <em className="text-coral-deep">perfumes de ambiente decor</em>.
           </h1>
           <p className="mt-5 text-lg text-ink-soft leading-relaxed max-w-2xl mx-auto">
-            A perfumesdeambientedecor não nasceu de uma planilha de mercado. Nasceu de uma vontade
+            A perfumes de ambiente decor não nasceu de uma planilha de mercado. Nasceu de uma vontade
             simples: a de deixar cada cantinho da casa com cheiro de cuidado.
           </p>
         </div>
@@ -26,7 +26,7 @@ export default function SobrePage() {
           className="aspect-[16/9] rounded-3xl bg-cream-soft border border-cream-deep bg-cover bg-center"
           style={{ backgroundImage: "url(/founder/perfumesdeambientedecor-founder-card.png)" }}
           role="img"
-          aria-label="Fundadora da perfumesdeambientedecor apresentando produto"
+          aria-label="Fundadora da perfumes de ambiente decor apresentando produto"
         />
 
         <div className="grid sm:grid-cols-2 gap-4">
@@ -34,7 +34,7 @@ export default function SobrePage() {
             className="aspect-[4/5] rounded-3xl bg-cream-soft border border-cream-deep bg-cover bg-center"
             style={{ backgroundImage: "url(/founder/perfumesdeambientedecor-product-kit.png)" }}
             role="img"
-            aria-label="Kit de difusor da perfumesdeambientedecor"
+            aria-label="Kit de difusor da perfumes de ambiente decor"
           />
           <div
             className="aspect-[4/5] rounded-3xl bg-cream-soft border border-cream-deep bg-cover bg-center"
@@ -79,7 +79,7 @@ export default function SobrePage() {
           <p className="font-display text-2xl italic text-ink">
             &ldquo;Casa boa é casa que cheira a memória boa.&rdquo;
           </p>
-          <p className="mt-2 text-xs uppercase tracking-widest text-sage-deep">— perfumesdeambientedecor</p>
+          <p className="mt-2 text-xs uppercase tracking-widest text-sage-deep">- lu</p>
           <Link
             href="/produtos"
             className="mt-6 inline-block rounded-full bg-coral px-7 py-3 text-sm font-medium text-white hover:bg-coral-deep transition"

@@ -39,7 +39,7 @@ export function Newsletter() {
           Aromas novos, promoções e dicas
         </h3>
         <p className="mt-2 text-sm text-ink-soft">
-          De vez em quando a perfumesdeambientedecor manda novidades direto pro seu e-mail. Sem spam, sem
+          De vez em quando a perfumes de ambiente decor manda novidades direto pro seu e-mail. Sem spam, sem
           letrinha miúda — pode cancelar quando quiser.
         </p>
         {done ? (

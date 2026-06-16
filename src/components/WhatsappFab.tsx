@@ -3,7 +3,7 @@ import { WHATSAPP_NUMBER } from "@/lib/contact";
 export function WhatsappFab() {
   const number = WHATSAPP_NUMBER.replace(/\D/g, "");
   const msg = encodeURIComponent(
-    "Oi! Vim pelo site da perfumesdeambientedecor e queria tirar uma dúvida 🌿"
+    "Oi! Vim pelo site da perfumes de ambiente decor e queria tirar uma dúvida 🌿"
   );
   const href = `https://wa.me/${number}?text=${msg}`;
 
@@ -12,7 +12,7 @@ export function WhatsappFab() {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Falar com a perfumesdeambientedecor no WhatsApp"
+      aria-label="Falar com a perfumes de ambiente decor no WhatsApp"
       className="fixed bottom-24 lg:bottom-5 right-5 z-40 group inline-flex items-center gap-2 rounded-full bg-sage-deep text-white shadow-lg hover:bg-sage-deep/90 transition pr-5 pl-4 py-3"
     >
       <svg
