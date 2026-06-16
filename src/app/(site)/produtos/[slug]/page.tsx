@@ -36,7 +36,7 @@ export async function generateMetadata({
   if (!data) return { title: "Produto não encontrado" };
   return {
     title: data.name,
-    description: data.description ?? `${data.name} — Luperfumes, perfumaria de ambiente.`,
+    description: data.description ?? `${data.name} — perfumesdeambientedecor, perfumaria de ambiente.`,
   };
 }
 
@@ -73,10 +73,10 @@ export default async function ProductPage({
     "@type": "Product",
     name: product.name,
     description:
-      product.description ?? `${product.name} — Luperfumes, perfumaria de ambiente.`,
+      product.description ?? `${product.name} — perfumesdeambientedecor, perfumaria de ambiente.`,
     image: images.map((i) => i.url),
     sku: product.id,
-    brand: { "@type": "Brand", name: "Luperfumes" },
+    brand: { "@type": "Brand", name: "perfumesdeambientedecor" },
     category: product.category?.name,
     offers: {
       "@type": "Offer",
@@ -86,7 +86,7 @@ export default async function ProductPage({
       availability: outOfStock
         ? "https://schema.org/OutOfStock"
         : "https://schema.org/InStock",
-      seller: { "@type": "Organization", name: "Luperfumes" },
+      seller: { "@type": "Organization", name: "perfumesdeambientedecor" },
     },
   };
 
@@ -222,7 +222,7 @@ export default async function ProductPage({
                 </p>
               ) : (
                 <p className="text-sm text-ink-soft italic leading-relaxed">
-                  Aroma escolhido a dedo pela LU pra deixar seu cantinho ainda mais aconchegante.
+                  Aroma escolhido a dedo pra deixar seu cantinho ainda mais aconchegante.
                   Em breve trazemos a descrição completa.
                 </p>
               )}

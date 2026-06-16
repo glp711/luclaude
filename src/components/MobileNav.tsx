@@ -14,7 +14,7 @@ const LINKS = [
 ];
 
 const META = [
-  { href: "/sobre", label: "Sobre a Lu" },
+  { href: "/sobre", label: "Sobre a marca" },
   { href: "/contato", label: "Contato" },
   { href: "/trocas-devolucoes", label: "Trocas e devoluções" },
 ];
@@ -69,8 +69,8 @@ export function MobileNav({ userArea }: { userArea: React.ReactNode }) {
               <Link href="/" className="flex items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/logo-mark.svg" alt="" className="h-8 w-8" />
-                <span className="font-display text-xl text-ink">
-                  Lu<span className="text-coral-deep">perfumes</span>
+                <span className="font-display text-lg text-ink">
+                  perfumes<span className="text-coral-deep">deambientedecor</span>
                 </span>
               </Link>
               <button
@@ -100,7 +100,7 @@ export function MobileNav({ userArea }: { userArea: React.ReactNode }) {
             </nav>
 
             <nav className="px-5 pb-5 space-y-1">
-              <p className="text-xs uppercase tracking-widest text-sage-deep mb-2">A Luperfumes</p>
+              <p className="text-xs uppercase tracking-widest text-sage-deep mb-2">A marca</p>
               {META.map((l) => (
                 <Link
                   key={l.href}

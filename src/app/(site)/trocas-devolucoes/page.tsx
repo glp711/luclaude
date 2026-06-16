@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Trocas e devoluções",
-  description: "Política de trocas e devoluções da Luperfumes, conforme o Código de Defesa do Consumidor.",
+  description: "Política de trocas e devoluções da perfumesdeambientedecor, conforme o Código de Defesa do Consumidor.",
 };
 
 export default function TrocasPage() {
@@ -70,7 +70,7 @@ export default function TrocasPage() {
 
         <div className="rounded-3xl bg-sage-soft/50 border border-sage-soft p-8 text-center">
           <p className="font-display text-2xl text-ink">Tem dúvida específica?</p>
-          <p className="mt-2 text-sm text-ink-soft">Chama a gente — a LU responde rápido.</p>
+          <p className="mt-2 text-sm text-ink-soft">Chama a gente — respondemos rápido.</p>
           <Link
             href="/contato"
             className="mt-5 inline-block rounded-full bg-coral px-7 py-3 text-sm font-medium text-white hover:bg-coral-deep transition"

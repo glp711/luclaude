@@ -3,7 +3,7 @@ import { INSTAGRAM_HANDLE, SUPPORT_EMAIL, WHATSAPP_NUMBER } from "@/lib/contact"
 
 export const metadata = {
   title: "Contato",
-  description: "Fale com a LU. Atendimento por WhatsApp, e-mail e Instagram.",
+  description: "Fale com a perfumesdeambientedecor. Atendimento por WhatsApp, e-mail e Instagram.",
 };
 
 export default function ContatoPage() {
@@ -18,7 +18,7 @@ export default function ContatoPage() {
             <span>/</span>
             <span className="text-ink-soft">Contato</span>
           </nav>
-          <h1 className="font-display text-5xl md:text-6xl text-ink">Fale com a LU</h1>
+          <h1 className="font-display text-5xl md:text-6xl text-ink">Fale com a perfumesdeambientedecor</h1>
           <p className="mt-3 text-lg text-ink-soft max-w-2xl">
             Dúvida sobre um produto, pedido ou parceria? Manda mensagem que respondemos
             no horário comercial.
@@ -39,7 +39,7 @@ export default function ContatoPage() {
             </div>
             <h2 className="font-display text-2xl text-ink">WhatsApp</h2>
             <p className="mt-1 text-sm text-ink-soft">
-              Atendimento direto, com a LU em pessoa.
+              Atendimento direto com a marca.
             </p>
             <span className="mt-4 inline-block text-xs text-coral-deep">Abrir conversa →</span>
           </a>
@@ -77,7 +77,7 @@ export default function ContatoPage() {
             Segunda a sexta, das 9h às 18h. Sábado, das 9h às 13h.
           </p>
           <p className="mt-2 text-xs text-ink-mute">
-            Fora desse horário, deixa a mensagem — a LU responde assim que chega.
+            Fora desse horário, deixa a mensagem — a gente responde assim que chega.
           </p>
         </div>
       </section>

@@ -70,8 +70,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
               alt=""
               className="h-10 w-10 flex-shrink-0 transition group-hover:rotate-[-4deg]"
             />
-            <span className="font-display text-xl sm:text-2xl tracking-tight text-ink truncate">
-              Lu<span className="text-coral-deep">perfumes</span>
+            <span className="font-display text-lg sm:text-xl tracking-tight text-ink truncate">
+              perfumes<span className="text-coral-deep">deambientedecor</span>
             </span>
           </Link>
 
@@ -138,7 +138,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             <div className="flex items-center gap-2 mb-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo-mark.svg" alt="" className="h-9 w-9" />
-              <span className="font-display text-xl text-ink">Luperfumes</span>
+              <span className="font-display text-xl text-ink">perfumesdeambientedecor</span>
             </div>
             <p className="text-ink-soft leading-relaxed max-w-xs">
               Perfumaria de ambiente, feita pra deixar memória em cada cantinho da sua casa.
@@ -167,7 +167,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
               <li><Link href="/trocas-devolucoes" className="hover:text-coral-deep transition">Trocas e devoluções</Link></li>
               <li><Link href="/politica-de-privacidade" className="hover:text-coral-deep transition">Privacidade</Link></li>
               <li><Link href="/contato" className="hover:text-coral-deep transition">Contato</Link></li>
-              <li><Link href="/sobre" className="hover:text-coral-deep transition">Sobre a Lu</Link></li>
+              <li><Link href="/sobre" className="hover:text-coral-deep transition">Sobre a marca</Link></li>
             </ul>
           </div>
           <div>
@@ -180,8 +180,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         </div>
         <div className="border-t border-cream-deep/60">
           <div className="mx-auto max-w-7xl px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-ink-mute">
-            <span>© {new Date().getFullYear()} Luperfumes — Todos os direitos reservados.</span>
-            <span className="italic font-display text-base text-coral-deep">por LU</span>
+            <span>© {new Date().getFullYear()} perfumesdeambientedecor — Todos os direitos reservados.</span>
+            <span className="italic font-display text-base text-coral-deep">@{INSTAGRAM_HANDLE}</span>
           </div>
         </div>
       </footer>

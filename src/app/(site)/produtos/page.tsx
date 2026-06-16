@@ -5,7 +5,7 @@ import { SortSelect } from "@/components/SortSelect";
 
 export const metadata = {
   title: "Catálogo",
-  description: "Difusores, sabonetes, home spray e mais — perfumaria de ambiente escolhida a dedo pela LU.",
+  description: "Difusores, sabonetes, home spray e mais — perfumaria de ambiente escolhida a dedo.",
 };
 
 const PAGE_SIZE = 24;
@@ -82,7 +82,7 @@ export default async function CatalogPage({
     ? "Selecionados a dedo pra sua casa."
     : q
       ? "Veja o que encontramos pra você."
-      : "Tudo o que a Lu trouxe pro seu cantinho.";
+      : "Tudo o que a perfumesdeambientedecor trouxe pro seu cantinho.";
 
   return (
     <main>

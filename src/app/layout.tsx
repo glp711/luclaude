@@ -15,11 +15,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Luperfumes — Perfumaria de ambiente", template: "%s · Luperfumes" },
-  description: "Difusores, sabonetes e home spray escolhidos a dedo pela LU pra sua casa virar memória.",
+  title: { default: "perfumesdeambientedecor — Perfumaria de ambiente", template: "%s · perfumesdeambientedecor" },
+  description: "Difusores, sabonetes e home spray escolhidos a dedo pra sua casa virar memória.",
   icons: { icon: "/logo-mark.svg" },
   openGraph: {
-    title: "Luperfumes",
+    title: "perfumesdeambientedecor",
     description: "Perfumaria de ambiente — aromas que ficam.",
     locale: "pt_BR",
     type: "website",

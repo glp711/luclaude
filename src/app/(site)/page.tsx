@@ -6,7 +6,7 @@ const iconClass = "h-6 w-6";
 const PILLARS = [
   {
     title: "Curadoria pessoal",
-    text: "Cada produto passa pelas mãos da LU antes de entrar no catálogo.",
+    text: "Cada produto passa por uma curadoria cuidadosa antes de entrar no catálogo.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={iconClass} aria-hidden="true">
         <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
@@ -40,7 +40,7 @@ const PILLARS = [
   },
   {
     title: "Atendimento humano",
-    text: "Dúvida? A LU responde no WhatsApp, e-mail ou Instagram.",
+    text: "Dúvida? A gente responde no WhatsApp, e-mail ou Instagram.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={iconClass} aria-hidden="true">
         <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"/>
@@ -94,8 +94,8 @@ export default async function HomePage() {
   const orgJsonLd = {
     "@context": "https://schema.org",
     "@type": "Store",
-    name: "Luperfumes",
-    description: "Perfumaria de ambiente — difusores, sabonetes e home spray escolhidos a dedo pela LU.",
+    name: "perfumesdeambientedecor",
+    description: "Perfumaria de ambiente — difusores, sabonetes e home spray escolhidos a dedo.",
     url: baseUrl,
     logo: `${baseUrl}/logo-mark.svg`,
     sameAs: ["https://www.instagram.com/perfumesdeambientedecor/"],
@@ -137,12 +137,12 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          {/* Espaço pra foto da LU — coloque public/lu-hero.jpg pra aparecer */}
+          {/* Foto da fundadora/produto */}
           <div
             className="relative aspect-[4/5] md:aspect-square rounded-3xl overflow-hidden bg-coral-soft/40 border border-cream-deep bg-cover bg-center"
-            style={{ backgroundImage: "url(/lu-hero.jpg)" }}
+            style={{ backgroundImage: "url(/founder/perfumesdeambientedecor-founder-diffuser.png)" }}
             role="img"
-            aria-label="Lu, fundadora da Luperfumes"
+            aria-label="Fundadora da perfumesdeambientedecor apresentando difusor"
           >
             <div className="absolute inset-0 flex items-end p-6">
               <div className="rounded-2xl bg-cream-soft/95 px-5 py-4 shadow-sm max-w-xs backdrop-blur">
@@ -150,7 +150,7 @@ export default async function HomePage() {
                 <p className="font-display italic text-lg text-ink">
                   &ldquo;Cada aroma escolhido como se fosse pra minha própria casa.&rdquo;
                 </p>
-                <p className="mt-1 text-xs uppercase tracking-wide text-ink-mute">— LU, fundadora</p>
+                <p className="mt-1 text-xs uppercase tracking-wide text-ink-mute">— perfumesdeambientedecor</p>
               </div>
             </div>
           </div>
@@ -209,12 +209,12 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* Por que Luperfumes */}
+      {/* Por que perfumesdeambientedecor */}
       <section className="border-t border-cream-deep/40 bg-cream">
         <div className="mx-auto max-w-7xl px-6 py-20">
           <div className="text-center mb-12">
             <p className="text-xs uppercase tracking-widest text-sage-deep">o que faz diferente</p>
-            <h2 className="mt-2 font-display text-4xl text-ink">Por que Luperfumes</h2>
+            <h2 className="mt-2 font-display text-4xl text-ink">Por que perfumesdeambientedecor</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {PILLARS.map((p) => (
@@ -233,24 +233,24 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Sobre a LU — placeholder pra preencher com foto */}
+      {/* Sobre a fundadora */}
       <section className="bg-sage-soft/60 border-y border-sage-soft">
         <div className="mx-auto max-w-7xl px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
           <div
             className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-cream-soft border border-cream-deep order-2 md:order-1 bg-cover bg-center"
-            style={{ backgroundImage: "url(/lu-sobre.jpg)" }}
+            style={{ backgroundImage: "url(/founder/perfumesdeambientedecor-founder-gift.png)" }}
             role="img"
-            aria-label="Sobre a LU"
+            aria-label="Fundadora da perfumesdeambientedecor montando presente"
           />
 
           <div className="order-1 md:order-2">
             <p className="text-xs uppercase tracking-widest text-sage-deep">conheça quem faz</p>
             <h2 className="mt-2 font-display text-4xl md:text-5xl text-ink">
-              Atrás de cada frasco, a <em className="text-coral-deep">LU</em>.
+              Atrás de cada frasco, a <em className="text-coral-deep">curadoria da marca</em>.
             </h2>
             <p className="mt-5 text-ink-soft leading-relaxed">
-              Cada difusor, cada sabonete, cada home spray passa pelas mãos da LU antes de
-              chegar até você. Não é uma loja qualquer — é o gosto dela compartilhado em
+              Cada difusor, cada sabonete, cada home spray passa por uma curadoria cuidadosa antes de
+              chegar até você. Não é uma loja qualquer — é bom gosto compartilhado em
               forma de aroma.
             </p>
             <Link
