@@ -37,6 +37,43 @@ const checkoutSchema = z.object({
   payment_method: z.enum(["pix", "credit_card", "boleto"]),
 });
 
+function mercadoPagoPaymentMethods(method: "pix" | "credit_card" | "boleto") {
+  if (method === "pix") {
+    return {
+      excluded_payment_types: [
+        { id: "credit_card" },
+        { id: "debit_card" },
+        { id: "prepaid_card" },
+        { id: "ticket" },
+        { id: "atm" },
+      ],
+    };
+  }
+
+  if (method === "credit_card") {
+    return {
+      excluded_payment_types: [
+        { id: "debit_card" },
+        { id: "prepaid_card" },
+        { id: "ticket" },
+        { id: "atm" },
+      ],
+      excluded_payment_methods: [{ id: "pix" }],
+      installments: 3,
+    };
+  }
+
+  return {
+    excluded_payment_types: [
+      { id: "credit_card" },
+      { id: "debit_card" },
+      { id: "prepaid_card" },
+      { id: "atm" },
+    ],
+    excluded_payment_methods: [{ id: "pix" }],
+  };
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
   const parsed = checkoutSchema.safeParse(body);
@@ -235,22 +272,8 @@ export async function POST(req: NextRequest) {
         },
         auto_return: "approved",
         statement_descriptor: "LUPERFUMES",
-        // Restringe métodos ao escolhido
-        payment_methods:
-          data.payment_method === "pix"
-            ? {
-                excluded_payment_types: [
-                  { id: "credit_card" },
-                  { id: "ticket" },
-                ],
-              }
-            : data.payment_method === "credit_card"
-              ? {
-                  excluded_payment_types: [{ id: "ticket" }],
-                  excluded_payment_methods: [{ id: "pix" }],
-                  installments: 3,
-                }
-              : { excluded_payment_types: [{ id: "credit_card" }] },
+        // Restringe os meios do Mercado Pago ao escolhido na loja.
+        payment_methods: mercadoPagoPaymentMethods(data.payment_method),
       },
     });
 
