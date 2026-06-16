@@ -31,6 +31,35 @@ Motivo tecnico:
 - Portanto, e seguro chamar a API propria da loja diretamente para gerar o pagamento Pix no backend.
 - O backend continua recalculando preco/frete e usando `MP_ACCESS_TOKEN` apenas no servidor.
 
+## Ajuste em 2026-06-16 - Pix via Orders API
+
+O painel do Mercado Pago pediu um Order ID de teste para medir a qualidade da integracao. Esse Order ID precisa vir da nova Orders API (`/v1/orders`) e nao da Payments API (`/v1/payments`).
+
+Order ID de teste gerado com credenciais de teste:
+
+```text
+ORDTST01KV8FWCHVQQPQQRVQPN3F05W5
+```
+
+Resposta resumida da API:
+
+```text
+status: action_required
+status_detail: waiting_transfer
+payment_id: PAY01KV8FWCJNBEZC07Q4E1W573C3
+qr_code: retornou
+qr_code_base64: retornou
+ticket_url: retornou
+```
+
+Alteracoes aplicadas:
+
+- Pix em `/api/checkout/transparent` agora cria Order no Mercado Pago via `POST https://api.mercadopago.com/v1/orders`.
+- A resposta do checkout agora pode retornar `mp_order_id`.
+- A tela de resultado exibe `Order ID Mercado Pago`.
+- O webhook agora aceita evento `type=order`, busca a Order no Mercado Pago e atualiza o pedido local quando houver mudanca de status.
+- A validacao de assinatura do webhook tambem aceita o `data.id` em lowercase, conforme a documentacao de notificacoes da Orders API.
+
 ## Arquivos alterados
 
 - `package.json`

@@ -29,14 +29,22 @@ export function verifyMercadoPagoSignature(params: {
   const v1 = parts.v1;
   if (!ts || !v1) return false;
 
-  const manifest = `id:${dataId};request-id:${requestIdHeader};ts:${ts};`;
-  const expected = createHmac("sha256", serverEnv().MP_WEBHOOK_SECRET)
-    .update(manifest)
-    .digest("hex");
+  const candidates = [dataId, dataId.toLowerCase()];
 
-  try {
-    return timingSafeEqual(Buffer.from(expected, "hex"), Buffer.from(v1, "hex"));
-  } catch {
-    return false;
+  for (const id of candidates) {
+    const manifest = `id:${id};request-id:${requestIdHeader};ts:${ts};`;
+    const expected = createHmac("sha256", serverEnv().MP_WEBHOOK_SECRET)
+      .update(manifest)
+      .digest("hex");
+
+    try {
+      if (timingSafeEqual(Buffer.from(expected, "hex"), Buffer.from(v1, "hex"))) {
+        return true;
+      }
+    } catch {
+      return false;
+    }
   }
+
+  return false;
 }

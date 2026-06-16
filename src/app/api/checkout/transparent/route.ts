@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import type { PaymentCreateRequest } from "mercadopago/dist/clients/payment/create/types";
 import { z } from "zod";
 import { createSupabaseAdminClient, createSupabaseServerClient } from "@/lib/supabase/server";
@@ -111,6 +112,14 @@ function readRecord(value: unknown): Record<string, unknown> | null {
 function readString(obj: Record<string, unknown> | null, key: string) {
   const value = obj?.[key];
   return typeof value === "string" && value.length > 0 ? value : undefined;
+}
+
+function readArray(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function centsToAmount(cents: number) {
+  return (cents / 100).toFixed(2);
 }
 
 export async function POST(req: NextRequest) {
@@ -322,6 +331,86 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    if (paymentMethod === "pix") {
+      const amount = centsToAmount(totalCents);
+      const mpOrderRes = await fetch("https://api.mercadopago.com/v1/orders", {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+          authorization: `Bearer ${env.MP_ACCESS_TOKEN}`,
+          "x-idempotency-key": randomUUID(),
+        },
+        body: JSON.stringify({
+          type: "online",
+          total_amount: amount,
+          external_reference: order.id,
+          processing_mode: "automatic",
+          transactions: {
+            payments: [
+              {
+                amount,
+                payment_method: { id: "pix", type: "bank_transfer" },
+                expiration_time: "PT30M",
+              },
+            ],
+          },
+          payer: { email: data.customer.email },
+        }),
+      });
+
+      const mpOrder = (await mpOrderRes.json().catch(() => ({}))) as Record<string, unknown>;
+      if (!mpOrderRes.ok) {
+        throw new Error(
+          typeof mpOrder.message === "string"
+            ? mpOrder.message
+            : `MP order failed with status ${mpOrderRes.status}`
+        );
+      }
+
+      const txs = readRecord(mpOrder.transactions);
+      const mpPayment = readRecord(readArray(txs?.payments)[0]);
+      const mpPaymentMethod = readRecord(mpPayment?.payment_method);
+      const mpOrderId = readString(mpOrder, "id") ?? "";
+      const mpPaymentId = readString(mpPayment, "id") ?? "";
+      const qrCode = readString(mpPaymentMethod, "qr_code");
+      const qrCodeBase64 = readString(mpPaymentMethod, "qr_code_base64");
+      const ticketUrl = readString(mpPaymentMethod, "ticket_url");
+
+      await admin
+        .from("orders")
+        .update({
+          mp_preference_id: mpOrderId,
+          mp_payment_id: mpPaymentId || null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", order.id);
+
+      if (!qrCode && !qrCodeBase64) {
+        console.warn("MP pix order created without QR code", {
+          orderId: order.id,
+          mpOrderId,
+          mpPaymentId,
+          status: readString(mpOrder, "status"),
+          statusDetail: readString(mpOrder, "status_detail"),
+        });
+      }
+
+      return NextResponse.json({
+        order_id: order.id,
+        order_number: order.order_number,
+        mp_order_id: mpOrderId,
+        payment_id: mpPaymentId,
+        status: readString(mpOrder, "status"),
+        status_detail: readString(mpOrder, "status_detail"),
+        payment_method: paymentMethod,
+        order_url: `/pedidos/${order.id}?pending=1`,
+        qr_code: qrCode,
+        qr_code_base64: qrCodeBase64,
+        ticket_url: ticketUrl,
+      });
+    }
+
     const mpPayment = await payment.create({
       body: paymentBody,
       requestOptions: { idempotencyKey: order.id },
@@ -364,15 +453,6 @@ export async function POST(req: NextRequest) {
     const qrCode = readString(txData, "qr_code");
     const qrCodeBase64 = readString(txData, "qr_code_base64");
     const ticketUrl = readString(txData, "ticket_url") ?? readString(txDetails, "external_resource_url");
-
-    if (paymentMethod === "pix" && !qrCode && !qrCodeBase64) {
-      console.warn("MP pix payment created without QR code", {
-        orderId: order.id,
-        mpPaymentId,
-        status: mpPayment.status,
-        statusDetail: mpPayment.status_detail,
-      });
-    }
 
     return NextResponse.json({
       order_id: order.id,

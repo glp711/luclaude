@@ -54,6 +54,7 @@ type CheckoutPayload = {
 type TransparentPaymentResult = {
   order_id: string;
   order_number: string;
+  mp_order_id?: string;
   payment_id: string;
   status: string;
   status_detail?: string;
@@ -258,6 +259,11 @@ export function CheckoutForm({
         <p className="mt-2 text-sm text-ink-soft">
           Status do pagamento: <span className="font-medium text-ink">{paymentResult.status}</span>
         </p>
+        {paymentResult.mp_order_id && (
+          <p className="mt-1 text-xs text-ink-mute">
+            Order ID Mercado Pago: <span className="font-mono text-ink">{paymentResult.mp_order_id}</span>
+          </p>
+        )}
 
         {paymentResult.payment_method === "pix" && (
           <div className="mt-6 grid gap-4 md:grid-cols-[220px_1fr]">
