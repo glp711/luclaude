@@ -122,6 +122,65 @@ function centsToAmount(cents: number) {
   return (cents / 100).toFixed(2);
 }
 
+function mercadoPagoErrorCode(payload: unknown) {
+  const root = readRecord(payload);
+  const errors = readArray(root?.errors);
+  const firstError = readRecord(errors[0]);
+  return readString(firstError, "code");
+}
+
+async function createMercadoPagoPixOrder(params: {
+  accessToken: string;
+  amount: string;
+  externalReference: string;
+  payerEmail: string;
+}) {
+  const orderBody = (payerEmail: string) => ({
+    type: "online",
+    total_amount: params.amount,
+    external_reference: params.externalReference,
+    processing_mode: "automatic",
+    transactions: {
+      payments: [
+        {
+          amount: params.amount,
+          payment_method: { id: "pix", type: "bank_transfer" },
+          expiration_time: "PT30M",
+        },
+      ],
+    },
+    payer: { email: payerEmail },
+  });
+
+  const create = async (payerEmail: string) => {
+    const res = await fetch("https://api.mercadopago.com/v1/orders", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        authorization: `Bearer ${params.accessToken}`,
+        "x-idempotency-key": randomUUID(),
+      },
+      body: JSON.stringify(orderBody(payerEmail)),
+    });
+    const text = await res.text();
+    let payload: unknown = {};
+    try {
+      payload = text ? JSON.parse(text) : {};
+    } catch {
+      payload = { raw: text };
+    }
+    return { res, payload, text };
+  };
+
+  const firstAttempt = await create(params.payerEmail);
+  if (firstAttempt.res.ok || mercadoPagoErrorCode(firstAttempt.payload) !== "invalid_email_for_sandbox") {
+    return firstAttempt;
+  }
+
+  return create("test_user_br@testuser.com");
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
   const parsed = checkoutTransparentSchema.safeParse(body);
@@ -333,45 +392,31 @@ export async function POST(req: NextRequest) {
   try {
     if (paymentMethod === "pix") {
       const amount = centsToAmount(totalCents);
-      const mpOrderRes = await fetch("https://api.mercadopago.com/v1/orders", {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "content-type": "application/json",
-          authorization: `Bearer ${env.MP_ACCESS_TOKEN}`,
-          "x-idempotency-key": randomUUID(),
-        },
-        body: JSON.stringify({
-          type: "online",
-          total_amount: amount,
-          external_reference: order.id,
-          processing_mode: "automatic",
-          transactions: {
-            payments: [
-              {
-                amount,
-                payment_method: { id: "pix", type: "bank_transfer" },
-                expiration_time: "PT30M",
-              },
-            ],
-          },
-          payer: { email: data.customer.email },
-        }),
+      const { res: mpOrderRes, payload: mpOrder, text: mpOrderText } = await createMercadoPagoPixOrder({
+        accessToken: env.MP_ACCESS_TOKEN,
+        amount,
+        externalReference: order.id,
+        payerEmail: data.customer.email,
       });
-
-      const mpOrder = (await mpOrderRes.json().catch(() => ({}))) as Record<string, unknown>;
+      const mpOrderRecord = readRecord(mpOrder) ?? {};
       if (!mpOrderRes.ok) {
+        console.error("MP order creation failed", {
+          orderId: order.id,
+          status: mpOrderRes.status,
+          response: mpOrderRecord,
+        });
         throw new Error(
-          typeof mpOrder.message === "string"
-            ? mpOrder.message
-            : `MP order failed with status ${mpOrderRes.status}`
+          readString(mpOrderRecord, "message") ??
+            readString(readRecord(readArray(mpOrderRecord.errors)[0]), "message") ??
+            mpOrderText.slice(0, 300) ??
+            `MP order failed with status ${mpOrderRes.status}`
         );
       }
 
-      const txs = readRecord(mpOrder.transactions);
+      const txs = readRecord(mpOrderRecord.transactions);
       const mpPayment = readRecord(readArray(txs?.payments)[0]);
       const mpPaymentMethod = readRecord(mpPayment?.payment_method);
-      const mpOrderId = readString(mpOrder, "id") ?? "";
+      const mpOrderId = readString(mpOrderRecord, "id") ?? "";
       const mpPaymentId = readString(mpPayment, "id") ?? "";
       const qrCode = readString(mpPaymentMethod, "qr_code");
       const qrCodeBase64 = readString(mpPaymentMethod, "qr_code_base64");
@@ -391,8 +436,8 @@ export async function POST(req: NextRequest) {
           orderId: order.id,
           mpOrderId,
           mpPaymentId,
-          status: readString(mpOrder, "status"),
-          statusDetail: readString(mpOrder, "status_detail"),
+          status: readString(mpOrderRecord, "status"),
+          statusDetail: readString(mpOrderRecord, "status_detail"),
         });
       }
 
@@ -401,8 +446,8 @@ export async function POST(req: NextRequest) {
         order_number: order.order_number,
         mp_order_id: mpOrderId,
         payment_id: mpPaymentId,
-        status: readString(mpOrder, "status"),
-        status_detail: readString(mpOrder, "status_detail"),
+        status: readString(mpOrderRecord, "status"),
+        status_detail: readString(mpOrderRecord, "status_detail"),
         payment_method: paymentMethod,
         order_url: `/pedidos/${order.id}?pending=1`,
         qr_code: qrCode,

@@ -60,6 +60,36 @@ Alteracoes aplicadas:
 - O webhook agora aceita evento `type=order`, busca a Order no Mercado Pago e atualiza o pedido local quando houver mudanca de status.
 - A validacao de assinatura do webhook tambem aceita o `data.id` em lowercase, conforme a documentacao de notificacoes da Orders API.
 
+## Hotfix em 2026-06-16 - `invalid_email_for_sandbox`
+
+Problema observado:
+
+```text
+MP order failed with status 400
+```
+
+Diagnostico:
+
+- A chamada chegava na Vercel: `POST /api/checkout/transparent` retornando `502`.
+- Reproduzindo localmente com o e-mail real do pedido cancelado, a Orders API respondeu:
+
+```json
+{"errors":[{"code":"invalid_email_for_sandbox","message":"Email format is invalid for sandbox environment, must contains '@testuser.com'."}]}
+```
+
+Causa:
+
+- A aplicacao esta usando credenciais de teste/sandbox da Orders API.
+- Nesse ambiente, o Mercado Pago exige que o e-mail do pagador termine com `@testuser.com`.
+- O checkout estava enviando o e-mail real digitado pelo cliente, por isso o Mercado Pago retornava 400 e nao gerava QR Code.
+
+Correcao aplicada:
+
+- A rota de Pix agora tenta criar a Order com o e-mail real do comprador.
+- Se o Mercado Pago retornar `invalid_email_for_sandbox`, a rota repete automaticamente a criacao com `test_user_br@testuser.com`.
+- Em producao real, sem esse erro de sandbox, o fluxo continua usando o e-mail real do cliente.
+- O erro do Mercado Pago agora e logado com resposta detalhada, em vez de salvar apenas `MP order failed with status 400`.
+
 ## Arquivos alterados
 
 - `package.json`
