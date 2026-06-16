@@ -90,6 +90,65 @@ Correcao aplicada:
 - Em producao real, sem esse erro de sandbox, o fluxo continua usando o e-mail real do cliente.
 - O erro do Mercado Pago agora e logado com resposta detalhada, em vez de salvar apenas `MP order failed with status 400`.
 
+## Ajuste em 2026-06-16 - Webhook de Orders
+
+Problema observado:
+
+- O QR Code Pix foi gerado.
+- O pedido local recebeu `mp_preference_id` com `ORDTST...` e `mp_payment_id` com `PAY...`.
+- O painel do Mercado Pago ainda mostrava 0 API requests e nenhuma notificacao.
+- A tabela `webhook_events` do Supabase estava vazia.
+
+Diagnostico:
+
+- A Vercel registrou `POST /api/checkout/transparent` com status `200`, entao a loja chamou o backend corretamente.
+- O pedido mais recente ficou assim:
+
+```text
+order_number: 5
+mp_order_id: ORDTST01KV8H1657JY6MNF4BAFTN4VTW
+mp_payment_id: PAY01KV8H165RWH1FEYVPYST0KWP2
+status: pending
+```
+
+- No painel Mercado Pago > Webhooks > Modo de teste, o evento `Order (Mercado Pago)` estava desmarcado.
+- Apenas `Pagamentos` estava marcado.
+- Como o Pix agora usa Orders API, o webhook precisa do evento `Order (Mercado Pago)`.
+
+Correcao feita no painel Mercado Pago:
+
+- Marquei `Order (Mercado Pago)` em Webhooks > Modo de teste.
+- Salvei as configuracoes.
+- O painel confirmou: `Pronto! Salvamos os dados da sua configuração com sucesso.`
+
+Validacao feita:
+
+- Enviei uma notificacao assinada para:
+
+```text
+https://luperfumes.vercel.app/api/webhooks/mercadopago?type=order&data.id=ORDTST01KV8H1657JY6MNF4BAFTN4VTW
+```
+
+- A loja respondeu:
+
+```json
+{"ok":true,"mpOrderStatus":"action_required","orderStatus":"pending"}
+```
+
+- O Supabase registrou:
+
+```text
+webhook_events.event_id: order:ORDTST01KV8H1657JY6MNF4BAFTN4VTW
+payments.gateway_payment_id: PAY01KV8H165RWH1FEYVPYST0KWP2
+orders.status: pending
+```
+
+Observacao sobre o painel de metricas:
+
+- O painel de monitoramento do Mercado Pago mostra: `O painel exibe dados coletados até o dia anterior (15/jun).`
+- Portanto, chamadas feitas em 16/jun podem nao aparecer no painel no mesmo dia.
+- Para validar em tempo real, usar Vercel logs e a tabela `webhook_events`.
+
 ## Arquivos alterados
 
 - `package.json`
