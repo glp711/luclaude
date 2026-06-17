@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { CartLink } from "@/components/CartLink";
-import { MobileNav } from "@/components/MobileNav";
+import { Header } from "@/components/Header/Header";
 import { Newsletter } from "@/components/Newsletter";
-import { PromoBar } from "@/components/PromoBar";
 import { WhatsappFab } from "@/components/WhatsappFab";
 import { INSTAGRAM_HANDLE } from "@/lib/contact";
+import { getCurrentUser } from "@/lib/auth/guards";
 
 function TrustItem({ icon, title, sub }: { icon: string; title: string; sub: string }) {
   return (
@@ -19,101 +18,14 @@ function TrustItem({ icon, title, sub }: { icon: string; title: string; sub: str
     </div>
   );
 }
-import { getCurrentUser } from "@/lib/auth/guards";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
 
-  const userArea = user ? (
-    user.role === "admin" ? (
-      <Link
-        href="/admin"
-        className="block w-full rounded-full border border-cream-deep px-5 py-2.5 text-center text-sm text-ink hover:border-coral hover:text-coral-deep transition"
-      >
-        Painel admin
-      </Link>
-    ) : (
-      <Link
-        href="/minha-conta"
-        className="block w-full rounded-full border border-cream-deep px-5 py-2.5 text-center text-sm text-ink hover:border-coral hover:text-coral-deep transition"
-      >
-        Minha conta
-      </Link>
-    )
-  ) : (
-    <div className="space-y-2">
-      <Link
-        href="/login"
-        className="block w-full rounded-full bg-coral px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-coral-deep transition"
-      >
-        Entrar
-      </Link>
-      <Link
-        href="/cadastro"
-        className="block w-full rounded-full border border-cream-deep px-5 py-2.5 text-center text-sm text-ink hover:border-coral hover:text-coral-deep transition"
-      >
-        Criar conta
-      </Link>
-    </div>
-  );
-
   return (
     <>
-      <a href="#main" className="skip-link">Pular para o conteúdo</a>
-      <PromoBar />
-      <header className="sticky top-0 z-30 border-b border-cream-deep/60 bg-cream-soft/85 backdrop-blur">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2.5 group min-w-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo-mark.svg"
-              alt=""
-              className="h-10 w-10 flex-shrink-0 transition group-hover:rotate-[-4deg]"
-            />
-            <span className="font-display text-lg sm:text-xl tracking-tight text-ink truncate">
-              perfumes de ambiente <span className="text-coral-deep">decor</span>
-            </span>
-          </Link>
-
-          <nav className="hidden lg:flex items-center gap-5 text-sm text-ink-soft">
-            <Link href="/produtos" className="hover:text-coral-deep transition">Catálogo</Link>
-            <Link href="/produtos?categoria=difusores" className="hover:text-coral-deep transition">Difusores</Link>
-            <Link href="/produtos?categoria=home-spray" className="hover:text-coral-deep transition">Home Spray</Link>
-            <Link href="/produtos?categoria=sabonetes" className="hover:text-coral-deep transition">Sabonetes</Link>
-            <Link href="/produtos?categoria=agua-perfumada" className="hover:text-coral-deep transition">Água Perfumada</Link>
-            <Link href="/produtos?categoria=cremes" className="hover:text-coral-deep transition">Cremes</Link>
-            <Link href="/produtos?categoria=kits" className="hover:text-coral-deep transition">Kits</Link>
-          </nav>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="hidden lg:block">
-              {user ? (
-                user.role === "admin" ? (
-                  <Link
-                    href="/admin"
-                    className="text-sm text-ink-soft hover:text-coral-deep transition"
-                  >
-                    Admin
-                  </Link>
-                ) : (
-                  <Link
-                    href="/minha-conta"
-                    className="text-sm text-ink-soft hover:text-coral-deep transition"
-                  >
-                    Minha conta
-                  </Link>
-                )
-              ) : (
-                <Link href="/login" className="text-sm text-ink-soft hover:text-coral-deep transition">
-                  Entrar
-                </Link>
-              )}
-            </div>
-            <CartLink />
-            <MobileNav userArea={userArea} />
-          </div>
-        </div>
-      </header>
+      <a href="#main" className="skip-link">Pular para o conteudo</a>
+      <Header user={user} />
 
       <div id="main" className="flex-1">{children}</div>
 
@@ -127,7 +39,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         <div className="mx-auto max-w-7xl px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           <TrustItem icon="🔐" title="Compra segura" sub="SSL + Mercado Pago" />
           <TrustItem icon="📦" title="Envio em 24h" sub="Correios + Jadlog" />
-          <TrustItem icon="💳" title="Pix, cartão, boleto" sub="parcele em 3x" />
+          <TrustItem icon="💳" title="Pix, cartao, boleto" sub="parcele em 3x" />
           <TrustItem icon="↩️" title="7 dias para troca" sub="conforme o CDC" />
         </div>
       </section>
@@ -141,7 +53,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
               <span className="font-display text-xl text-ink">perfumes de ambiente decor</span>
             </div>
             <p className="text-ink-soft leading-relaxed max-w-xs">
-              Perfumaria de ambiente, feita pra deixar memória em cada cantinho da sua casa.
+              Perfumaria de ambiente, feita pra deixar memoria em cada cantinho da sua casa.
             </p>
             <a
               href={`https://www.instagram.com/${INSTAGRAM_HANDLE}/`}
@@ -155,16 +67,17 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           <div>
             <h3 className="font-display text-lg text-ink mb-3">Loja</h3>
             <ul className="space-y-2 text-ink-soft">
-              <li><Link href="/produtos" className="hover:text-coral-deep transition">Catálogo</Link></li>
-              <li><Link href="/produtos?categoria=difusores" className="hover:text-coral-deep transition">Difusores</Link></li>
+              <li><Link href="/produtos" className="hover:text-coral-deep transition">Catalogo</Link></li>
+              <li><Link href="/produtos?categoria=difusor-de-varetas" className="hover:text-coral-deep transition">Difusor de Varetas</Link></li>
               <li><Link href="/produtos?categoria=home-spray" className="hover:text-coral-deep transition">Home Spray</Link></li>
+              <li><Link href="/marcas" className="hover:text-coral-deep transition">Marcas</Link></li>
               <li><Link href="/carrinho" className="hover:text-coral-deep transition">Carrinho</Link></li>
             </ul>
           </div>
           <div>
             <h3 className="font-display text-lg text-ink mb-3">Ajuda</h3>
             <ul className="space-y-2 text-ink-soft">
-              <li><Link href="/trocas-devolucoes" className="hover:text-coral-deep transition">Trocas e devoluções</Link></li>
+              <li><Link href="/trocas-devolucoes" className="hover:text-coral-deep transition">Trocas e devolucoes</Link></li>
               <li><Link href="/politica-de-privacidade" className="hover:text-coral-deep transition">Privacidade</Link></li>
               <li><Link href="/contato" className="hover:text-coral-deep transition">Contato</Link></li>
               <li><Link href="/sobre" className="hover:text-coral-deep transition">Sobre a marca</Link></li>

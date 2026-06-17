@@ -2,32 +2,52 @@ import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { ProductCard, type ProductCardData } from "@/components/ProductCard";
 import { SortSelect } from "@/components/SortSelect";
+import { buildProductsUrl, buildProductsUrlWithout, type CatalogFilters } from "@/lib/url";
 
 export const metadata = {
-  title: "Catálogo",
+  title: "Catalogo",
   description: "Difusores, sabonetes, home spray e mais — perfumaria de ambiente escolhida a dedo.",
 };
 
 const PAGE_SIZE = 24;
 
+type SearchParams = {
+  categoria?: string;
+  marca?: string;
+  busca?: string;
+  q?: string; // back-compat: ?q= usado por versoes anteriores
+  page?: string;
+  sort?: string;
+  ofertas?: string;
+};
+
 export default async function CatalogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ categoria?: string; q?: string; page?: string; sort?: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const sp = await searchParams;
   const page = Math.max(1, Number.parseInt(sp.page ?? "1", 10) || 1);
-  const categoriaSlug = sp.categoria?.trim() ?? null;
-  const q = sp.q?.trim() ?? "";
+  const categoriaSlug = sp.categoria?.trim() || null;
+  const marcaSlug = sp.marca?.trim() || null;
+  const busca = (sp.busca ?? sp.q)?.trim() ?? "";
   const sort = sp.sort ?? "recent";
+  const onlyOffers = sp.ofertas === "1";
 
   const supabase = await createSupabaseServerClient();
 
-  const [{ data: categories }, categoryRow] = await Promise.all([
-    supabase.from("categories").select("id, slug, name").order("position"),
+  const [{ data: brands }, categoryRow, brandRow] = await Promise.all([
+    supabase.from("brands").select("id, slug, name").eq("active", true).order("position"),
     categoriaSlug
-      ? supabase.from("categories").select("id, name").eq("slug", categoriaSlug).maybeSingle()
-      : Promise.resolve({ data: null }),
+      ? supabase
+          .from("categories")
+          .select("id, name, group_slug, product_type_label")
+          .eq("slug", categoriaSlug)
+          .maybeSingle()
+      : Promise.resolve({ data: null as null | { id: string; name: string; group_slug: string | null; product_type_label: string | null } }),
+    marcaSlug
+      ? supabase.from("brands").select("id, name").eq("slug", marcaSlug).maybeSingle()
+      : Promise.resolve({ data: null as null | { id: string; name: string } }),
   ]);
 
   let query = supabase
@@ -40,7 +60,9 @@ export default async function CatalogPage({
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
 
   if (categoryRow.data?.id) query = query.eq("category_id", categoryRow.data.id);
-  if (q) query = query.ilike("name", `%${q}%`);
+  if (brandRow.data?.id) query = query.eq("brand_id", brandRow.data.id);
+  if (busca) query = query.ilike("name", `%${busca}%`);
+  if (onlyOffers) query = query.not("compare_at_price_cents", "is", null);
 
   switch (sort) {
     case "price_asc":
@@ -58,8 +80,8 @@ export default async function CatalogPage({
 
   const { data: products, count } = await query;
 
-  const cards: ProductCardData[] =
-    (products ?? []).map((p: {
+  const cards: ProductCardData[] = (products ?? []).map(
+    (p: {
       id: string;
       slug: string;
       name: string;
@@ -75,22 +97,38 @@ export default async function CatalogPage({
       compare_at_price_cents: p.compare_at_price_cents,
       stock_quantity: p.stock_quantity,
       cover_url: pickCover(p.product_images),
-    }));
+    })
+  );
 
-  const title = categoryRow.data?.name ?? (q ? `Resultados para "${q}"` : "Catálogo");
-  const subtitle = categoryRow.data?.name
-    ? "Selecionados a dedo pra sua casa."
-    : q
-      ? "Veja o que encontramos pra você."
-      : "Tudo o que a perfumes de ambiente decor trouxe pro seu cantinho.";
+  const title = buildTitle({
+    categoryName: categoryRow.data?.name,
+    brandName: brandRow.data?.name,
+    busca,
+    onlyOffers,
+  });
+
+  const subtitle = buildSubtitle({
+    categoryName: categoryRow.data?.name,
+    brandName: brandRow.data?.name,
+    busca,
+    onlyOffers,
+  });
+
+  const currentFilters: CatalogFilters = {
+    categoria: categoriaSlug,
+    marca: marcaSlug,
+    busca: busca || null,
+    sort: sort === "recent" ? null : sort,
+    ofertas: onlyOffers || null,
+  };
 
   return (
     <main>
-      {/* Cabeçalho editorial */}
+      {/* Cabecalho editorial */}
       <section className="bg-cream-soft border-b border-cream-deep/60">
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
           <nav className="text-xs text-ink-mute mb-3 flex items-center gap-2" aria-label="breadcrumb">
-            <Link href="/" className="hover:text-coral-deep transition">Início</Link>
+            <Link href="/" className="hover:text-coral-deep transition">Inicio</Link>
             <span>/</span>
             <span className="text-ink-soft">{title}</span>
           </nav>
@@ -101,16 +139,31 @@ export default async function CatalogPage({
               {count} {count === 1 ? "produto" : "produtos"}
             </p>
           )}
-          {(categoriaSlug || q) && (
+          {(categoriaSlug || marcaSlug || busca || onlyOffers) && (
             <div className="mt-5 flex flex-wrap gap-2">
               {categoriaSlug && (
                 <FilterChip
                   label={categoryRow.data?.name ?? categoriaSlug}
-                  removeHref={qWithout(sp, "categoria")}
+                  removeHref={buildProductsUrlWithout(currentFilters, "categoria")}
                 />
               )}
-              {q && (
-                <FilterChip label={`"${q}"`} removeHref={qWithout(sp, "q")} />
+              {marcaSlug && (
+                <FilterChip
+                  label={brandRow.data?.name ?? marcaSlug}
+                  removeHref={buildProductsUrlWithout(currentFilters, "marca")}
+                />
+              )}
+              {busca && (
+                <FilterChip
+                  label={`"${busca}"`}
+                  removeHref={buildProductsUrlWithout(currentFilters, "busca")}
+                />
+              )}
+              {onlyOffers && (
+                <FilterChip
+                  label="Ofertas"
+                  removeHref={buildProductsUrlWithout(currentFilters, "ofertas")}
+                />
               )}
               <Link
                 href="/produtos"
@@ -124,53 +177,19 @@ export default async function CatalogPage({
       </section>
 
       <div className="mx-auto max-w-7xl px-6 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10">
           {/* Sidebar */}
           <aside className="space-y-8">
-            <div>
-              <h2 className="text-xs font-medium uppercase tracking-widest text-sage-deep mb-3">
-                Categorias
-              </h2>
-              <ul className="space-y-1.5 text-sm">
-                <li>
-                  <Link
-                    href="/produtos"
-                    className={
-                      !categoriaSlug
-                        ? "font-medium text-coral-deep"
-                        : "text-ink-soft hover:text-coral-deep transition"
-                    }
-                  >
-                    Todas
-                  </Link>
-                </li>
-                {(categories ?? []).map((c) => (
-                  <li key={c.id}>
-                    <Link
-                      href={`/produtos?categoria=${c.slug}`}
-                      className={
-                        categoriaSlug === c.slug
-                          ? "font-medium text-coral-deep"
-                          : "text-ink-soft hover:text-coral-deep transition"
-                      }
-                    >
-                      {c.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             <form className="space-y-2" action="/produtos">
               <h2 className="text-xs font-medium uppercase tracking-widest text-sage-deep">
                 Buscar
               </h2>
-              {categoriaSlug && (
-                <input type="hidden" name="categoria" value={categoriaSlug} />
-              )}
+              {categoriaSlug && <input type="hidden" name="categoria" value={categoriaSlug} />}
+              {marcaSlug && <input type="hidden" name="marca" value={marcaSlug} />}
+              {onlyOffers && <input type="hidden" name="ofertas" value="1" />}
               <input
-                name="q"
-                defaultValue={q}
+                name="busca"
+                defaultValue={busca}
                 placeholder="Nome do produto"
                 className="w-full rounded-full border border-cream-deep bg-cream-soft px-4 py-2 text-sm placeholder:text-ink-mute focus:outline-none focus:border-coral transition"
               />
@@ -178,6 +197,40 @@ export default async function CatalogPage({
                 Buscar
               </button>
             </form>
+
+            <div>
+              <h2 className="text-xs font-medium uppercase tracking-widest text-sage-deep mb-3">
+                Marcas
+              </h2>
+              <ul className="space-y-1.5 text-sm">
+                <li>
+                  <Link
+                    href={buildProductsUrl({ ...currentFilters, marca: null })}
+                    className={
+                      !marcaSlug
+                        ? "font-medium text-coral-deep"
+                        : "text-ink-soft hover:text-coral-deep transition"
+                    }
+                  >
+                    Todas as marcas
+                  </Link>
+                </li>
+                {(brands ?? []).map((b) => (
+                  <li key={b.id}>
+                    <Link
+                      href={buildProductsUrl({ ...currentFilters, marca: b.slug })}
+                      className={
+                        marcaSlug === b.slug
+                          ? "font-medium text-coral-deep"
+                          : "text-ink-soft hover:text-coral-deep transition"
+                      }
+                    >
+                      {b.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </aside>
 
           {/* Lista */}
@@ -200,14 +253,26 @@ export default async function CatalogPage({
 
             {cards.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-cream-deep bg-cream-soft p-16 text-center">
-                <p className="font-display text-2xl text-ink">Nada por aqui.</p>
-                <p className="mt-2 text-sm text-ink-soft">
-                  Tenta ajustar o filtro ou{" "}
-                  <Link href="/produtos" className="text-coral-deep underline underline-offset-4">
-                    ver tudo
-                  </Link>
-                  .
+                <p className="font-display text-2xl text-ink">Nada por aqui ainda.</p>
+                <p className="mt-2 text-sm text-ink-soft max-w-md mx-auto">
+                  {marcaSlug
+                    ? "Estamos preparando o catalogo desta marca. Em breve mais produtos por aqui."
+                    : "Tenta ajustar o filtro ou "}
+                  {!marcaSlug && (
+                    <Link href="/produtos" className="text-coral-deep underline underline-offset-4">
+                      ver tudo
+                    </Link>
+                  )}
+                  {!marcaSlug && "."}
                 </p>
+                {marcaSlug && (
+                  <Link
+                    href="/produtos"
+                    className="mt-5 inline-block rounded-full bg-coral px-6 py-2.5 text-sm font-medium text-white hover:bg-coral-deep transition"
+                  >
+                    Ver catalogo completo
+                  </Link>
+                )}
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -218,13 +283,44 @@ export default async function CatalogPage({
             )}
 
             {count != null && count > PAGE_SIZE && (
-              <Pagination page={page} total={count} sp={sp} />
+              <Pagination
+                page={page}
+                total={count}
+                currentFilters={currentFilters}
+              />
             )}
           </div>
         </div>
       </div>
     </main>
   );
+}
+
+function buildTitle(input: {
+  categoryName?: string | null;
+  brandName?: string | null;
+  busca: string;
+  onlyOffers: boolean;
+}): string {
+  if (input.categoryName && input.brandName)
+    return `${input.categoryName} · ${input.brandName}`;
+  if (input.categoryName) return input.categoryName;
+  if (input.brandName) return input.brandName;
+  if (input.busca) return `Resultados para "${input.busca}"`;
+  if (input.onlyOffers) return "Ofertas";
+  return "Catalogo";
+}
+
+function buildSubtitle(input: {
+  categoryName?: string | null;
+  brandName?: string | null;
+  busca: string;
+  onlyOffers: boolean;
+}): string {
+  if (input.categoryName || input.brandName) return "Selecionados com curadoria.";
+  if (input.busca) return "Veja o que encontramos pra voce.";
+  if (input.onlyOffers) return "Ofertas vigentes no catalogo.";
+  return "Tudo o que a curadoria trouxe pro seu cantinho.";
 }
 
 function FilterChip({ label, removeHref }: { label: string; removeHref: string }) {
@@ -234,51 +330,41 @@ function FilterChip({ label, removeHref }: { label: string; removeHref: string }
       className="group inline-flex items-center gap-1.5 rounded-full bg-coral-soft px-3 py-1 text-xs text-coral-deep hover:bg-coral hover:text-white transition"
     >
       <span>{label}</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-3 w-3">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        className="h-3 w-3"
+        aria-hidden="true"
+      >
         <path d="M6 6l12 12M18 6L6 18" />
       </svg>
     </Link>
   );
 }
 
-function qWithout(sp: { categoria?: string; q?: string; sort?: string }, removeKey: "categoria" | "q") {
-  const u = new URLSearchParams();
-  if (removeKey !== "categoria" && sp.categoria) u.set("categoria", sp.categoria);
-  if (removeKey !== "q" && sp.q) u.set("q", sp.q);
-  if (sp.sort && sp.sort !== "recent") u.set("sort", sp.sort);
-  const s = u.toString();
-  return s ? `/produtos?${s}` : "/produtos";
-}
-
 function Pagination({
   page,
   total,
-  sp,
+  currentFilters,
 }: {
   page: number;
   total: number;
-  sp: { categoria?: string; q?: string; sort?: string };
+  currentFilters: CatalogFilters;
 }) {
   const last = Math.ceil(total / PAGE_SIZE);
-  const qs = (p: number) => {
-    const u = new URLSearchParams();
-    if (sp.categoria) u.set("categoria", sp.categoria);
-    if (sp.q) u.set("q", sp.q);
-    if (sp.sort && sp.sort !== "recent") u.set("sort", sp.sort);
-    if (p > 1) u.set("page", String(p));
-    const s = u.toString();
-    return s ? `?${s}` : "";
-  };
   return (
     <div className="flex items-center justify-between text-sm text-ink-soft pt-6 border-t border-cream-deep">
       <span>
-        Página <strong className="text-ink">{page}</strong> de{" "}
+        Pagina <strong className="text-ink">{page}</strong> de{" "}
         <strong className="text-ink">{last}</strong>
       </span>
       <div className="flex gap-2">
         {page > 1 && (
           <Link
-            href={`/produtos${qs(page - 1)}`}
+            href={buildProductsUrl({ ...currentFilters, page: page - 1 })}
             className="rounded-full border border-cream-deep px-4 py-1.5 hover:bg-cream-soft hover:border-coral transition"
           >
             ← Anterior
@@ -286,10 +372,10 @@ function Pagination({
         )}
         {page < last && (
           <Link
-            href={`/produtos${qs(page + 1)}`}
+            href={buildProductsUrl({ ...currentFilters, page: page + 1 })}
             className="rounded-full bg-ink text-cream-soft px-4 py-1.5 hover:bg-coral-deep transition"
           >
-            Próxima →
+            Proxima →
           </Link>
         )}
       </div>
