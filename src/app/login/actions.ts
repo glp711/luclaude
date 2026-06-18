@@ -1,21 +1,13 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { buildEmailConfirmationRedirect, safeInternalPath } from "@/lib/auth/paths";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-
-// Aceita redirect só pra paths internos (proteção contra open redirect)
-function safeFrom(raw: string | null | undefined): string | null {
-  if (!raw) return null;
-  if (!raw.startsWith("/") || raw.startsWith("//")) return null;
-  // bloqueia rotas auth, evita loop
-  if (raw.startsWith("/login") || raw.startsWith("/cadastro") || raw.startsWith("/logout")) return null;
-  return raw;
-}
 
 export async function signIn(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const from = safeFrom(String(formData.get("from") ?? "")) ?? null;
+  const from = safeInternalPath(String(formData.get("from") ?? ""), "");
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -23,14 +15,16 @@ export async function signIn(formData: FormData) {
   if (error) {
     const code =
       error.message.toLowerCase().includes("not confirmed") ? "not_confirmed" : "invalid";
-    const qs = from ? `?error=${code}&from=${encodeURIComponent(from)}` : `?error=${code}`;
-    redirect(`/login${qs}`);
+    const qs = new URLSearchParams({ error: code, email });
+    if (from) qs.set("from", from);
+    redirect(`/login?${qs.toString()}`);
   }
 
-  // se veio de algum lugar protegido, volta pra lá; senão decide pelo role
   if (from) redirect(from);
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
@@ -39,5 +33,36 @@ export async function signIn(formData: FormData) {
       .single();
     if (profile?.role === "admin") redirect("/admin");
   }
+
   redirect("/minha-conta");
+}
+
+export async function resendLoginConfirmation(formData: FormData) {
+  const email = String(formData.get("email") ?? "").trim();
+  const from = safeInternalPath(String(formData.get("from") ?? ""), "");
+
+  if (!email) {
+    redirect("/login?error=not_confirmed&resent=missing");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
+    options: {
+      emailRedirectTo: buildEmailConfirmationRedirect(),
+    },
+  });
+
+  const qs = new URLSearchParams({ error: "not_confirmed", email });
+  if (from) qs.set("from", from);
+
+  if (error) {
+    const msg = error.message.toLowerCase();
+    qs.set("resent", msg.includes("rate") || msg.includes("too many") ? "rate" : "error");
+    redirect(`/login?${qs.toString()}`);
+  }
+
+  qs.set("resent", "1");
+  redirect(`/login?${qs.toString()}`);
 }

@@ -19,5 +19,5 @@ export async function updatePassword(formData: FormData) {
   const { error } = await supabase.auth.updateUser({ password });
   if (error) redirect("/redefinir-senha?error=failed");
 
-  redirect("/login?ok=password_updated");
+  redirect("/login?reset=1");
 }

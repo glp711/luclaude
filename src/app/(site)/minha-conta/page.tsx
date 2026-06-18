@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/guards";
 import { formatBRL } from "@/lib/money";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Minha conta" };
 
@@ -26,7 +26,12 @@ const STATUS_STYLE: Record<string, string> = {
   refunded: "bg-cream-deep text-ink-soft",
 };
 
-export default async function MinhaContaPage() {
+export default async function MinhaContaPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ confirmed?: string; welcome?: string }>;
+}) {
+  const params = await searchParams;
   const user = await getCurrentUser();
   if (!user) redirect("/login?from=/minha-conta");
 
@@ -41,66 +46,79 @@ export default async function MinhaContaPage() {
       .limit(10),
   ]);
 
-  const firstName = (profile?.full_name ?? user.email ?? "").split(" ")[0] || "Você";
+  const firstName = (profile?.full_name ?? user.email ?? "").split(" ")[0] || "Voce";
 
   return (
     <main>
       <section className="bg-cream-soft border-b border-cream-deep/60">
         <div className="mx-auto max-w-5xl px-6 py-10">
-          <nav className="text-xs text-ink-mute mb-3 flex items-center gap-2" aria-label="breadcrumb">
-            <Link href="/" className="hover:text-coral-deep transition">Início</Link>
+          <nav className="mb-3 flex items-center gap-2 text-xs text-ink-mute" aria-label="breadcrumb">
+            <Link href="/" className="hover:text-coral-deep transition">Inicio</Link>
             <span>/</span>
             <span className="text-ink-soft">Minha conta</span>
           </nav>
           <h1 className="font-display text-5xl text-ink">
-            Olá, <em className="text-coral-deep">{firstName}</em>.
+            Ola, <em className="text-coral-deep not-italic">{firstName}</em>.
           </h1>
           <p className="mt-2 text-ink-soft">
-            Aqui você acompanha pedidos e atualiza seus dados.
+            Aqui voce acompanha pedidos e consulta seus dados.
           </p>
+          {(params.confirmed || params.welcome) && (
+            <div className="mt-5 rounded-[8px] border border-sage-soft bg-sage-soft/45 px-4 py-3 text-sm text-sage-deep">
+              {params.confirmed
+                ? "E-mail confirmado com sucesso. Sua conta ja esta ativa."
+                : "Conta criada com sucesso. Seja bem-vinda."}
+            </div>
+          )}
         </div>
       </section>
 
-      <div className="mx-auto max-w-5xl px-6 py-10 grid grid-cols-1 md:grid-cols-[1fr_280px] gap-8">
+      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-6 py-10 md:grid-cols-[1fr_280px]">
         <div className="space-y-6">
-          <section className="rounded-2xl border border-cream-deep bg-cream-soft p-6">
-            <h2 className="font-display text-2xl text-ink mb-4">Pedidos recentes</h2>
+          <section className="rounded-[8px] border border-cream-deep bg-cream-soft p-6">
+            <h2 className="mb-4 font-display text-2xl text-ink">Pedidos recentes</h2>
             {!orders || orders.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-cream-deep bg-cream p-8 text-center">
-                <p className="font-display text-lg text-ink">Você ainda não tem pedidos</p>
+              <div className="rounded-[8px] border border-dashed border-cream-deep bg-cream p-8 text-center">
+                <p className="font-display text-lg text-ink">Voce ainda nao tem pedidos</p>
                 <p className="mt-1 text-sm text-ink-soft">
-                  Que tal começar pelo nosso catálogo?
+                  Que tal comecar pelo nosso catalogo?
                 </p>
                 <Link
                   href="/produtos"
                   className="mt-4 inline-block rounded-full bg-coral px-6 py-2.5 text-sm font-medium text-white hover:bg-coral-deep transition"
                 >
-                  Ver catálogo
+                  Ver catalogo
                 </Link>
               </div>
             ) : (
               <ul className="divide-y divide-cream-deep">
-                {orders.map((o) => (
-                  <li key={o.id} className="py-4 flex items-center justify-between gap-4 flex-wrap">
+                {orders.map((order) => (
+                  <li key={order.id} className="flex flex-wrap items-center justify-between gap-4 py-4">
                     <div className="space-y-1">
-                      <div className="font-mono text-sm text-ink">#{o.order_number}</div>
+                      <div className="font-mono text-sm text-ink">#{order.order_number}</div>
                       <div className="text-xs text-ink-mute">
-                        {new Date(o.created_at).toLocaleDateString("pt-BR", {
-                          day: "2-digit", month: "long", year: "numeric",
+                        {new Date(order.created_at).toLocaleDateString("pt-BR", {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
                         })}
                       </div>
-                      {o.tracking_code && (
+                      {order.tracking_code && (
                         <div className="text-xs text-coral-deep">
-                          Rastreio: <span className="font-mono">{o.tracking_code}</span>
+                          Rastreio: <span className="font-mono">{order.tracking_code}</span>
                         </div>
                       )}
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider ${STATUS_STYLE[o.status] ?? "bg-cream-deep text-ink-soft"}`}>
-                        {STATUS_LABEL[o.status] ?? o.status}
+                      <span
+                        className={`rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider ${
+                          STATUS_STYLE[order.status] ?? "bg-cream-deep text-ink-soft"
+                        }`}
+                      >
+                        {STATUS_LABEL[order.status] ?? order.status}
                       </span>
-                      <span className="font-display text-xl text-coral-deep tabular-nums">
-                        {formatBRL(o.total_cents)}
+                      <span className="font-display text-xl tabular-nums text-coral-deep">
+                        {formatBRL(order.total_cents)}
                       </span>
                     </div>
                   </li>
@@ -110,17 +128,17 @@ export default async function MinhaContaPage() {
           </section>
         </div>
 
-        <aside className="space-y-4 h-fit">
-          <section className="rounded-2xl border border-cream-deep bg-cream-soft p-6">
-            <h2 className="font-display text-xl text-ink mb-3">Meus dados</h2>
-            <dl className="text-sm space-y-2">
+        <aside className="h-fit space-y-4">
+          <section className="rounded-[8px] border border-cream-deep bg-cream-soft p-6">
+            <h2 className="mb-3 font-display text-xl text-ink">Meus dados</h2>
+            <dl className="space-y-2 text-sm">
               <div>
                 <dt className="text-xs uppercase tracking-widest text-sage-deep">Nome</dt>
-                <dd className="text-ink">{profile?.full_name ?? "—"}</dd>
+                <dd className="text-ink">{profile?.full_name ?? "-"}</dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-widest text-sage-deep">E-mail</dt>
-                <dd className="text-ink break-all">{user.email}</dd>
+                <dd className="break-all text-ink">{user.email}</dd>
               </div>
               {profile?.phone && (
                 <div>

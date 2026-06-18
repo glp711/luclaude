@@ -96,7 +96,7 @@ export function MobileMenuDrawer({
               aria-label="Fechar menu"
               className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
             />
-            <aside className="absolute right-0 top-0 bottom-0 w-[90%] max-w-md bg-cream-soft shadow-xl flex flex-col">
+            <aside className="absolute right-0 top-0 bottom-0 w-[94%] max-w-md bg-cream-soft shadow-xl flex flex-col">
               {/* Cabecalho */}
               <div className="flex items-center justify-between p-4 border-b border-cream-deep">
                 <Link
@@ -132,6 +132,37 @@ export function MobileMenuDrawer({
 
               {/* Lista de grupos com acordeao */}
               <div className="flex-1 overflow-y-auto p-4">
+                <div className="mb-5 rounded-[8px] border border-cream-deep bg-cream p-3">
+                  <p className="px-1 text-[11px] uppercase tracking-widest text-sage-deep">
+                    explorar
+                  </p>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <Link
+                      href="/produtos"
+                      onClick={close}
+                      className="rounded-full bg-coral px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-coral-deep transition"
+                    >
+                      Catalogo
+                    </Link>
+                    <Link
+                      href="/marcas"
+                      onClick={close}
+                      className="rounded-full border border-sage px-4 py-2.5 text-center text-sm font-medium text-sage-deep hover:bg-sage-soft transition"
+                    >
+                      Marcas
+                    </Link>
+                    <Link
+                      href="/produtos?ofertas=1"
+                      onClick={close}
+                      className="col-span-2 rounded-full border border-cream-deep bg-cream-soft px-4 py-2.5 text-center text-sm text-ink-soft hover:border-coral hover:text-coral-deep transition"
+                    >
+                      Ver ofertas e achadinhos
+                    </Link>
+                  </div>
+                </div>
+                <p className="mb-2 px-2 text-[11px] uppercase tracking-widest text-sage-deep">
+                  navegar por tipo
+                </p>
                 <nav aria-label="Navegacao mobile" className="space-y-1">
                   {navItems.map((item) => {
                     if (item.kind === "link") {
