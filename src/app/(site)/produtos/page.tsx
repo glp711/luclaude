@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CatalogMobileFilters } from "@/components/CatalogMobileFilters";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { ProductCard, type ProductCardData } from "@/components/ProductCard";
 import { SortSelect } from "@/components/SortSelect";
@@ -148,18 +149,21 @@ export default async function CatalogPage({
       const bGroup = b.group_slug ?? "zz";
       return aGroup.localeCompare(bGroup) || a.position - b.position || a.name.localeCompare(b.name);
     });
+  const activeFilterCount = [categoriaSlug, marcaSlug, busca || null, onlyOffers ? "ofertas" : null].filter(Boolean).length;
+  const resultLabel =
+    count != null ? `${count} ${count === 1 ? "produto" : "produtos"}` : undefined;
 
   return (
     <main>
       {/* Cabecalho editorial */}
       <section className="bg-cream-soft border-b border-cream-deep/60">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
+        <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 md:py-16">
           <nav className="text-xs text-ink-mute mb-3 flex items-center gap-2" aria-label="breadcrumb">
             <Link href="/" className="hover:text-coral-deep transition">Inicio</Link>
             <span>/</span>
             <span className="text-ink-soft">{title}</span>
           </nav>
-          <h1 className="font-display text-5xl md:text-6xl text-ink">{title}</h1>
+          <h1 className="font-display text-4xl text-ink md:text-6xl">{title}</h1>
           <p className="mt-2 text-ink-soft">{subtitle}</p>
           {count != null && (
             <p className="mt-4 text-xs uppercase tracking-widest text-sage-deep">
@@ -203,10 +207,117 @@ export default async function CatalogPage({
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-6 py-10">
+      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:py-10">
+        <CatalogMobileFilters activeCount={activeFilterCount} resultLabel={resultLabel}>
+          <div className="space-y-5">
+            <form className="rounded-[8px] border border-cream-deep bg-cream p-4 shadow-sm space-y-3" action="/produtos">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-sage-deep">
+                Buscar produto
+              </h2>
+              {categoriaSlug && <input type="hidden" name="categoria" value={categoriaSlug} />}
+              {marcaSlug && <input type="hidden" name="marca" value={marcaSlug} />}
+              {onlyOffers && <input type="hidden" name="ofertas" value="1" />}
+              <input
+                name="busca"
+                defaultValue={busca}
+                placeholder="Nome, fragrancia ou produto"
+                className="w-full rounded-full border border-cream-deep bg-cream-soft px-4 py-3 text-sm placeholder:text-ink-mute focus:outline-none focus:border-coral transition"
+              />
+              <button className="w-full rounded-full bg-ink px-4 py-3 text-sm font-medium text-cream-soft hover:bg-coral-deep transition">
+                Buscar
+              </button>
+            </form>
+
+            <div className="rounded-[8px] border border-cream-deep bg-cream p-4 shadow-sm">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-sage-deep mb-3">
+                Categorias
+              </h2>
+              <ul className="space-y-1.5 text-sm">
+                <li>
+                  <Link
+                    href={buildProductsUrl({ ...currentFilters, categoria: null })}
+                    className={
+                      !categoriaSlug
+                        ? "flex items-center justify-between rounded-full bg-coral-soft px-3 py-2.5 font-semibold text-coral-deep"
+                        : "flex items-center justify-between rounded-full px-3 py-2.5 text-ink-soft hover:bg-cream-soft hover:text-coral-deep transition"
+                    }
+                  >
+                    <span>Todas</span>
+                    <span className="text-xs">{totalActiveProducts}</span>
+                  </Link>
+                </li>
+                {visibleCategories.map((category) => (
+                  <li key={category.id}>
+                    <Link
+                      href={buildProductsUrl({ ...currentFilters, categoria: category.slug })}
+                      className={
+                        categoriaSlug === category.slug
+                          ? "flex items-center justify-between rounded-full bg-coral-soft px-3 py-2.5 font-semibold text-coral-deep"
+                          : "flex items-center justify-between rounded-full px-3 py-2.5 text-ink-soft hover:bg-cream-soft hover:text-coral-deep transition"
+                      }
+                    >
+                      <span>{category.name}</span>
+                      <span className="text-xs">{countByCategory.get(category.id) ?? 0}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-[8px] border border-cream-deep bg-cream p-4 shadow-sm">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-sage-deep mb-3">
+                Marcas
+              </h2>
+              <ul className="space-y-1.5 text-sm">
+                <li>
+                  <Link
+                    href={buildProductsUrl({ ...currentFilters, marca: null })}
+                    className={
+                      !marcaSlug
+                        ? "block rounded-full bg-coral-soft px-3 py-2.5 font-semibold text-coral-deep"
+                        : "block rounded-full px-3 py-2.5 text-ink-soft hover:bg-cream-soft hover:text-coral-deep transition"
+                    }
+                  >
+                    Todas as marcas
+                  </Link>
+                </li>
+                {((brands ?? []) as { id: string; slug: string; name: string }[]).map((brand) => (
+                  <li key={brand.id}>
+                    <Link
+                      href={buildProductsUrl({ ...currentFilters, marca: brand.slug })}
+                      className={
+                        marcaSlug === brand.slug
+                          ? "block rounded-full bg-coral-soft px-3 py-2.5 font-semibold text-coral-deep"
+                          : "block rounded-full px-3 py-2.5 text-ink-soft hover:bg-cream-soft hover:text-coral-deep transition"
+                      }
+                    >
+                      {brand.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <Link
+              href={buildProductsUrl({ ...currentFilters, ofertas: true })}
+              className="block rounded-[8px] border border-coral bg-coral-soft/60 p-4 text-sm transition hover:bg-coral-soft"
+            >
+              <span className="block text-xs font-bold uppercase tracking-widest text-coral-deep">
+                Achadinhos
+              </span>
+              <span className="mt-1 block font-display text-2xl leading-tight text-ink">
+                Ver ofertas
+              </span>
+              <span className="mt-2 block text-xs text-ink-soft">
+                Produtos com preco promocional no catalogo.
+              </span>
+            </Link>
+          </div>
+        </CatalogMobileFilters>
+
         <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10">
           {/* Sidebar */}
-          <aside className="space-y-8">
+          <aside className="hidden space-y-8 lg:block">
             <form className="rounded-[8px] border border-cream-deep bg-cream-soft p-4 shadow-sm space-y-3" action="/produtos">
               <h2 className="text-xs font-bold uppercase tracking-widest text-sage-deep">
                 Buscar
@@ -313,7 +424,7 @@ export default async function CatalogPage({
 
           {/* Lista */}
           <div className="space-y-5">
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm text-ink-soft">
                 {count != null && (
                   <span>
