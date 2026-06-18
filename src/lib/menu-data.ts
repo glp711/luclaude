@@ -7,6 +7,10 @@ import {
   type MenuType,
 } from "@/lib/navigation";
 
+const CATEGORY_GROUP_FALLBACK: Record<string, string> = {
+  acessorios: "acessorios",
+};
+
 /**
  * Monta a estrutura do mega menu a partir dos produtos cadastrados.
  *
@@ -61,17 +65,20 @@ export async function getDynamicMenuGroups(): Promise<MenuGroup[]> {
   for (const row of data as unknown as Row[]) {
     const cat = row.categories;
     const brand = row.brands;
-    if (!cat || !cat.group_slug || !brand) continue;
+    if (!cat || !brand) continue;
+
+    const groupSlug = cat.group_slug ?? CATEGORY_GROUP_FALLBACK[cat.slug];
+    if (!groupSlug) continue;
 
     catInfo.set(cat.slug, {
       name: cat.name,
       label: cat.product_type_label ?? cat.name,
       position: cat.position,
-      groupSlug: cat.group_slug,
+      groupSlug,
     });
 
-    if (!tree.has(cat.group_slug)) tree.set(cat.group_slug, new Map());
-    const cats = tree.get(cat.group_slug)!;
+    if (!tree.has(groupSlug)) tree.set(groupSlug, new Map());
+    const cats = tree.get(groupSlug)!;
     if (!cats.has(cat.slug)) cats.set(cat.slug, new Map());
     cats.get(cat.slug)!.set(brand.slug, { name: brand.name, position: brand.position });
   }

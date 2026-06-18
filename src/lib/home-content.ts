@@ -182,6 +182,7 @@ export const CATEGORY_SHORTCUTS: CategoryShortcut[] = [
   { label: "Sabonetes", categorySlug: "sabonete-liquido" },
   { label: "Velas", categorySlug: "vela-perfumada" },
   { label: "Corpo e Perfumaria", categorySlug: "body-splash" },
+  { label: "Acessórios", categorySlug: "acessorios" },
 ];
 
 /**

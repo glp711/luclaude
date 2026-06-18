@@ -5,7 +5,7 @@ import { SortSelect } from "@/components/SortSelect";
 import { buildProductsUrl, buildProductsUrlWithout, type CatalogFilters } from "@/lib/url";
 
 export const metadata = {
-  title: "Catalogo",
+  title: "Catálogo",
   description: "Difusores, sabonetes, home spray e mais — perfumaria de ambiente escolhida a dedo.",
 };
 
@@ -36,8 +36,14 @@ export default async function CatalogPage({
 
   const supabase = await createSupabaseServerClient();
 
-  const [{ data: brands }, categoryRow, brandRow] = await Promise.all([
+  const [{ data: brands }, { data: categories }, { data: activeCategoryRows }, categoryRow, brandRow] = await Promise.all([
     supabase.from("brands").select("id, slug, name").eq("active", true).order("position"),
+    supabase
+      .from("categories")
+      .select("id, slug, name, group_slug, position")
+      .order("position")
+      .order("name"),
+    supabase.from("products").select("category_id").eq("status", "active"),
     categoriaSlug
       ? supabase
           .from("categories")
@@ -122,6 +128,27 @@ export default async function CatalogPage({
     ofertas: onlyOffers || null,
   };
 
+  const countByCategory = new Map<string, number>();
+  for (const row of (activeCategoryRows ?? []) as { category_id: string | null }[]) {
+    if (row.category_id) {
+      countByCategory.set(row.category_id, (countByCategory.get(row.category_id) ?? 0) + 1);
+    }
+  }
+  const totalActiveProducts = Array.from(countByCategory.values()).reduce((sum, value) => sum + value, 0);
+  const visibleCategories = ((categories ?? []) as {
+    id: string;
+    slug: string;
+    name: string;
+    group_slug: string | null;
+    position: number;
+  }[])
+    .filter((category) => (countByCategory.get(category.id) ?? 0) > 0)
+    .sort((a, b) => {
+      const aGroup = a.group_slug ?? "zz";
+      const bGroup = b.group_slug ?? "zz";
+      return aGroup.localeCompare(bGroup) || a.position - b.position || a.name.localeCompare(b.name);
+    });
+
   return (
     <main>
       {/* Cabecalho editorial */}
@@ -180,8 +207,8 @@ export default async function CatalogPage({
         <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10">
           {/* Sidebar */}
           <aside className="space-y-8">
-            <form className="space-y-2" action="/produtos">
-              <h2 className="text-xs font-medium uppercase tracking-widest text-sage-deep">
+            <form className="rounded-[8px] border border-cream-deep bg-cream-soft p-4 shadow-sm space-y-3" action="/produtos">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-sage-deep">
                 Buscar
               </h2>
               {categoriaSlug && <input type="hidden" name="categoria" value={categoriaSlug} />}
@@ -198,8 +225,44 @@ export default async function CatalogPage({
               </button>
             </form>
 
-            <div>
-              <h2 className="text-xs font-medium uppercase tracking-widest text-sage-deep mb-3">
+            <div className="rounded-[8px] border border-cream-deep bg-cream-soft p-4 shadow-sm">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-sage-deep mb-3">
+                Categorias
+              </h2>
+              <ul className="space-y-1.5 text-sm">
+                <li>
+                  <Link
+                    href={buildProductsUrl({ ...currentFilters, categoria: null })}
+                    className={
+                      !categoriaSlug
+                        ? "flex items-center justify-between rounded-full bg-coral-soft px-3 py-2 font-semibold text-coral-deep"
+                        : "flex items-center justify-between rounded-full px-3 py-2 text-ink-soft hover:bg-cream hover:text-coral-deep transition"
+                    }
+                  >
+                    <span>Todas</span>
+                    <span className="text-xs">{totalActiveProducts}</span>
+                  </Link>
+                </li>
+                {visibleCategories.map((category) => (
+                  <li key={category.id}>
+                    <Link
+                      href={buildProductsUrl({ ...currentFilters, categoria: category.slug })}
+                      className={
+                        categoriaSlug === category.slug
+                          ? "flex items-center justify-between rounded-full bg-coral-soft px-3 py-2 font-semibold text-coral-deep"
+                          : "flex items-center justify-between rounded-full px-3 py-2 text-ink-soft hover:bg-cream hover:text-coral-deep transition"
+                      }
+                    >
+                      <span>{category.name}</span>
+                      <span className="text-xs">{countByCategory.get(category.id) ?? 0}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-[8px] border border-cream-deep bg-cream-soft p-4 shadow-sm">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-sage-deep mb-3">
                 Marcas
               </h2>
               <ul className="space-y-1.5 text-sm">
@@ -208,8 +271,8 @@ export default async function CatalogPage({
                     href={buildProductsUrl({ ...currentFilters, marca: null })}
                     className={
                       !marcaSlug
-                        ? "font-medium text-coral-deep"
-                        : "text-ink-soft hover:text-coral-deep transition"
+                        ? "block rounded-full bg-coral-soft px-3 py-2 font-semibold text-coral-deep"
+                        : "block rounded-full px-3 py-2 text-ink-soft hover:bg-cream hover:text-coral-deep transition"
                     }
                   >
                     Todas as marcas
@@ -221,8 +284,8 @@ export default async function CatalogPage({
                       href={buildProductsUrl({ ...currentFilters, marca: b.slug })}
                       className={
                         marcaSlug === b.slug
-                          ? "font-medium text-coral-deep"
-                          : "text-ink-soft hover:text-coral-deep transition"
+                          ? "block rounded-full bg-coral-soft px-3 py-2 font-semibold text-coral-deep"
+                          : "block rounded-full px-3 py-2 text-ink-soft hover:bg-cream hover:text-coral-deep transition"
                       }
                     >
                       {b.name}
@@ -231,6 +294,21 @@ export default async function CatalogPage({
                 ))}
               </ul>
             </div>
+
+            <Link
+              href={buildProductsUrl({ ...currentFilters, ofertas: true })}
+              className="block rounded-[8px] border border-coral bg-coral-soft/60 p-4 text-sm transition hover:bg-coral-soft"
+            >
+              <span className="block text-xs font-bold uppercase tracking-widest text-coral-deep">
+                Achadinhos
+              </span>
+              <span className="mt-1 block font-display text-2xl leading-tight text-ink">
+                Ver ofertas
+              </span>
+              <span className="mt-2 block text-xs text-ink-soft">
+                Produtos com preço promocional no catálogo.
+              </span>
+            </Link>
           </aside>
 
           {/* Lista */}
@@ -256,7 +334,7 @@ export default async function CatalogPage({
                 <p className="font-display text-2xl text-ink">Nada por aqui ainda.</p>
                 <p className="mt-2 text-sm text-ink-soft max-w-md mx-auto">
                   {marcaSlug
-                    ? "Estamos preparando o catalogo desta marca. Em breve mais produtos por aqui."
+                    ? "Estamos preparando o catálogo desta marca. Em breve mais produtos por aqui."
                     : "Tenta ajustar o filtro ou "}
                   {!marcaSlug && (
                     <Link href="/produtos" className="text-coral-deep underline underline-offset-4">
@@ -270,7 +348,7 @@ export default async function CatalogPage({
                     href="/produtos"
                     className="mt-5 inline-block rounded-full bg-coral px-6 py-2.5 text-sm font-medium text-white hover:bg-coral-deep transition"
                   >
-                    Ver catalogo completo
+                    Ver catálogo completo
                   </Link>
                 )}
               </div>
@@ -308,7 +386,7 @@ function buildTitle(input: {
   if (input.brandName) return input.brandName;
   if (input.busca) return `Resultados para "${input.busca}"`;
   if (input.onlyOffers) return "Ofertas";
-  return "Catalogo";
+  return "Catálogo";
 }
 
 function buildSubtitle(input: {
@@ -319,7 +397,7 @@ function buildSubtitle(input: {
 }): string {
   if (input.categoryName || input.brandName) return "Selecionados com curadoria.";
   if (input.busca) return "Veja o que encontramos pra voce.";
-  if (input.onlyOffers) return "Ofertas vigentes no catalogo.";
+  if (input.onlyOffers) return "Ofertas vigentes no catálogo.";
   return "Tudo o que a curadoria trouxe pro seu cantinho.";
 }
 

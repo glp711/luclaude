@@ -243,6 +243,17 @@ export const MENU_GROUPS: MenuGroup[] = [
       },
     ],
   },
+  {
+    slug: "acessorios",
+    label: "Acessórios",
+    types: [
+      {
+        categorySlug: "acessorios",
+        label: "Acessórios",
+        brands: [DANI_FERNANDES],
+      },
+    ],
+  },
 ];
 
 /**
