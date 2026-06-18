@@ -22,10 +22,20 @@ export const SEO_KEYWORDS = [
   "Kailash",
 ];
 
+const CANONICAL_PRODUCTION_URL = "https://www.perfumesdeambiente.com";
+
 export function siteUrl(path = "/") {
-  const origin = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
+  const configured = process.env.NEXT_PUBLIC_CANONICAL_SITE_URL ?? process.env.NEXT_PUBLIC_SITE_URL;
+  const origin = pickCanonicalOrigin(configured).replace(/\/+$/, "");
   if (!path || path === "/") return `${origin}/`;
   return `${origin}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+function pickCanonicalOrigin(configured: string | undefined) {
+  if (!configured) return CANONICAL_PRODUCTION_URL;
+  if (configured.includes("localhost") || configured.includes("127.0.0.1")) return configured;
+  if (configured.includes("luperfumes.vercel.app")) return CANONICAL_PRODUCTION_URL;
+  return configured;
 }
 
 export function absoluteUrl(pathOrUrl: string | null | undefined) {

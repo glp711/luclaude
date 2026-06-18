@@ -52,6 +52,10 @@ Criado `src/lib/seo.ts` com:
 
 Isso evita repetir nome, descricao e origem do site em varios arquivos.
 
+Observacao importante:
+
+- `siteUrl()` agora prefere `https://www.perfumesdeambiente.com` quando `NEXT_PUBLIC_SITE_URL` estiver apontando para `luperfumes.vercel.app`. Isso evita canonical, robots e sitemap usando a URL temporaria da Vercel em producao.
+
 ### Metadata global
 
 Arquivo: `src/app/layout.tsx`
