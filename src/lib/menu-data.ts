@@ -4,6 +4,7 @@ import {
   MENU_GROUPS,
   type BrandLink,
   type MenuGroup,
+  type MenuProductPreview,
   type MenuType,
 } from "@/lib/navigation";
 
@@ -29,9 +30,10 @@ export async function getDynamicMenuGroups(): Promise<MenuGroup[]> {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "category_id, brand_id, categories(slug, name, group_slug, product_type_label, position), brands(slug, name, position)"
+      "category_id, brand_id, slug, name, price_cents, created_at, categories(slug, name, group_slug, product_type_label, position), brands(slug, name, position), product_images(url, position)"
     )
-    .eq("status", "active");
+    .eq("status", "active")
+    .order("created_at", { ascending: false });
 
   if (error || !data) {
     console.error("[menu-data] falha buscando produtos:", error?.message);
@@ -41,6 +43,10 @@ export async function getDynamicMenuGroups(): Promise<MenuGroup[]> {
   type Row = {
     category_id: string;
     brand_id: string | null;
+    slug: string;
+    name: string;
+    price_cents: number;
+    created_at: string;
     categories: {
       slug: string;
       name: string;
@@ -49,6 +55,7 @@ export async function getDynamicMenuGroups(): Promise<MenuGroup[]> {
       position: number;
     } | null;
     brands: { slug: string; name: string; position: number } | null;
+    product_images: { url: string; position: number }[] | null;
   };
 
   // Estrutura: groupSlug -> catSlug -> brandSlug -> { name, position }
@@ -61,6 +68,7 @@ export async function getDynamicMenuGroups(): Promise<MenuGroup[]> {
     string,
     { name: string; label: string; position: number; groupSlug: string }
   >();
+  const previewsByCategory = new Map<string, MenuProductPreview[]>();
 
   for (const row of data as unknown as Row[]) {
     const cat = row.categories;
@@ -81,6 +89,20 @@ export async function getDynamicMenuGroups(): Promise<MenuGroup[]> {
     const cats = tree.get(groupSlug)!;
     if (!cats.has(cat.slug)) cats.set(cat.slug, new Map());
     cats.get(cat.slug)!.set(brand.slug, { name: brand.name, position: brand.position });
+
+    const previews = previewsByCategory.get(cat.slug) ?? [];
+    if (previews.length < 4 && !previews.some((product) => product.slug === row.slug)) {
+      const imageUrl =
+        [...(row.product_images ?? [])].sort((a, b) => a.position - b.position)[0]?.url ??
+        null;
+      previews.push({
+        slug: row.slug,
+        name: row.name,
+        priceCents: row.price_cents,
+        imageUrl,
+      });
+      previewsByCategory.set(cat.slug, previews);
+    }
   }
 
   const result: MenuGroup[] = [];
@@ -105,7 +127,12 @@ export async function getDynamicMenuGroups(): Promise<MenuGroup[]> {
         .map(([brandSlug, b]) => ({ slug: brandSlug, label: b.name }));
 
       if (brands.length === 0) continue;
-      types.push({ categorySlug: slug, label: info.label, brands });
+      types.push({
+        categorySlug: slug,
+        label: info.label,
+        brands,
+        previews: previewsByCategory.get(slug) ?? [],
+      });
     }
 
     if (types.length === 0) continue;

@@ -25,6 +25,8 @@ export type MenuType = {
   label: string;
   /** Marcas que oferecem este tipo (links no painel) */
   brands: BrandLink[];
+  /** Produtos ativos usados como previa visual no mega menu. */
+  previews?: MenuProductPreview[];
 };
 
 export type MenuGroup = {
@@ -36,6 +38,13 @@ export type MenuGroup = {
   types: MenuType[];
   /** Bloco opcional de destaque na lateral do painel (campanha/produto/imagem) */
   feature?: MenuFeature;
+};
+
+export type MenuProductPreview = {
+  slug: string;
+  name: string;
+  priceCents: number;
+  imageUrl: string | null;
 };
 
 export type MenuFeature = {

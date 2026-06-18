@@ -1,22 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import type { MenuGroup } from "@/lib/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { MenuGroup, MenuProductPreview, MenuType } from "@/lib/navigation";
 import type { NavItem } from "@/lib/menu-data";
 import { buildProductsUrl } from "@/lib/url";
 
-/**
- * Barra de navegacao principal com mega menu por grupo.
- *
- * Desktop:
- *  - Abre painel ao passar mouse OU receber foco
- *  - Mantem aberto enquanto cursor estiver dentro de qualquer parte (bridge invisivel)
- *  - Fecha ao ESC, click-fora ou navegar
- *  - ARIA: aria-expanded, aria-controls, aria-haspopup
- *
- * Mobile: este componente eh hidden lg:block — drawer separado lida com mobile.
- */
 export function MegaMenu({
   groups,
   navItems,
@@ -26,7 +16,6 @@ export function MegaMenu({
 }) {
   const [openSlug, setOpenSlug] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  // Timeout que permite mover o cursor entre item da nav e painel sem fechar
   const closeTimer = useRef<number | null>(null);
 
   const open = (slug: string) => {
@@ -48,7 +37,6 @@ export function MegaMenu({
     setOpenSlug(null);
   };
 
-  // ESC fecha
   useEffect(() => {
     if (!openSlug) return;
     const onKey = (e: KeyboardEvent) => {
@@ -58,7 +46,6 @@ export function MegaMenu({
     return () => document.removeEventListener("keydown", onKey);
   }, [openSlug]);
 
-  // Click fora fecha
   useEffect(() => {
     if (!openSlug) return;
     const onClick = (e: MouseEvent) => {
@@ -73,7 +60,7 @@ export function MegaMenu({
   return (
     <div ref={containerRef} className="hidden lg:block relative">
       <nav
-        aria-label="Navegacao principal"
+        aria-label="Navegação principal"
         className="mx-auto max-w-7xl px-6 flex items-center justify-center gap-1"
         onMouseLeave={scheduleClose}
       >
@@ -90,9 +77,11 @@ export function MegaMenu({
               </Link>
             );
           }
+
           const group = groups.find((g) => g.slug === item.slug);
           if (!group) return null;
           const isOpen = openSlug === item.slug;
+
           return (
             <div key={item.slug} className="relative">
               <button
@@ -104,9 +93,7 @@ export function MegaMenu({
                 onFocus={() => open(item.slug)}
                 onClick={() => (isOpen ? closeNow() : open(item.slug))}
                 className={`px-3 py-3 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-coral ${
-                  isOpen
-                    ? "text-coral-deep"
-                    : "text-ink hover:text-coral-deep"
+                  isOpen ? "text-coral-deep" : "text-ink hover:text-coral-deep"
                 }`}
               >
                 {item.label}
@@ -122,7 +109,6 @@ export function MegaMenu({
         })}
       </nav>
 
-      {/* Painel — overlay sutil + container */}
       {openSlug && (
         <div
           id={`mega-panel-${openSlug}`}
@@ -132,14 +118,15 @@ export function MegaMenu({
           onMouseEnter={() => open(openSlug)}
           onMouseLeave={scheduleClose}
         >
-          {/* "Bridge" pra evitar fechamento ao mover entre botao e painel */}
           <div aria-hidden="true" className="h-2" />
           <MegaPanel
+            key={openSlug}
             group={groups.find((g) => g.slug === openSlug)!}
             onNavigate={closeNow}
           />
         </div>
       )}
+
       {openSlug && (
         <div
           aria-hidden="true"
@@ -157,82 +144,175 @@ function MegaPanel({
   group: MenuGroup;
   onNavigate: () => void;
 }) {
-  const hasFeature = !!group.feature;
-  const cols = hasFeature ? "lg:grid-cols-[1fr_280px]" : "lg:grid-cols-1";
+  const [activeSlug, setActiveSlug] = useState(group.types[0]?.categorySlug ?? "");
+
+  const activeType = useMemo(
+    () =>
+      group.types.find((type) => type.categorySlug === activeSlug) ??
+      group.types[0],
+    [activeSlug, group.types]
+  );
+
+  const previews = activeType?.previews ?? [];
+
   return (
-    <div className={`bg-cream-soft border-y border-cream-deep shadow-xl shadow-ink/5`}>
-      <div className={`mx-auto max-w-7xl px-6 py-8 grid gap-8 ${cols}`}>
+    <div className="border-y border-cream-deep bg-cream-soft shadow-xl shadow-ink/5">
+      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,0.78fr)_minmax(420px,1fr)] gap-10 px-6 py-8">
         <div>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+          <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-sage-deep">
+            Escolha uma categoria
+          </p>
+          <div className="grid grid-cols-2 gap-x-8 gap-y-5">
             {group.types.map((type) => (
-              <div key={type.categorySlug}>
-                <Link
-                  href={buildProductsUrl({ categoria: type.categorySlug })}
-                  onClick={onNavigate}
-                  className="block font-display text-lg text-ink hover:text-coral-deep transition"
-                >
-                  {type.label}
-                </Link>
-                <ul className="mt-2 space-y-1">
-                  {type.brands.map((brand) => (
-                    <li key={brand.slug}>
-                      <Link
-                        href={buildProductsUrl({
-                          categoria: type.categorySlug,
-                          marca: brand.slug,
-                        })}
-                        onClick={onNavigate}
-                        className="text-sm text-ink-soft hover:text-coral-deep transition"
-                      >
-                        {brand.label}
-                      </Link>
-                    </li>
-                  ))}
-                  <li>
-                    <Link
-                      href={buildProductsUrl({ categoria: type.categorySlug })}
-                      onClick={onNavigate}
-                      className="text-xs uppercase tracking-widest text-sage-deep hover:text-coral-deep transition"
-                    >
-                      Ver todos →
-                    </Link>
-                  </li>
-                </ul>
-              </div>
+              <MenuTypeColumn
+                key={type.categorySlug}
+                type={type}
+                active={activeType?.categorySlug === type.categorySlug}
+                onHover={() => setActiveSlug(type.categorySlug)}
+                onNavigate={onNavigate}
+              />
             ))}
           </div>
         </div>
-        {group.feature && (
-          <aside className="hidden lg:flex flex-col rounded-2xl bg-cream border border-cream-deep p-5">
-            {group.feature.imageSrc && (
-              <div
-                className="aspect-[4/3] rounded-xl bg-cover bg-center mb-4 border border-cream-deep"
-                style={{ backgroundImage: `url(${group.feature.imageSrc})` }}
-                role="img"
-                aria-label={group.feature.title}
-              />
-            )}
-            {group.feature.eyebrow && (
-              <p className="text-xs uppercase tracking-widest text-sage-deep">
-                {group.feature.eyebrow}
+
+        <aside className="border-l border-cream-deep pl-8">
+          <div className="mb-4 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-coral-deep">
+                Prévia dos produtos
               </p>
+              <h3 className="mt-1 font-display text-3xl leading-tight text-ink">
+                {activeType?.label ?? group.label}
+              </h3>
+            </div>
+            {activeType && (
+              <Link
+                href={buildProductsUrl({ categoria: activeType.categorySlug })}
+                onClick={onNavigate}
+                className="text-xs font-semibold uppercase tracking-widest text-sage-deep transition hover:text-coral-deep"
+              >
+                Ver todos →
+              </Link>
             )}
-            <p className="mt-1 font-display text-xl text-ink">{group.feature.title}</p>
-            {group.feature.description && (
-              <p className="mt-1 text-sm text-ink-soft leading-relaxed">
-                {group.feature.description}
-              </p>
-            )}
-            <Link
-              href={group.feature.ctaHref}
-              onClick={onNavigate}
-              className="mt-4 inline-flex items-center justify-center rounded-full bg-coral px-5 py-2.5 text-sm font-medium text-white hover:bg-coral-deep transition"
-            >
-              {group.feature.ctaLabel}
-            </Link>
-          </aside>
-        )}
+          </div>
+
+          {previews.length > 0 ? (
+            <div className="grid grid-cols-4 gap-3">
+              {previews.map((product) => (
+                <ProductPreviewCard
+                  key={product.slug}
+                  product={product}
+                  onNavigate={onNavigate}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-[8px] border border-cream-deep bg-cream p-6 text-sm text-ink-soft">
+              Passe por uma categoria para ver produtos da curadoria.
+            </div>
+          )}
+        </aside>
       </div>
     </div>
   );
+}
+
+function MenuTypeColumn({
+  type,
+  active,
+  onHover,
+  onNavigate,
+}: {
+  type: MenuType;
+  active: boolean;
+  onHover: () => void;
+  onNavigate: () => void;
+}) {
+  return (
+    <div
+      onMouseEnter={onHover}
+      onFocus={onHover}
+      className={`rounded-[8px] border px-4 py-3 transition ${
+        active
+          ? "border-coral-soft bg-cream shadow-sm shadow-ink/5"
+          : "border-transparent hover:border-cream-deep hover:bg-cream/60"
+      }`}
+    >
+      <Link
+        href={buildProductsUrl({ categoria: type.categorySlug })}
+        onClick={onNavigate}
+        className="block font-display text-lg leading-tight text-ink transition hover:text-coral-deep"
+      >
+        {type.label}
+      </Link>
+      <ul className="mt-2 space-y-1">
+        {type.brands.slice(0, 4).map((brand) => (
+          <li key={brand.slug}>
+            <Link
+              href={buildProductsUrl({
+                categoria: type.categorySlug,
+                marca: brand.slug,
+              })}
+              onClick={onNavigate}
+              className="text-sm text-ink-soft transition hover:text-coral-deep"
+            >
+              {brand.label}
+            </Link>
+          </li>
+        ))}
+        {type.brands.length > 4 && (
+          <li className="text-xs text-ink-mute">
+            + {type.brands.length - 4} marcas
+          </li>
+        )}
+      </ul>
+    </div>
+  );
+}
+
+function ProductPreviewCard({
+  product,
+  onNavigate,
+}: {
+  product: MenuProductPreview;
+  onNavigate: () => void;
+}) {
+  return (
+    <Link
+      href={`/produtos/${product.slug}`}
+      onClick={onNavigate}
+      className="group block overflow-hidden rounded-[8px] border border-cream-deep bg-cream transition hover:border-coral hover:shadow-lg hover:shadow-ink/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+    >
+      <div className="relative aspect-[4/5] bg-coral-soft/20">
+        {product.imageUrl ? (
+          <Image
+            src={product.imageUrl}
+            alt={product.name}
+            fill
+            sizes="150px"
+            className="object-cover transition duration-500 group-hover:scale-[1.04]"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center px-3 text-center text-xs uppercase tracking-widest text-ink-mute">
+            imagem em curadoria
+          </div>
+        )}
+      </div>
+      <div className="p-3">
+        <p className="line-clamp-2 min-h-[2.5rem] text-xs leading-snug text-ink">
+          {product.name}
+        </p>
+        <p className="mt-2 text-sm font-semibold tabular-nums text-coral-deep">
+          {formatBRL(product.priceCents)}
+        </p>
+      </div>
+    </Link>
+  );
+}
+
+function formatBRL(cents: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(cents / 100);
 }
