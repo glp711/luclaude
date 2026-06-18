@@ -1,28 +1,28 @@
 /**
- * Conteudo configuravel da home (slides do hero, marquee, banners promo,
- * trio editorial, atalhos de categoria).
+ * Conteúdo configurável da home: hero, marquee, banners promo,
+ * trio editorial e atalhos de categoria.
  *
- * Editar este arquivo para ajustar textos/imagens sem mexer no componente
- * visual.
+ * Perfumes de Ambiente Décor é a marca da loja/curadoria.
+ * Os produtos continuam com as marcas originais cadastradas no banco.
  */
 import { buildProductsUrl } from "@/lib/url";
 
 export type HeroSlide = {
-  /** Tema visual do slide — controla a cor dominante do gradient overlay. */
+  /** Tema visual do slide: controla detalhes de fundo e acento. */
   theme: "warm" | "cool" | "earthy";
   eyebrow: string;
   title: string;
-  /** Trecho do titulo destacado em coral. */
+  /** Trecho do título destacado em coral. */
   titleAccent: string;
-  description: string;
+  description: string | string[];
   primaryCta: { label: string; href: string };
   secondaryCta: { label: string; href: string };
   imageSrc: string;
   imageAlt: string;
+  imageCaption?: string;
   /**
-   * Posicao do recorte da imagem dentro do banner widescreen.
-   * Foto vertical => normalmente "center 25%" pra mostrar rosto/topo.
-   * Default: "center center".
+   * Posição do recorte da imagem dentro do banner.
+   * Foto vertical => normalmente "center 35%" para mostrar rosto/produto.
    */
   imagePosition?: string;
 };
@@ -30,41 +30,44 @@ export type HeroSlide = {
 export const HERO_SLIDES: HeroSlide[] = [
   {
     theme: "warm",
-    eyebrow: "Marcas com assinatura",
-    title: "11 marcas, um so",
+    eyebrow: "Perfume de Ambiente Décor · Desde 2020",
+    title: "11 marcas, um só",
     titleAccent: "lugar.",
-    description:
-      "M. Victoria, Maison Berger, Lenvie, Kailash, Dani Fernandes e outras marcas brasileiras e internacionais lado a lado, no nosso jeito.",
+    description: [
+      "Uma curadoria olfativa feita com técnica, emoção e memória.",
+      "Fragrâncias, extratos e matérias-primas selecionadas com olhar estético, sensibilidade e respeito à arte de perfumar.",
+      "Em cada frasco, uma história. Em cada aroma, um gesto de arte.",
+    ],
     primaryCta: { label: "Ver marcas", href: "/marcas" },
-    secondaryCta: { label: "Explorar catalogo", href: "/produtos" },
-    imageSrc: "/hero/universomarcas.jpg",
-    imageAlt:
-      "Difusor Maison Berger, vela M. Victoria, home spray Dani Fernandes e Lenvie em arranjo editorial",
-    imagePosition: "center center",
+    secondaryCta: { label: "Explorar catálogo", href: "/produtos" },
+    imageSrc: "/hero/lu-curadoria-difusor.jpeg",
+    imageAlt: "Lu avaliando um difusor em uma vitrine de curadoria olfativa",
+    imageCaption: "Curadoria olfativa com olhar estético e sensível.",
+    imagePosition: "center 42%",
   },
   {
-    theme: "earthy",
-    eyebrow: "Marca em destaque",
-    title: "Dani Fernandes, um universo de",
-    titleAccent: "perfume e aconchego.",
-    description:
-      "Aguas perfumadas, difusores e fragrancias que transformam a casa em um refugio delicado e acolhedor.",
-    primaryCta: {
-      label: "Ver marca",
-      href: buildProductsUrl({ marca: "dani-fernandes" }),
-    },
-    secondaryCta: { label: "Explorar catalogo", href: "/produtos" },
-    imageSrc: "/hero/danifernandes.jpg",
-    imageAlt: "Agua perfumada e difusor Dani Fernandes em arranjo com flores rosa",
-    imagePosition: "70% center",
+    theme: "cool",
+    eyebrow: "Uma busca pelo extraordinário",
+    title: "Técnica, emoção e",
+    titleAccent: "memória.",
+    description: [
+      "Fragrâncias e extratos nobres da França, Espanha, Alemanha, Inglaterra, Líbano, Itália e Brasil.",
+      "Cada curadoria nasce dessa seleção: uma linguagem olfativa construída com amor, esmero e assinatura em cada escolha.",
+    ],
+    primaryCta: { label: "Ver marcas", href: "/marcas" },
+    secondaryCta: { label: "Explorar catálogo", href: "/produtos" },
+    imageSrc: "/hero/lu-vitrine-curadoria.jpeg",
+    imageAlt: "Lu selecionando um produto em uma vitrine de fragrâncias para casa",
+    imageCaption: "Marcas originais reunidas por uma biblioteca de curadoria.",
+    imagePosition: "center 38%",
   },
 ];
 
 export const MARQUEE_ITEMS: string[] = [
-  "Frete gratis acima de R$ 250",
+  "Frete grátis acima de R$ 250",
   "Pix com 5% off",
   "Trocas em 7 dias",
-  "Envio em 24h util",
+  "Envio em 24h útil",
   "Atendimento por WhatsApp",
   "Parcele em 3x sem juros",
 ];
@@ -83,23 +86,23 @@ export const PROMO_TRIO: PromoCard[] = [
   {
     eyebrow: "presentes",
     title: "Presentes que marcam",
-    description: "Kits prontos pra entregar uma memoria.",
+    description: "Kits prontos para entregar memória, cuidado e presença.",
     href: buildProductsUrl({ categoria: "kits" }),
-    imageSrc: "/founder/perfumesdeambientedecor-founder-gift.png",
+    imageSrc: "/hero/lu-home-spray.jpeg",
     tone: "coral",
   },
   {
     eyebrow: "aromatize",
-    title: "Toda a casa, com cheiro",
-    description: "Difusor, home spray e vela pra cada canto.",
+    title: "Toda a casa, com assinatura",
+    description: "Difusor, home spray e vela para criar atmosfera.",
     href: buildProductsUrl({ categoria: "difusor-de-varetas" }),
-    imageSrc: "/founder/perfumesdeambientedecor-founder-diffuser.png",
+    imageSrc: "/hero/detalhe-materia-prima.jpeg",
     tone: "sage",
   },
   {
     eyebrow: "ofertas",
-    title: "Ofertas vigentes",
-    description: "Selecao com desconto enquanto durar.",
+    title: "Achados da curadoria",
+    description: "Seleção com desconto enquanto durar.",
     href: "/produtos?ofertas=1",
     imageSrc: "/founder/perfumesdeambientedecor-product-kit.png",
     tone: "ink",
@@ -122,17 +125,17 @@ export const EDITORIAL_DUO: EditorialCard[] = [
     eyebrow: "ambiente principal",
     title: "Sala e quarto com personalidade",
     description:
-      "Difusores e home spray pra deixar memoria nos ambientes que voce mais vive.",
+      "Difusores e home spray para deixar memória nos ambientes que você mais vive.",
     ctaLabel: "Ver difusores",
     href: buildProductsUrl({ categoria: "difusor-de-varetas" }),
-    imageSrc: "/founder/perfumesdeambientedecor-founder-card.png",
+    imageSrc: "/hero/lu-curadoria-difusor.jpeg",
     imageSide: "left",
   },
   {
-    eyebrow: "ritual diario",
+    eyebrow: "ritual diário",
     title: "Banheiro e cuidados",
     description:
-      "Sabonete liquido e hidratante com a mesma assinatura olfativa do seu cantinho.",
+      "Sabonete líquido e hidratante com a mesma delicadeza olfativa do seu cantinho.",
     ctaLabel: "Ver sabonetes",
     href: buildProductsUrl({ categoria: "sabonete-liquido" }),
     imageSrc: "/founder/perfumesdeambientedecor-product-kit.png",
@@ -150,7 +153,7 @@ export const BENEFITS: Benefit[] = [
   {
     iconKey: "shipping",
     title: "Envio para todo o Brasil",
-    description: "Acompanhe seu pedido com codigo de rastreio.",
+    description: "Acompanhe seu pedido com código de rastreio.",
   },
   {
     iconKey: "secure",
@@ -160,12 +163,12 @@ export const BENEFITS: Benefit[] = [
   {
     iconKey: "payment",
     title: "Parcelamento",
-    description: "Cartao em ate 3x, Pix com confirmacao imediata.",
+    description: "Cartão em até 3x, Pix com confirmação imediata.",
   },
   {
     iconKey: "support",
     title: "Atendimento personalizado",
-    description: "Tire duvidas no WhatsApp, Instagram ou e-mail.",
+    description: "Tire dúvidas no WhatsApp, Instagram ou e-mail.",
   },
 ];
 
@@ -175,10 +178,10 @@ export type CategoryShortcut = {
 };
 
 export const CATEGORY_SHORTCUTS: CategoryShortcut[] = [
-  { label: "Agua Perfumada", categorySlug: "agua-perfumada" },
+  { label: "Água Perfumada", categorySlug: "agua-perfumada" },
   { label: "Home Spray", categorySlug: "home-spray" },
   { label: "Difusores", categorySlug: "difusor-de-varetas" },
-  { label: "Essencias", categorySlug: "essencia-concentrada" },
+  { label: "Essências", categorySlug: "essencia-concentrada" },
   { label: "Sabonetes", categorySlug: "sabonete-liquido" },
   { label: "Velas", categorySlug: "vela-perfumada" },
   { label: "Corpo e Perfumaria", categorySlug: "body-splash" },
@@ -186,7 +189,7 @@ export const CATEGORY_SHORTCUTS: CategoryShortcut[] = [
 ];
 
 /**
- * Mantido pra compatibilidade com componentes que ainda importam HERO direto.
+ * Mantido para compatibilidade com componentes que ainda importam HERO direto.
  * Fonte: primeiro slide do HERO_SLIDES.
  */
 export const HERO = HERO_SLIDES[0];

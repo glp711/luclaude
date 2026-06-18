@@ -37,7 +37,7 @@ export async function BrandsShowcase() {
             <p className="text-xs uppercase tracking-widest text-sage-deep">curadoria</p>
             <h2 className="mt-2 font-display text-4xl text-ink">Explore nossas marcas</h2>
             <p className="mt-2 text-sm text-ink-soft max-w-xl">
-              Marcas brasileiras e internacionais escolhidas a dedo. Clica numa e ve
+              Marcas brasileiras e internacionais escolhidas a dedo. Clica em uma e vê
               tudo dela.
             </p>
           </div>
@@ -58,7 +58,7 @@ export async function BrandsShowcase() {
                 <Link
                   key={b.id}
                   href={buildProductsUrl({ marca: b.slug })}
-                  className="group relative rounded-2xl border border-cream-deep bg-cream p-4 text-center hover:border-coral hover:bg-coral-soft/30 transition"
+                  className="group relative rounded-[8px] border border-cream-deep bg-cream p-4 text-center transition hover:border-coral hover:bg-coral-soft/30"
                 >
                   <p className="font-display text-lg text-ink group-hover:text-coral-deep transition leading-tight">
                     {b.name}
@@ -72,8 +72,8 @@ export async function BrandsShowcase() {
             return (
               <div
                 key={b.id}
-                className="relative rounded-2xl border border-cream-deep/60 bg-cream/40 p-4 text-center"
-                title="Em breve no catalogo"
+                className="relative rounded-[8px] border border-cream-deep/60 bg-cream/40 p-4 text-center"
+                title="Em breve no catálogo"
               >
                 <p className="font-display text-lg text-ink-mute leading-tight">
                   {b.name}

@@ -1,104 +1,76 @@
 import Image from "next/image";
 import Link from "next/link";
 
-/**
- * Banner editorial sobre o processo de curadoria.
- *
- * Vai entre BrandsShowcase e Novidades — quebra o ritmo cream da home,
- * conta o angulo "por que essa loja eh diferente" e empurra pra /sobre.
- *
- * Visual: coral-soft de fundo, foto editorial a esquerda em moldura
- * inclinada, texto + CTAs a direita.
- */
 export function CurationBanner() {
   return (
-    <section className="relative overflow-hidden border-y border-cream-deep/40 bg-coral-soft/40">
+    <section className="relative overflow-hidden border-y border-cream-deep/50 bg-cream-soft">
       <div
         aria-hidden="true"
-        className="absolute inset-0 opacity-[0.08] pointer-events-none"
+        className="absolute inset-0 opacity-70"
         style={{
-          backgroundImage:
-            "radial-gradient(circle at 80% 20%, var(--color-coral-deep) 0, transparent 50%), radial-gradient(circle at 10% 90%, var(--color-sage-deep) 0, transparent 45%)",
+          background:
+            "linear-gradient(135deg, rgba(248,211,203,0.34), transparent 42%), linear-gradient(315deg, rgba(212,227,221,0.55), transparent 48%)",
         }}
       />
-      <div className="relative mx-auto max-w-7xl px-6 py-20 md:py-24 grid md:grid-cols-[1fr_1.1fr] gap-12 lg:gap-16 items-center">
-        {/* Foto */}
-        <div className="order-2 md:order-1">
-          <div className="relative w-full max-w-md mx-auto">
-            <div
-              aria-hidden="true"
-              className="absolute -inset-3 rounded-[2rem] bg-cream-soft/60 rotate-[3deg]"
+
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 py-20 sm:px-10 md:grid-cols-[0.88fr_1.12fr] md:py-24 lg:gap-16">
+        <div className="relative order-2 md:order-1">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[8px] border border-cream-deep bg-cream shadow-2xl shadow-ink/10">
+            <Image
+              src="/hero/detalhe-materia-prima.jpeg"
+              alt="Detalhe de acabamento, matéria-prima e frasco selecionado pela curadoria"
+              fill
+              sizes="(max-width: 768px) 90vw, 38vw"
+              className="object-cover"
+              style={{ objectPosition: "center 48%" }}
             />
-            <div className="relative aspect-[4/5] w-full rounded-[1.75rem] overflow-hidden border border-cream-deep shadow-xl shadow-ink/10 rotate-[-1.5deg] bg-cream-soft">
-              <Image
-                src="/founder/perfumesdeambientedecor-product-kit.png"
-                alt="Kit selecionado de difusores e sabonetes"
-                fill
-                sizes="(max-width: 768px) 90vw, 45vw"
-                className="object-cover"
-              />
-            </div>
-            {/* Selo discreto */}
-            <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 rounded-full bg-cream-soft border border-cream-deep h-20 w-20 sm:h-24 sm:w-24 flex flex-col items-center justify-center rotate-[8deg] shadow-md shadow-ink/10">
-              <span className="text-[9px] uppercase tracking-widest text-sage-deep">
-                desde
-              </span>
-              <span className="font-display text-2xl sm:text-3xl text-ink leading-none">
-                2020
-              </span>
-            </div>
+          </div>
+          <div className="absolute -right-3 -top-3 flex h-24 w-24 rotate-[5deg] flex-col items-center justify-center rounded-full border border-cream-deep bg-cream-soft text-center shadow-lg shadow-ink/10 sm:-right-5 sm:-top-5">
+            <span className="text-[9px] font-semibold uppercase tracking-widest text-sage-deep">
+              desde
+            </span>
+            <span className="font-display text-3xl leading-none text-ink">2020</span>
           </div>
         </div>
 
-        {/* Texto */}
         <div className="order-1 md:order-2">
-          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-coral-deep">
+          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-coral-deep">
             <span aria-hidden="true" className="h-px w-8 bg-coral-deep/60" />
-            por tras de cada frasco
+            Uma busca pelo extraordinário
           </p>
-          <h2 className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.05] text-ink">
-            Curadoria honesta,{" "}
-            <em className="not-italic text-coral-deep">aroma por aroma</em>.
+          <h2 className="mt-4 max-w-2xl font-display text-4xl leading-[1.03] text-ink sm:text-5xl lg:text-6xl">
+            Cada curadoria nasce de uma seleção sensível.
           </h2>
-          <p className="mt-5 text-base sm:text-lg text-ink-soft max-w-xl leading-relaxed">
-            Cada marca que entra no catalogo passa por uma escolha pessoal — testamos
-            fragrancia, fixacao e acabamento antes de chegar ate voce. Nada de
-            empurrao: so o que a gente colocaria na propria casa.
-          </p>
-          <ul className="mt-6 grid sm:grid-cols-2 gap-2 max-w-lg">
-            {[
-              "Marcas brasileiras e internacionais",
-              "Notas testadas em ambiente real",
-              "Acabamento que combina com decoracao",
-              "Pos-venda no WhatsApp",
-            ].map((item) => (
-              <li
-                key={item}
-                className="flex items-start gap-2 text-sm text-ink-soft"
-              >
-                <span
-                  aria-hidden="true"
-                  className="mt-1.5 h-1.5 w-1.5 rounded-full bg-coral-deep flex-shrink-0"
-                />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-5 max-w-2xl space-y-3 text-base leading-relaxed text-ink-soft sm:text-lg">
+            <p>
+              Um encontro entre técnica, emoção e memória, guiado por um olhar
+              estético apurado e pelo respeito às matérias-primas.
+            </p>
+            <p>
+              Fragrâncias e extratos nobres da França, Espanha, Alemanha,
+              Inglaterra, Líbano, Itália e Brasil compõem uma linguagem olfativa
+              construída com amor e esmero.
+            </p>
+            <p className="font-medium text-ink">
+              Tradição, sensibilidade e assinatura em cada escolha.
+            </p>
+          </div>
+
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               href="/marcas"
-              className="inline-flex items-center rounded-full bg-ink px-7 py-3.5 text-sm font-medium text-cream-soft hover:bg-coral-deep transition focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+              className="inline-flex items-center rounded-full bg-ink px-7 py-3.5 text-sm font-semibold text-cream-soft shadow-lg shadow-ink/10 transition hover:bg-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
             >
-              Conhecer marcas
+              Ver marcas
               <span aria-hidden="true" className="ml-2">
                 →
               </span>
             </Link>
             <Link
               href="/sobre"
-              className="inline-flex items-center rounded-full border border-ink/20 px-6 py-3.5 text-sm font-medium text-ink hover:border-coral-deep hover:text-coral-deep transition focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+              className="inline-flex items-center rounded-full border border-ink/15 bg-cream-soft/70 px-6 py-3.5 text-sm font-semibold text-ink transition hover:border-coral-deep hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
             >
-              Nossa historia
+              Nossa história
             </Link>
           </div>
         </div>

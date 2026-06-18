@@ -55,14 +55,14 @@ export async function CategoryShortcuts() {
       <div className="text-center mb-12">
         <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-sage-deep">
           <span aria-hidden="true" className="h-px w-8 bg-sage-deep/60" />
-          o que voce procura
+          o que você procura
           <span aria-hidden="true" className="h-px w-8 bg-sage-deep/60" />
         </p>
         <h2 className="mt-3 font-display text-4xl sm:text-5xl text-ink">
           Escolha por categoria
         </h2>
         <p className="mt-3 text-sm text-ink-soft max-w-md mx-auto">
-          Comeca pelo tipo de produto. Depois escolhe a marca e a fragrancia.
+          Começa pelo tipo de produto. Depois escolhe a marca e a fragrância.
         </p>
       </div>
       <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
@@ -72,7 +72,7 @@ export async function CategoryShortcuts() {
             <li key={c.categorySlug}>
               <Link
                 href={buildProductsUrl({ categoria: c.categorySlug })}
-                className="group block rounded-3xl overflow-hidden border border-cream-deep bg-cream-soft hover:border-coral transition focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+                className="group block overflow-hidden rounded-[8px] border border-cream-deep bg-cream-soft transition hover:border-coral focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-coral-soft/20">
                   <Image

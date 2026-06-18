@@ -4,17 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { HERO_SLIDES } from "@/lib/home-content";
 import { HeroSlide } from "@/components/Home/HeroSlide";
 
-/**
- * Hero da home como banner full-bleed em carrossel.
- *
- * - Banner alto (480px mobile / 560px md / 620px lg) com imagem cobrindo
- *   toda a area.
- * - Setas circulares nas laterais (prev/next).
- * - Dots no canto inferior direito (estilo Carol Rosa).
- * - Auto-rotate a cada 7s; pausa ao hover/foco; reseta o timer quando o
- *   usuario navega manualmente (evita "vira ja" depois do clique).
- * - Respeita prefers-reduced-motion (sem auto-rotate).
- */
 const ROTATE_MS = 7000;
 
 export function HeroCarousel() {
@@ -60,18 +49,15 @@ export function HeroCarousel() {
 
   return (
     <section
-      className="relative bg-cream-soft border-b border-cream-deep/40"
-      aria-label="Destaques da loja"
+      className="relative border-b border-cream-deep/50 bg-cream-soft"
+      aria-label="Destaques da curadoria"
       aria-roledescription="carousel"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div className="relative h-[460px] sm:h-[520px] md:h-[580px] lg:h-[640px] overflow-hidden">
-        {/* Trilho horizontal: cada slide ocupa 100% da largura; translateX
-            move o conjunto. Crossfade vertical evitado pra nao sobrepor
-            duas imagens durante a transicao. */}
+      <div className="relative h-[880px] overflow-hidden sm:h-[820px] md:h-[780px] lg:h-[700px]">
         <div
           className="flex h-full transition-transform duration-700 ease-out"
           style={{
@@ -96,12 +82,11 @@ export function HeroCarousel() {
 
         {HERO_SLIDES.length > 1 && (
           <>
-            {/* Setas — desktop only */}
             <button
               type="button"
               onClick={() => goTo(active - 1)}
               aria-label="Slide anterior"
-              className="hidden md:inline-flex absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 z-20 h-12 w-12 items-center justify-center rounded-full bg-cream-soft/85 backdrop-blur text-ink shadow-md shadow-ink/10 hover:bg-cream-soft hover:text-coral-deep transition focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+              className="absolute bottom-6 right-28 z-20 hidden h-11 w-11 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/85 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral lg:inline-flex"
             >
               <span aria-hidden="true" className="text-xl">
                 ←
@@ -110,16 +95,15 @@ export function HeroCarousel() {
             <button
               type="button"
               onClick={() => goTo(active + 1)}
-              aria-label="Proximo slide"
-              className="hidden md:inline-flex absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 z-20 h-12 w-12 items-center justify-center rounded-full bg-cream-soft/85 backdrop-blur text-ink shadow-md shadow-ink/10 hover:bg-cream-soft hover:text-coral-deep transition focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+              aria-label="Próximo slide"
+              className="absolute bottom-6 right-14 z-20 hidden h-11 w-11 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/85 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral lg:inline-flex"
             >
               <span aria-hidden="true" className="text-xl">
                 →
               </span>
             </button>
 
-            {/* Dots — bottom right (estilo Carol Rosa) */}
-            <div className="absolute bottom-6 right-6 lg:bottom-8 lg:right-10 z-20 flex items-center gap-2">
+            <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 lg:bottom-8 lg:left-auto lg:right-10 lg:hidden lg:translate-x-0">
               {HERO_SLIDES.map((slide, idx) => (
                 <button
                   key={idx}
