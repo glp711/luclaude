@@ -57,7 +57,7 @@ export function HeroCarousel() {
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div className="relative h-[720px] overflow-hidden sm:h-[700px] md:h-[660px] lg:h-[640px]">
+      <div className="relative h-[610px] overflow-hidden sm:h-[650px] lg:h-[640px]">
         <div
           className="flex h-full transition-transform duration-700 ease-out"
           style={{
@@ -103,7 +103,7 @@ export function HeroCarousel() {
               </span>
             </button>
 
-            <div className="absolute bottom-5 right-6 z-20 flex items-center gap-2 lg:bottom-8 lg:right-10">
+            <div className="absolute bottom-4 right-5 z-20 flex items-center gap-2 lg:bottom-8 lg:right-10">
               {HERO_SLIDES.map((slide, idx) => (
                 <button
                   key={idx}

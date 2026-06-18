@@ -66,7 +66,7 @@ export function MobileMenuDrawer({
         aria-expanded={open}
         aria-controls="mobile-nav-drawer"
         aria-label="Abrir menu"
-        className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-cream-deep bg-cream-soft text-ink hover:border-coral hover:text-coral-deep transition"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-coral-soft bg-cream text-ink shadow-sm shadow-ink/5 transition hover:border-coral hover:text-coral-deep lg:hidden"
       >
         <svg
           viewBox="0 0 24 24"
@@ -96,7 +96,7 @@ export function MobileMenuDrawer({
               aria-label="Fechar menu"
               className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
             />
-            <aside className="absolute right-0 top-0 bottom-0 w-[94%] max-w-md bg-cream-soft shadow-xl flex flex-col">
+            <aside className="absolute bottom-0 left-0 top-0 flex w-[88%] max-w-sm flex-col bg-cream-soft shadow-2xl shadow-ink/20">
               {/* Cabecalho */}
               <div className="flex items-center justify-between p-4 border-b border-cream-deep">
                 <Link

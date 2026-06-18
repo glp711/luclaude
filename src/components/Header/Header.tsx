@@ -61,26 +61,30 @@ export async function Header({ user }: { user: SessionUser | null }) {
       <PromoBar />
 
       {/* Linha 2: brand + busca + icones */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-3 grid grid-cols-[auto_1fr_auto] gap-3 sm:gap-6 items-center">
-        <Link href="/" className="flex items-center gap-2.5 group min-w-0">
+      <div className="mx-auto grid max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-2 px-3 py-2.5 sm:px-6 sm:py-3 lg:gap-6">
+        <div className="lg:hidden">
+          <MobileMenuDrawer userArea={userArea} groups={menuGroups} navItems={navItems} />
+        </div>
+
+        <Link href="/" className="flex min-w-0 items-center justify-center gap-2 group lg:justify-start">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo-mark.svg"
             alt=""
-            className="h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 transition group-hover:rotate-[-4deg]"
+            className="h-8 w-8 flex-shrink-0 transition group-hover:rotate-[-4deg] sm:h-10 sm:w-10"
           />
-          <span className="font-display text-base sm:text-xl tracking-tight text-ink truncate">
+          <span className="truncate font-display text-[17px] tracking-tight text-ink sm:text-xl">
             perfumes de ambiente <span className="text-coral-deep">decor</span>
           </span>
         </Link>
 
         {/* Busca: ocupa centro no desktop, escondida no mobile */}
-        <div className="hidden md:block">
+        <div className="hidden lg:block lg:min-w-[360px]">
           <SearchInput className="max-w-xl mx-auto" />
         </div>
 
         {/* Icones do lado direito */}
-        <div className="flex items-center gap-1 sm:gap-2 justify-end">
+        <div className="flex items-center justify-end gap-1 sm:gap-2">
           {/* WhatsApp / atendimento — apenas desktop */}
           <a
             href={wppHref}
@@ -123,17 +127,19 @@ export async function Header({ user }: { user: SessionUser | null }) {
           )}
 
           <CartLink />
-          <MobileMenuDrawer userArea={userArea} groups={menuGroups} navItems={navItems} />
+          <div className="hidden lg:block">
+            <MobileMenuDrawer userArea={userArea} groups={menuGroups} navItems={navItems} />
+          </div>
         </div>
       </div>
 
       {/* Busca mobile (segunda linha em telas pequenas) */}
-      <div className="md:hidden px-4 pb-3">
+      <div className="lg:hidden px-3 pb-2">
         <SearchInput />
       </div>
 
       {/* Linha 3: nav principal com mega menu (desktop) */}
-      <div className="border-t border-cream-deep/40">
+      <div className="hidden border-t border-cream-deep/40 lg:block">
         <MegaMenu groups={menuGroups} navItems={navItems} />
       </div>
     </header>
