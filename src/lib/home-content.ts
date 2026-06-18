@@ -8,11 +8,9 @@
 import { buildProductsUrl } from "@/lib/url";
 
 export type HeroSlide = {
-  /** Tema visual do slide: controla detalhes de fundo e acento. */
   theme: "warm" | "cool" | "earthy";
   eyebrow: string;
   title: string;
-  /** Trecho do título destacado em coral. */
   titleAccent: string;
   description: string | string[];
   primaryCta: { label: string; href: string };
@@ -20,10 +18,6 @@ export type HeroSlide = {
   imageSrc: string;
   imageAlt: string;
   imageCaption?: string;
-  /**
-   * Posição do recorte da imagem dentro do banner.
-   * Foto vertical => normalmente "center 35%" para mostrar rosto/produto.
-   */
   imagePosition?: string;
 };
 
@@ -31,12 +25,48 @@ export const HERO_SLIDES: HeroSlide[] = [
   {
     theme: "warm",
     eyebrow: "Perfume de Ambiente Décor · Desde 2020",
-    title: "11 marcas, um só",
-    titleAccent: "lugar.",
+    title: "Um universo de aromas",
+    titleAccent: "com curadoria.",
+    description: [
+      "Fragrâncias, extratos e matérias-primas selecionadas com olhar estético, sensibilidade e respeito à arte de perfumar.",
+      "Dani Fernandes, M. Victoria, Lenvie, Maison Berger, Kailash e outras marcas reunidas em um só lugar.",
+      "Em cada frasco, uma história. Em cada aroma, um gesto de arte.",
+    ],
+    primaryCta: { label: "Explorar catálogo", href: "/produtos" },
+    secondaryCta: { label: "Ver marcas", href: "/marcas" },
+    imageSrc: "/hero/universomarcas.jpg",
+    imageAlt:
+      "Seleção de difusores, vela e home spray de marcas diferentes reunidos em uma curadoria",
+    imageCaption: "Marcas originais reunidas em uma curadoria de aromas para casa.",
+    imagePosition: "center center",
+  },
+  {
+    theme: "earthy",
+    eyebrow: "Marca em destaque",
+    title: "Dani Fernandes, perfume e",
+    titleAccent: "aconchego.",
+    description: [
+      "Águas perfumadas, difusores e fragrâncias delicadas para transformar a casa em refúgio.",
+      "Uma assinatura floral, suave e elegante dentro da nossa seleção de marcas.",
+    ],
+    primaryCta: {
+      label: "Ver Dani Fernandes",
+      href: buildProductsUrl({ marca: "dani-fernandes" }),
+    },
+    secondaryCta: { label: "Explorar difusores", href: buildProductsUrl({ categoria: "difusor-de-varetas" }) },
+    imageSrc: "/hero/danifernandes.jpg",
+    imageAlt: "Produtos Dani Fernandes com difusor, água perfumada e flores",
+    imageCaption: "Dani Fernandes dentro da curadoria Perfumes de Ambiente Décor.",
+    imagePosition: "center center",
+  },
+  {
+    theme: "cool",
+    eyebrow: "11 marcas, um só lugar",
+    title: "Técnica, emoção e",
+    titleAccent: "memória.",
     description: [
       "Uma curadoria olfativa feita com técnica, emoção e memória.",
-      "Fragrâncias, extratos e matérias-primas selecionadas com olhar estético, sensibilidade e respeito à arte de perfumar.",
-      "Em cada frasco, uma história. Em cada aroma, um gesto de arte.",
+      "A escolha nasce do encontro entre estética, sensibilidade e respeito às matérias-primas.",
     ],
     primaryCta: { label: "Ver marcas", href: "/marcas" },
     secondaryCta: { label: "Explorar catálogo", href: "/produtos" },
@@ -44,22 +74,6 @@ export const HERO_SLIDES: HeroSlide[] = [
     imageAlt: "Lu avaliando um difusor em uma vitrine de curadoria olfativa",
     imageCaption: "Curadoria olfativa com olhar estético e sensível.",
     imagePosition: "center 42%",
-  },
-  {
-    theme: "cool",
-    eyebrow: "Uma busca pelo extraordinário",
-    title: "Técnica, emoção e",
-    titleAccent: "memória.",
-    description: [
-      "Fragrâncias e extratos nobres da França, Espanha, Alemanha, Inglaterra, Líbano, Itália e Brasil.",
-      "Cada curadoria nasce dessa seleção: uma linguagem olfativa construída com amor, esmero e assinatura em cada escolha.",
-    ],
-    primaryCta: { label: "Ver marcas", href: "/marcas" },
-    secondaryCta: { label: "Explorar catálogo", href: "/produtos" },
-    imageSrc: "/hero/lu-vitrine-curadoria.jpeg",
-    imageAlt: "Lu selecionando um produto em uma vitrine de fragrâncias para casa",
-    imageCaption: "Marcas originais reunidas por uma biblioteca de curadoria.",
-    imagePosition: "center 38%",
   },
 ];
 
@@ -78,7 +92,6 @@ export type PromoCard = {
   description: string;
   href: string;
   imageSrc: string;
-  /** Cor do overlay sobre a imagem. */
   tone: "coral" | "sage" | "ink";
 };
 
@@ -116,7 +129,6 @@ export type EditorialCard = {
   ctaLabel: string;
   href: string;
   imageSrc: string;
-  /** Lado da imagem. */
   imageSide: "left" | "right";
 };
 
@@ -188,9 +200,5 @@ export const CATEGORY_SHORTCUTS: CategoryShortcut[] = [
   { label: "Acessórios", categorySlug: "acessorios" },
 ];
 
-/**
- * Mantido para compatibilidade com componentes que ainda importam HERO direto.
- * Fonte: primeiro slide do HERO_SLIDES.
- */
 export const HERO = HERO_SLIDES[0];
 export const HERO_TRUST_STRIP = MARQUEE_ITEMS;

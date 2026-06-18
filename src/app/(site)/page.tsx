@@ -81,8 +81,6 @@ export default async function HomePage() {
       <HeroCarousel />
 
       <BenefitsBar />
-      <PromoTrio />
-
       <CategoryShortcuts />
       <BrandsShowcase />
 
@@ -94,9 +92,6 @@ export default async function HomePage() {
         limit={12}
       />
 
-      <CurationBanner />
-      <EditorialDuo />
-
       <FeaturedProducts
         kind="recent"
         eyebrow="recém-chegados"
@@ -104,6 +99,10 @@ export default async function HomePage() {
         viewAllHref="/produtos"
         limit={12}
       />
+
+      <PromoTrio />
+      <CurationBanner />
+      <EditorialDuo />
 
       <section className="border-t border-cream-deep/40 bg-cream">
         <div className="mx-auto max-w-7xl px-6 py-20">
