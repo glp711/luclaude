@@ -8,6 +8,16 @@ export const metadata = {
   title: "Marcas",
   description:
     "Marcas brasileiras e internacionais de perfumaria de ambiente selecionadas a dedo.",
+  alternates: {
+    canonical: "/marcas",
+  },
+  openGraph: {
+    title: "Marcas de perfumes de ambiente",
+    description:
+      "Explore marcas como Dani Fernandes, M. Victoria, Lenvie, Maison Berger e Kailash em uma curadoria premium para casa.",
+    url: "/marcas",
+    images: [{ url: "/hero/universomarcas.jpg", alt: "Biblioteca de marcas da curadoria" }],
+  },
 };
 
 type BrandRow = {

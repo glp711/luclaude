@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { requestPasswordReset } from "./actions";
 
-export const metadata = { title: "Recuperar senha" };
+export const metadata = {
+  title: "Recuperar senha",
+  robots: { index: false, follow: false },
+};
 
 export default function RecuperarSenhaPage({
   searchParams,

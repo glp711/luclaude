@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
+import { SEO_KEYWORDS, SITE_DESCRIPTION, SITE_NAME, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -15,14 +16,53 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: { default: "perfumes de ambiente decor — Perfumaria de ambiente", template: "%s · perfumes de ambiente decor" },
-  description: "Difusores, sabonetes e home spray escolhidos a dedo pra sua casa virar memória.",
+  metadataBase: new URL(siteUrl()),
+  title: {
+    default: `${SITE_NAME} | Curadoria premium de aromas para casa`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  keywords: SEO_KEYWORDS,
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
   icons: { icon: "/logo-mark.svg" },
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: "perfumes de ambiente decor",
-    description: "Perfumaria de ambiente — aromas que ficam.",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: siteUrl(),
+    siteName: SITE_NAME,
     locale: "pt_BR",
     type: "website",
+    images: [
+      {
+        url: "/hero/universomarcas.jpg",
+        width: 1200,
+        height: 900,
+        alt: "Curadoria premium de perfumes de ambiente",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: ["/hero/universomarcas.jpg"],
   },
   formatDetection: { telephone: false },
 };

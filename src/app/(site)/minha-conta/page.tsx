@@ -4,7 +4,10 @@ import { getCurrentUser } from "@/lib/auth/guards";
 import { formatBRL } from "@/lib/money";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export const metadata = { title: "Minha conta" };
+export const metadata = {
+  title: "Minha conta",
+  robots: { index: false, follow: false },
+};
 
 const STATUS_LABEL: Record<string, string> = {
   pending: "Aguardando pagamento",

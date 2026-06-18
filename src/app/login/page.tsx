@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { resendLoginConfirmation, signIn } from "./actions";
 
-export const metadata = { title: "Entrar" };
+export const metadata = {
+  title: "Entrar",
+  robots: { index: false, follow: false },
+};
 
 type LoginSearchParams = {
   error?: string;

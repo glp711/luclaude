@@ -2,7 +2,10 @@ import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { CartContents } from "./CartContents";
 
-export const metadata = { title: "Carrinho" };
+export const metadata = {
+  title: "Carrinho",
+  robots: { index: false, follow: false },
+};
 
 type ProductForCart = {
   id: string;

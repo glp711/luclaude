@@ -3,7 +3,10 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/guards";
 import { CheckoutForm } from "./CheckoutForm";
 
-export const metadata = { title: "Finalizar compra" };
+export const metadata = {
+  title: "Finalizar compra",
+  robots: { index: false, follow: false },
+};
 
 type ProductForCheckout = {
   id: string;

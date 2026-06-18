@@ -1,4 +1,5 @@
 import { buildProductsUrl } from "@/lib/url";
+import { SITE_BRAND_NAME, SITE_DESCRIPTION, SOCIAL_LINKS, siteUrl } from "@/lib/seo";
 import { BenefitsBar } from "@/components/Home/BenefitsBar";
 import { BrandsShowcase } from "@/components/Home/BrandsShowcase";
 import { CategoryShortcuts } from "@/components/Home/CategoryShortcuts";
@@ -57,17 +58,26 @@ const PILLARS = [
 ] as const;
 
 export default async function HomePage() {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
+  const baseUrl = siteUrl().replace(/\/$/, "");
   const orgJsonLd = {
     "@context": "https://schema.org",
     "@type": "Store",
-    name: "perfumes de ambiente decor",
-    description:
-      "Curadoria premium de aromas para casa, com marcas brasileiras e internacionais.",
+    name: SITE_BRAND_NAME,
+    description: SITE_DESCRIPTION,
     url: baseUrl,
     logo: `${baseUrl}/logo-mark.svg`,
-    sameAs: ["https://www.instagram.com/perfumesdeambientedecor/"],
+    sameAs: SOCIAL_LINKS,
+  };
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_BRAND_NAME,
+    url: baseUrl,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${baseUrl}/produtos?busca={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
   };
 
   return (
@@ -75,6 +85,10 @@ export default async function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
 
       <MarqueeBar />

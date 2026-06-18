@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { updatePassword } from "./actions";
 
-export const metadata = { title: "Redefinir senha" };
+export const metadata = {
+  title: "Redefinir senha",
+  robots: { index: false, follow: false },
+};
 
 export default function RedefinirSenhaPage({
   searchParams,

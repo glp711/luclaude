@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { resendConfirmation, signUp } from "./actions";
 
-export const metadata = { title: "Criar conta" };
+export const metadata = {
+  title: "Criar conta",
+  robots: { index: false, follow: false },
+};
 
 type SignUpSearchParams = {
   error?: string;

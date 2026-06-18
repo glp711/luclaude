@@ -4,7 +4,10 @@ import { createSupabaseAdminClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/guards";
 import { formatBRL } from "@/lib/money";
 
-export const metadata = { title: "Seu pedido" };
+export const metadata = {
+  title: "Seu pedido",
+  robots: { index: false, follow: false },
+};
 
 const STATUS_LABEL: Record<string, string> = {
   pending: "Aguardando pagamento",
