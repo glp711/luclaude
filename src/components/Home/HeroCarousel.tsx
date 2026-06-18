@@ -57,7 +57,7 @@ export function HeroCarousel() {
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div className="relative h-[880px] overflow-hidden sm:h-[820px] md:h-[780px] lg:h-[700px]">
+      <div className="relative h-[720px] overflow-hidden sm:h-[700px] md:h-[660px] lg:h-[640px]">
         <div
           className="flex h-full transition-transform duration-700 ease-out"
           style={{
@@ -86,7 +86,7 @@ export function HeroCarousel() {
               type="button"
               onClick={() => goTo(active - 1)}
               aria-label="Slide anterior"
-              className="absolute bottom-6 right-28 z-20 hidden h-11 w-11 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/85 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral lg:inline-flex"
+              className="absolute bottom-16 right-20 z-20 hidden h-11 w-11 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/85 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral md:inline-flex"
             >
               <span aria-hidden="true" className="text-xl">
                 ←
@@ -96,14 +96,14 @@ export function HeroCarousel() {
               type="button"
               onClick={() => goTo(active + 1)}
               aria-label="Próximo slide"
-              className="absolute bottom-6 right-14 z-20 hidden h-11 w-11 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/85 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral lg:inline-flex"
+              className="absolute bottom-16 right-6 z-20 hidden h-11 w-11 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/85 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral md:inline-flex"
             >
               <span aria-hidden="true" className="text-xl">
                 →
               </span>
             </button>
 
-            <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 lg:bottom-8 lg:left-auto lg:right-10 lg:hidden lg:translate-x-0">
+            <div className="absolute bottom-5 right-6 z-20 flex items-center gap-2 lg:bottom-8 lg:right-10">
               {HERO_SLIDES.map((slide, idx) => (
                 <button
                   key={idx}
