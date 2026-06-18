@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { MENU_GROUPS, NAV_ITEMS, type MenuGroup, type MenuType } from "@/lib/navigation";
+import type { MenuGroup, MenuType } from "@/lib/navigation";
+import type { NavItem } from "@/lib/menu-data";
 import { buildProductsUrl } from "@/lib/url";
 
 /**
@@ -18,7 +19,15 @@ import { buildProductsUrl } from "@/lib/url";
  *  - Apenas um grupo / um tipo aberto por vez (acordeao)
  *  - Foco volta pro botao trigger ao fechar
  */
-export function MobileMenuDrawer({ userArea }: { userArea: React.ReactNode }) {
+export function MobileMenuDrawer({
+  userArea,
+  groups,
+  navItems,
+}: {
+  userArea: React.ReactNode;
+  groups: MenuGroup[];
+  navItems: NavItem[];
+}) {
   const [open, setOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [openType, setOpenType] = useState<string | null>(null);
@@ -124,7 +133,7 @@ export function MobileMenuDrawer({ userArea }: { userArea: React.ReactNode }) {
               {/* Lista de grupos com acordeao */}
               <div className="flex-1 overflow-y-auto p-4">
                 <nav aria-label="Navegacao mobile" className="space-y-1">
-                  {NAV_ITEMS.map((item) => {
+                  {navItems.map((item) => {
                     if (item.kind === "link") {
                       return (
                         <Link
@@ -137,7 +146,7 @@ export function MobileMenuDrawer({ userArea }: { userArea: React.ReactNode }) {
                         </Link>
                       );
                     }
-                    const group = MENU_GROUPS.find((g) => g.slug === item.slug);
+                    const group = groups.find((g) => g.slug === item.slug);
                     if (!group) return null;
                     return (
                       <AccordionGroup

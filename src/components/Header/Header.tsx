@@ -6,6 +6,7 @@ import { PromoBar } from "@/components/PromoBar";
 import { SearchInput } from "@/components/Header/SearchInput";
 import { WHATSAPP_NUMBER } from "@/lib/contact";
 import type { SessionUser } from "@/lib/auth/guards";
+import { buildNavItems, getDynamicMenuGroups } from "@/lib/menu-data";
 
 /**
  * Cabecalho da loja em 3 linhas:
@@ -16,8 +17,10 @@ import type { SessionUser } from "@/lib/auth/guards";
  * Componentes server-side (Header) compoem componentes client (MegaMenu, Drawer,
  * SearchInput) sem precisar marcar o cabecalho inteiro como "use client".
  */
-export function Header({ user }: { user: SessionUser | null }) {
+export async function Header({ user }: { user: SessionUser | null }) {
   const wppHref = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`;
+  const menuGroups = await getDynamicMenuGroups();
+  const navItems = buildNavItems(menuGroups);
 
   const userArea = user ? (
     user.role === "admin" ? (
@@ -120,7 +123,7 @@ export function Header({ user }: { user: SessionUser | null }) {
           )}
 
           <CartLink />
-          <MobileMenuDrawer userArea={userArea} />
+          <MobileMenuDrawer userArea={userArea} groups={menuGroups} navItems={navItems} />
         </div>
       </div>
 
@@ -131,7 +134,7 @@ export function Header({ user }: { user: SessionUser | null }) {
 
       {/* Linha 3: nav principal com mega menu (desktop) */}
       <div className="border-t border-cream-deep/40">
-        <MegaMenu />
+        <MegaMenu groups={menuGroups} navItems={navItems} />
       </div>
     </header>
   );

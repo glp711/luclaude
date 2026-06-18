@@ -75,6 +75,36 @@ body {
   top: 1rem;
 }
 
+/* Marquee scrolling (avisos da home) */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* Esconde scrollbar em carrosseis horizontais */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Scrollbar mais discreta no Chrome/Edge */
 @media (min-width: 768px) {
   ::-webkit-scrollbar {

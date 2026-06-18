@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { MENU_GROUPS, NAV_ITEMS, type MenuGroup } from "@/lib/navigation";
+import type { MenuGroup } from "@/lib/navigation";
+import type { NavItem } from "@/lib/menu-data";
 import { buildProductsUrl } from "@/lib/url";
 
 /**
@@ -16,7 +17,13 @@ import { buildProductsUrl } from "@/lib/url";
  *
  * Mobile: este componente eh hidden lg:block — drawer separado lida com mobile.
  */
-export function MegaMenu() {
+export function MegaMenu({
+  groups,
+  navItems,
+}: {
+  groups: MenuGroup[];
+  navItems: NavItem[];
+}) {
   const [openSlug, setOpenSlug] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   // Timeout que permite mover o cursor entre item da nav e painel sem fechar
@@ -70,7 +77,7 @@ export function MegaMenu() {
         className="mx-auto max-w-7xl px-6 flex items-center justify-center gap-1"
         onMouseLeave={scheduleClose}
       >
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           if (item.kind === "link") {
             return (
               <Link
@@ -83,7 +90,7 @@ export function MegaMenu() {
               </Link>
             );
           }
-          const group = MENU_GROUPS.find((g) => g.slug === item.slug);
+          const group = groups.find((g) => g.slug === item.slug);
           if (!group) return null;
           const isOpen = openSlug === item.slug;
           return (
@@ -120,7 +127,7 @@ export function MegaMenu() {
         <div
           id={`mega-panel-${openSlug}`}
           role="region"
-          aria-label={MENU_GROUPS.find((g) => g.slug === openSlug)?.label}
+          aria-label={groups.find((g) => g.slug === openSlug)?.label}
           className="absolute left-0 right-0 top-full z-40"
           onMouseEnter={() => open(openSlug)}
           onMouseLeave={scheduleClose}
@@ -128,7 +135,7 @@ export function MegaMenu() {
           {/* "Bridge" pra evitar fechamento ao mover entre botao e painel */}
           <div aria-hidden="true" className="h-2" />
           <MegaPanel
-            group={MENU_GROUPS.find((g) => g.slug === openSlug)!}
+            group={groups.find((g) => g.slug === openSlug)!}
             onNavigate={closeNow}
           />
         </div>

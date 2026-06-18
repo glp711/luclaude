@@ -1,9 +1,13 @@
-import Link from "next/link";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { ProductCard, type ProductCardData } from "@/components/ProductCard";
-import { HeroBanner } from "@/components/Home/HeroBanner";
+import { buildProductsUrl } from "@/lib/url";
 import { BenefitsBar } from "@/components/Home/BenefitsBar";
+import { BrandsShowcase } from "@/components/Home/BrandsShowcase";
 import { CategoryShortcuts } from "@/components/Home/CategoryShortcuts";
+import { CurationBanner } from "@/components/Home/CurationBanner";
+import { EditorialDuo } from "@/components/Home/EditorialDuo";
+import { FeaturedProducts } from "@/components/Home/FeaturedProducts";
+import { HeroCarousel } from "@/components/Home/HeroCarousel";
+import { MarqueeBar } from "@/components/Home/MarqueeBar";
+import { PromoTrio } from "@/components/Home/PromoTrio";
 
 const iconClass = "h-6 w-6";
 const PILLARS = [
@@ -53,43 +57,14 @@ const PILLARS = [
 ] as const;
 
 export default async function HomePage() {
-  const supabase = await createSupabaseServerClient();
-
-  const { data: products } = await supabase
-    .from("products")
-    .select(
-      "id, slug, name, price_cents, compare_at_price_cents, stock_quantity, product_images(url, position)"
-    )
-    .eq("status", "active")
-    .order("created_at", { ascending: false })
-    .limit(8);
-
-  const featured: ProductCardData[] =
-    (products ?? []).map((p: {
-      id: string;
-      slug: string;
-      name: string;
-      price_cents: number;
-      compare_at_price_cents: number | null;
-      stock_quantity: number;
-      product_images: { url: string; position: number }[];
-    }) => ({
-      id: p.id,
-      slug: p.slug,
-      name: p.name,
-      price_cents: p.price_cents,
-      compare_at_price_cents: p.compare_at_price_cents,
-      stock_quantity: p.stock_quantity,
-      cover_url: pickCover(p.product_images),
-    }));
-
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
   const orgJsonLd = {
     "@context": "https://schema.org",
     "@type": "Store",
     name: "perfumes de ambiente decor",
-    description: "Perfumaria de ambiente — difusores, sabonetes e home spray escolhidos a dedo.",
+    description:
+      "Perfumaria de ambiente — difusores, sabonetes e home spray escolhidos a dedo.",
     url: baseUrl,
     logo: `${baseUrl}/logo-mark.svg`,
     sameAs: ["https://www.instagram.com/perfumesdeambientedecor/"],
@@ -102,45 +77,48 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
       />
 
-      {/* Nova primeira secao: banner + beneficios + atalhos */}
-      <HeroBanner />
+      {/* Marquee de avisos rolando, hero em carrossel */}
+      <MarqueeBar />
+      <HeroCarousel />
+
+      {/* Beneficios + trio promo (3 jornadas) */}
       <BenefitsBar />
+      <PromoTrio />
+
+      {/* Atalhos por categoria (com foto) + marcas */}
       <CategoryShortcuts />
+      <BrandsShowcase />
 
-      {/* Novidades */}
-      <section className="mx-auto max-w-7xl px-6 pb-20">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <p className="text-xs uppercase tracking-widest text-sage-deep">recem-chegados</p>
-            <h2 className="mt-2 font-display text-4xl text-ink">Novidades</h2>
-          </div>
-          <Link
-            href="/produtos"
-            className="text-sm text-ink-soft hover:text-coral-deep transition"
-          >
-            Ver tudo →
-          </Link>
-        </div>
+      {/* Mais queridos (premium) + banner editorial + lancamentos */}
+      <FeaturedProducts
+        kind="highlights"
+        eyebrow="mais queridos"
+        title="Os mais queridos"
+        viewAllHref={buildProductsUrl({ sort: "price_desc" })}
+        limit={12}
+      />
 
-        {featured.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-cream-deep bg-cream-soft p-12 text-center text-ink-mute">
-            Catalogo em preparacao. Volte em breve.
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {featured.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        )}
-      </section>
+      <CurationBanner />
+      <EditorialDuo />
+
+      <FeaturedProducts
+        kind="recent"
+        eyebrow="recem-chegados"
+        title="Novidades"
+        viewAllHref="/produtos"
+        limit={12}
+      />
 
       {/* Por que perfumes de ambiente decor */}
       <section className="border-t border-cream-deep/40 bg-cream">
         <div className="mx-auto max-w-7xl px-6 py-20">
           <div className="text-center mb-12">
-            <p className="text-xs uppercase tracking-widest text-sage-deep">o que faz diferente</p>
-            <h2 className="mt-2 font-display text-4xl text-ink">Por que perfumes de ambiente decor</h2>
+            <p className="text-xs uppercase tracking-widest text-sage-deep">
+              o que faz diferente
+            </p>
+            <h2 className="mt-2 font-display text-4xl text-ink">
+              Por que perfumes de ambiente decor
+            </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {PILLARS.map((p) => (
@@ -158,42 +136,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Sobre a fundadora */}
-      <section className="bg-sage-soft/60 border-y border-sage-soft">
-        <div className="mx-auto max-w-7xl px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
-          <div
-            className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-cream-soft border border-cream-deep order-2 md:order-1 bg-cover bg-center"
-            style={{ backgroundImage: "url(/founder/perfumesdeambientedecor-founder-gift.png)" }}
-            role="img"
-            aria-label="Fundadora da perfumes de ambiente decor montando presente"
-          />
-
-          <div className="order-1 md:order-2">
-            <p className="text-xs uppercase tracking-widest text-sage-deep">conheca quem faz</p>
-            <h2 className="mt-2 font-display text-4xl md:text-5xl text-ink">
-              Atras de cada frasco, a <em className="text-coral-deep">curadoria da marca</em>.
-            </h2>
-            <p className="mt-5 text-ink-soft leading-relaxed">
-              Cada difusor, cada sabonete, cada home spray passa por uma curadoria cuidadosa antes de
-              chegar ate voce. Nao eh uma loja qualquer — eh bom gosto compartilhado em
-              forma de aroma.
-            </p>
-            <Link
-              href="/sobre"
-              className="mt-6 inline-flex items-center rounded-full border border-ink/20 px-6 py-2.5 text-sm text-ink hover:bg-ink hover:text-cream-soft transition"
-            >
-              Nossa historia
-            </Link>
-          </div>
-        </div>
-      </section>
     </main>
   );
-}
-
-function pickCover(images: { url: string; position: number }[] | null | undefined): string | null {
-  if (!images || images.length === 0) return null;
-  const sorted = [...images].sort((a, b) => a.position - b.position);
-  return sorted[0].url;
 }
