@@ -90,8 +90,23 @@ body {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+@keyframes hero-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.animate-hero-progress {
+  animation: hero-progress 5s linear forwards;
+}
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee {
+    animation: none;
+  }
+  .animate-hero-progress {
     animation: none;
   }
 }
