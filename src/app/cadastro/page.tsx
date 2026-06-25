@@ -140,6 +140,7 @@ function SignUpFeedback({ params }: { params: SignUpSearchParams }) {
         <p className="font-medium text-sage-deep">Conta criada. Confirme seu e-mail.</p>
         <p className="mt-1 text-ink-soft">
           Enviamos o link de confirmacao{params.email ? ` para ${params.email}` : ""}.
+          Ao clicar no botao do e-mail, voce volta para a area da cliente no site.
           Confira tambem as abas de spam, promocoes ou lixo eletronico.
         </p>
         {params.resend === "1" && (
@@ -158,15 +159,23 @@ function SignUpFeedback({ params }: { params: SignUpSearchParams }) {
           </p>
         )}
         {params.email && (
-          <form action={resendConfirmation} className="mt-4">
-            <input type="hidden" name="email" value={params.email} />
-            <button
-              type="submit"
-              className="rounded-full border border-sage px-4 py-2 text-xs font-medium uppercase tracking-widest text-sage-deep hover:bg-sage-soft transition"
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link
+              href={`/login?email=${encodeURIComponent(params.email)}`}
+              className="rounded-full bg-sage px-4 py-2 text-xs font-medium uppercase tracking-widest text-white transition hover:bg-sage-deep"
             >
-              Reenviar confirmacao
-            </button>
-          </form>
+              Ja confirmei, entrar
+            </Link>
+            <form action={resendConfirmation}>
+              <input type="hidden" name="email" value={params.email} />
+              <button
+                type="submit"
+                className="rounded-full border border-sage px-4 py-2 text-xs font-medium uppercase tracking-widest text-sage-deep hover:bg-sage-soft transition"
+              >
+                Reenviar confirmacao
+              </button>
+            </form>
+          </div>
         )}
       </div>
     );

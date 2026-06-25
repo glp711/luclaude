@@ -1,9 +1,20 @@
 import { clientEnv } from "@/lib/env";
 
 const BLOCKED_AUTH_PREFIXES = ["/login", "/cadastro", "/logout"];
+const PRODUCTION_SITE_ORIGIN = "https://www.perfumesdeambiente.com";
 
 export function siteOrigin() {
-  return clientEnv.NEXT_PUBLIC_SITE_URL.replace(/\/+$/, "");
+  const configured = clientEnv.NEXT_PUBLIC_SITE_URL.replace(/\/+$/, "");
+
+  if (
+    configured.includes("localhost") ||
+    configured.includes("127.0.0.1") ||
+    configured.includes("luperfumes.vercel.app")
+  ) {
+    return PRODUCTION_SITE_ORIGIN;
+  }
+
+  return configured;
 }
 
 export function safeInternalPath(

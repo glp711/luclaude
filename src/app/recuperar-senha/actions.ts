@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { buildEmailConfirmationRedirect } from "@/lib/auth/paths";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function requestPasswordReset(formData: FormData) {
@@ -8,13 +9,10 @@ export async function requestPasswordReset(formData: FormData) {
   if (!email) redirect("/recuperar-senha?error=missing");
 
   const supabase = await createSupabaseServerClient();
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
 
-  // Sempre retorna sucesso pro usuário (não revela se o e-mail existe);
-  // Supabase manda o link de redefinição via e-mail se a conta existir.
+  // Sempre retorna sucesso pro usuario para nao revelar se o e-mail existe.
   await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${siteUrl}/auth/callback?next=/redefinir-senha`,
+    redirectTo: buildEmailConfirmationRedirect("/redefinir-senha"),
   });
 
   redirect("/recuperar-senha?sent=1");
