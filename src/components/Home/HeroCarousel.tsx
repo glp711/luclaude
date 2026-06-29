@@ -93,7 +93,7 @@ export function HeroCarousel() {
               type="button"
               onClick={() => goTo(active - 1)}
               aria-label="Slide anterior"
-              className="absolute left-3 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/82 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral lg:left-6"
+              className="absolute left-3 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/82 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral md:inline-flex lg:left-6"
             >
               <span aria-hidden="true" className="text-xl leading-none">
                 &lt;
@@ -103,7 +103,7 @@ export function HeroCarousel() {
               type="button"
               onClick={() => goTo(active + 1)}
               aria-label="Proximo slide"
-              className="absolute right-3 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/82 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral lg:right-6"
+              className="absolute right-3 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/82 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral md:inline-flex lg:right-6"
             >
               <span aria-hidden="true" className="text-xl leading-none">
                 &gt;

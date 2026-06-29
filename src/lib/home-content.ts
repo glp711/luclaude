@@ -1,8 +1,8 @@
 /**
- * Conteúdo configurável da home: hero, marquee, banners promo,
+ * Conteudo configuravel da home: hero, marquee, banners promo,
  * trio editorial e atalhos de categoria.
  *
- * Perfumes de Ambiente Décor é a marca da loja/curadoria.
+ * Perfumes de Ambiente Decor e a marca da loja/curadoria.
  * Os produtos continuam com as marcas originais cadastradas no banco.
  */
 import { buildProductsUrl } from "@/lib/url";
@@ -23,22 +23,27 @@ export type HeroSlide = {
 
 export const HERO_SLIDES: HeroSlide[] = [
   {
-    theme: "warm",
-    eyebrow: "Perfume de Ambiente Décor · Desde 2020",
-    title: "Um universo de aromas",
-    titleAccent: "com curadoria.",
+    theme: "cool",
+    eyebrow: "Marca em destaque",
+    title: "Lenvie, casa com",
+    titleAccent: "assinatura.",
     description: [
-      "Fragrâncias, extratos e matérias-primas selecionadas com olhar estético, sensibilidade e respeito à arte de perfumar.",
-      "Dani Fernandes, M. Victoria, Lenvie, Maison Berger, Kailash e outras marcas reunidas em um só lugar.",
-      "Em cada frasco, uma história. Em cada aroma, um gesto de arte.",
+      "Difusores, home sprays, velas e refis para transformar fragrancia em presenca.",
+      "Uma marca brasileira com leitura elegante, natural e sensorial para o ritual da casa.",
     ],
-    primaryCta: { label: "Explorar catálogo", href: "/produtos" },
-    secondaryCta: { label: "Ver marcas", href: "/marcas" },
-    imageSrc: "/hero/universomarcas.jpg",
+    primaryCta: {
+      label: "Ver Lenvie",
+      href: buildProductsUrl({ marca: "lenvie" }),
+    },
+    secondaryCta: {
+      label: "Explorar difusores",
+      href: buildProductsUrl({ categoria: "difusor-de-varetas", marca: "lenvie" }),
+    },
+    imageSrc: "/hero/lenvie-lotus-collection.jpeg",
     imageAlt:
-      "Seleção de difusores, vela e home spray de marcas diferentes reunidos em uma curadoria",
-    imageCaption: "Marcas originais reunidas em uma curadoria de aromas para casa.",
-    imagePosition: "center center",
+      "Produtos Lenvie com difusor, home spray, vela e refil em composicao floral suave",
+    imageCaption: "Lenvie na curadoria Perfumes de Ambiente Decor.",
+    imagePosition: "62% center",
   },
   {
     theme: "earthy",
@@ -46,42 +51,63 @@ export const HERO_SLIDES: HeroSlide[] = [
     title: "Dani Fernandes, perfume e",
     titleAccent: "aconchego.",
     description: [
-      "Águas perfumadas, difusores e fragrâncias delicadas para transformar a casa em refúgio.",
-      "Uma assinatura floral, suave e elegante dentro da nossa seleção de marcas.",
+      "Aguas perfumadas, difusores e fragrancias delicadas para transformar a casa em refugio.",
+      "Uma assinatura floral, suave e elegante dentro da nossa selecao de marcas.",
     ],
     primaryCta: {
       label: "Ver Dani Fernandes",
       href: buildProductsUrl({ marca: "dani-fernandes" }),
     },
-    secondaryCta: { label: "Explorar difusores", href: buildProductsUrl({ categoria: "difusor-de-varetas" }) },
+    secondaryCta: {
+      label: "Explorar difusores",
+      href: buildProductsUrl({ categoria: "difusor-de-varetas" }),
+    },
     imageSrc: "/hero/danifernandes.jpg",
-    imageAlt: "Produtos Dani Fernandes com difusor, água perfumada e flores",
-    imageCaption: "Dani Fernandes dentro da curadoria Perfumes de Ambiente Décor.",
+    imageAlt: "Produtos Dani Fernandes com difusor, agua perfumada e flores",
+    imageCaption: "Dani Fernandes dentro da curadoria Perfumes de Ambiente Decor.",
+    imagePosition: "center center",
+  },
+  {
+    theme: "warm",
+    eyebrow: "Perfume de Ambiente Decor - Desde 2020",
+    title: "Um universo de aromas",
+    titleAccent: "com curadoria.",
+    description: [
+      "Fragrancias, extratos e materias-primas selecionadas com olhar estetico, sensibilidade e respeito a arte de perfumar.",
+      "Dani Fernandes, M. Victoria, Lenvie, Maison Berger, Kailash e outras marcas reunidas em um so lugar.",
+      "Em cada frasco, uma historia. Em cada aroma, um gesto de arte.",
+    ],
+    primaryCta: { label: "Explorar catalogo", href: "/produtos" },
+    secondaryCta: { label: "Ver marcas", href: "/marcas" },
+    imageSrc: "/hero/universomarcas.jpg",
+    imageAlt:
+      "Selecao de difusores, vela e home spray de marcas diferentes reunidos em uma curadoria",
+    imageCaption: "Marcas originais reunidas em uma curadoria de aromas para casa.",
     imagePosition: "center center",
   },
   {
     theme: "cool",
-    eyebrow: "11 marcas, um só lugar",
-    title: "Técnica, emoção e",
-    titleAccent: "memória.",
+    eyebrow: "11 marcas, um so lugar",
+    title: "Tecnica, emocao e",
+    titleAccent: "memoria.",
     description: [
-      "Uma curadoria olfativa feita com técnica, emoção e memória.",
-      "A escolha nasce do encontro entre estética, sensibilidade e respeito às matérias-primas.",
+      "Uma curadoria olfativa feita com tecnica, emocao e memoria.",
+      "A escolha nasce do encontro entre estetica, sensibilidade e respeito as materias-primas.",
     ],
     primaryCta: { label: "Ver marcas", href: "/marcas" },
-    secondaryCta: { label: "Explorar catálogo", href: "/produtos" },
+    secondaryCta: { label: "Explorar catalogo", href: "/produtos" },
     imageSrc: "/hero/lu-curadoria-difusor.jpeg",
     imageAlt: "Lu avaliando um difusor em uma vitrine de curadoria olfativa",
-    imageCaption: "Curadoria olfativa com olhar estético e sensível.",
+    imageCaption: "Curadoria olfativa com olhar estetico e sensivel.",
     imagePosition: "center 42%",
   },
 ];
 
 export const MARQUEE_ITEMS: string[] = [
-  "Frete grátis acima de R$ 250",
+  "Frete gratis acima de R$ 250",
   "Pix com 5% off",
   "Trocas em 7 dias",
-  "Envio em 24h útil",
+  "Envio em 24h util",
   "Atendimento por WhatsApp",
   "Parcele em 3x sem juros",
 ];
@@ -99,23 +125,23 @@ export const PROMO_TRIO: PromoCard[] = [
   {
     eyebrow: "presentes",
     title: "Presentes que marcam",
-    description: "Kits prontos para entregar memória, cuidado e presença.",
+    description: "Kits prontos para entregar memoria, cuidado e presenca.",
     href: buildProductsUrl({ categoria: "kits" }),
     imageSrc: "/hero/lu-home-spray.jpeg",
     tone: "coral",
   },
   {
     eyebrow: "aromatize",
-    title: "Toda a casa, com assinatura",
-    description: "Difusor, home spray e vela para criar atmosfera.",
-    href: buildProductsUrl({ categoria: "difusor-de-varetas" }),
-    imageSrc: "/hero/detalhe-materia-prima.jpeg",
+    title: "Lenvie para criar atmosfera",
+    description: "Difusor, refil e home spray com presenca elegante no ambiente.",
+    href: buildProductsUrl({ marca: "lenvie" }),
+    imageSrc: "/hero/lenvie-agua-de-coco.jpeg",
     tone: "sage",
   },
   {
     eyebrow: "ofertas",
     title: "Achados da curadoria",
-    description: "Seleção com desconto enquanto durar.",
+    description: "Selecao com desconto enquanto durar.",
     href: "/produtos?ofertas=1",
     imageSrc: "/founder/perfumesdeambientedecor-product-kit.png",
     tone: "ink",
@@ -135,22 +161,22 @@ export type EditorialCard = {
 export const EDITORIAL_DUO: EditorialCard[] = [
   {
     eyebrow: "ambiente principal",
-    title: "Sala e quarto com personalidade",
+    title: "Lenvie: a casa como assinatura",
     description:
-      "Difusores e home spray para deixar memória nos ambientes que você mais vive.",
-    ctaLabel: "Ver difusores",
-    href: buildProductsUrl({ categoria: "difusor-de-varetas" }),
-    imageSrc: "/hero/lu-curadoria-difusor.jpeg",
+      "Fragrancias que entram no ambiente como gesto de cuidado, memoria e identidade.",
+    ctaLabel: "Ver Lenvie",
+    href: buildProductsUrl({ marca: "lenvie" }),
+    imageSrc: "/hero/lenvie-ritual-assinatura.jpeg",
     imageSide: "left",
   },
   {
-    eyebrow: "ritual diário",
-    title: "Banheiro e cuidados",
+    eyebrow: "ritual diario",
+    title: "Difusores, refis e presenca",
     description:
-      "Sabonete líquido e hidratante com a mesma delicadeza olfativa do seu cantinho.",
-    ctaLabel: "Ver sabonetes",
-    href: buildProductsUrl({ categoria: "sabonete-liquido" }),
-    imageSrc: "/founder/perfumesdeambientedecor-product-kit.png",
+      "Opcoes para renovar a atmosfera da casa sem perder delicadeza visual.",
+    ctaLabel: "Explorar difusores",
+    href: buildProductsUrl({ categoria: "difusor-de-varetas", marca: "lenvie" }),
+    imageSrc: "/hero/lenvie-vanilla-bloom.jpeg",
     imageSide: "right",
   },
 ];
@@ -165,7 +191,7 @@ export const BENEFITS: Benefit[] = [
   {
     iconKey: "shipping",
     title: "Envio para todo o Brasil",
-    description: "Acompanhe seu pedido com código de rastreio.",
+    description: "Acompanhe seu pedido com codigo de rastreio.",
   },
   {
     iconKey: "secure",
@@ -175,12 +201,12 @@ export const BENEFITS: Benefit[] = [
   {
     iconKey: "payment",
     title: "Parcelamento",
-    description: "Cartão em até 3x, Pix com confirmação imediata.",
+    description: "Cartao em ate 3x, Pix com confirmacao imediata.",
   },
   {
     iconKey: "support",
     title: "Atendimento personalizado",
-    description: "Tire dúvidas no WhatsApp, Instagram ou e-mail.",
+    description: "Tire duvidas no WhatsApp, Instagram ou e-mail.",
   },
 ];
 
@@ -190,14 +216,14 @@ export type CategoryShortcut = {
 };
 
 export const CATEGORY_SHORTCUTS: CategoryShortcut[] = [
-  { label: "Água Perfumada", categorySlug: "agua-perfumada" },
+  { label: "Agua Perfumada", categorySlug: "agua-perfumada" },
   { label: "Home Spray", categorySlug: "home-spray" },
   { label: "Difusores", categorySlug: "difusor-de-varetas" },
-  { label: "Essências", categorySlug: "essencia-concentrada" },
+  { label: "Essencias", categorySlug: "essencia-concentrada" },
   { label: "Sabonetes", categorySlug: "sabonete-liquido" },
   { label: "Velas", categorySlug: "vela-perfumada" },
   { label: "Corpo e Perfumaria", categorySlug: "body-splash" },
-  { label: "Acessórios", categorySlug: "acessorios" },
+  { label: "Acessorios", categorySlug: "acessorios" },
 ];
 
 export const HERO = HERO_SLIDES[0];
