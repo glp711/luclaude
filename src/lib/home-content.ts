@@ -39,11 +39,11 @@ export const HERO_SLIDES: HeroSlide[] = [
       label: "Explorar difusores",
       href: buildProductsUrl({ categoria: "difusor-de-varetas", marca: "lenvie" }),
     },
-    imageSrc: "/hero/lenvie-lotus-collection.jpeg",
+    imageSrc: "/hero/lenvie-produtos-reais-hero-1920x800.jpg",
     imageAlt:
       "Produtos Lenvie com difusor, home spray, vela e refil em composicao floral suave",
     imageCaption: "Lenvie na curadoria Perfumes de Ambiente Decor.",
-    imagePosition: "62% center",
+    imagePosition: "center center",
   },
   {
     theme: "earthy",
