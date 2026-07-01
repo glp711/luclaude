@@ -46,7 +46,7 @@ export function PromoBar() {
   };
 
   return (
-    <div className="bg-coral text-white text-xs sm:text-sm">
+    <div className="bg-sage-deep text-cream-soft text-xs sm:text-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-2 flex items-center justify-center gap-3 relative">
         <span className="text-center font-medium tracking-wide transition-opacity">
           {MESSAGES[index]}
@@ -55,7 +55,7 @@ export function PromoBar() {
           type="button"
           onClick={dismiss}
           aria-label="Fechar"
-          className="absolute right-3 sm:right-6 text-white/80 hover:text-white transition"
+          className="absolute right-3 sm:right-6 text-cream-soft/80 hover:text-cream-soft transition"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-4 w-4">
             <path d="M6 6l12 12M18 6L6 18" />

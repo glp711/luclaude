@@ -64,7 +64,7 @@ export function HeroCarousel() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="relative h-[610px] overflow-hidden sm:h-[650px] lg:h-[640px]">
+      <div className="relative h-[560px] overflow-hidden min-[390px]:h-[590px] sm:h-[650px] lg:h-[640px]">
         <div
           className="flex h-full transition-transform duration-700 ease-out"
           style={{
@@ -93,7 +93,7 @@ export function HeroCarousel() {
               type="button"
               onClick={() => goTo(active - 1)}
               aria-label="Slide anterior"
-              className="absolute left-3 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/82 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral md:inline-flex lg:left-6"
+              className="absolute left-3 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/82 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep md:inline-flex lg:left-6"
             >
               <span aria-hidden="true" className="text-xl leading-none">
                 &lt;
@@ -103,14 +103,14 @@ export function HeroCarousel() {
               type="button"
               onClick={() => goTo(active + 1)}
               aria-label="Proximo slide"
-              className="absolute right-3 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/82 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral md:inline-flex lg:right-6"
+              className="absolute right-3 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/82 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:bg-cream-soft hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep md:inline-flex lg:right-6"
             >
               <span aria-hidden="true" className="text-xl leading-none">
                 &gt;
               </span>
             </button>
 
-            <div className="absolute bottom-4 left-5 z-20 flex items-center gap-2 lg:bottom-8 lg:left-10">
+            <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-cream-soft/70 bg-cream-soft/78 px-3 py-2 shadow-sm shadow-ink/10 backdrop-blur lg:bottom-8 lg:left-10 lg:translate-x-0 lg:border-0 lg:bg-transparent lg:px-0 lg:py-0 lg:shadow-none lg:backdrop-blur-0">
               {HERO_SLIDES.map((slide, idx) => (
                 <button
                   key={idx}
@@ -118,9 +118,9 @@ export function HeroCarousel() {
                   onClick={() => goTo(idx)}
                   aria-label={`Ir para slide ${idx + 1}: ${slide.title} ${slide.titleAccent}`}
                   aria-pressed={idx === active}
-                  className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral focus-visible:ring-offset-2 focus-visible:ring-offset-cream-soft ${
+                  className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep focus-visible:ring-offset-2 focus-visible:ring-offset-cream-soft ${
                     idx === active
-                      ? "w-10 bg-coral"
+                      ? "w-9 bg-sage-deep lg:w-10"
                       : "w-2 bg-ink/30 hover:bg-ink/50"
                   }`}
                 />
@@ -132,7 +132,7 @@ export function HeroCarousel() {
               onClick={() => setUserPaused((current) => !current)}
               aria-label={userPaused ? "Retomar banners automaticos" : "Pausar banners automaticos"}
               aria-pressed={userPaused}
-              className="absolute bottom-3 right-4 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/82 text-ink-soft shadow-sm shadow-ink/10 backdrop-blur transition hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral lg:bottom-7 lg:right-10"
+              className="absolute bottom-3 right-4 z-20 hidden h-9 w-9 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/82 text-ink-soft shadow-sm shadow-ink/10 backdrop-blur transition hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep sm:inline-flex lg:bottom-7 lg:right-10"
             >
               {userPaused ? (
                 <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden="true">
@@ -148,7 +148,7 @@ export function HeroCarousel() {
             <div className="absolute inset-x-0 bottom-0 z-10 h-1 bg-ink/5">
               <div
                 key={`${active}-${paused ? "paused" : "play"}`}
-                className={paused ? "h-full bg-coral/45" : "h-full origin-left animate-hero-progress bg-coral"}
+                className={paused ? "h-full bg-sage-deep/45" : "h-full origin-left animate-hero-progress bg-sage-deep"}
               />
             </div>
           </>
