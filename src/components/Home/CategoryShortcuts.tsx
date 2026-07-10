@@ -5,11 +5,7 @@ import { buildProductsUrl } from "@/lib/url";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 /**
- * Atalhos por categoria com foto representativa de produto.
- *
- * Pra cada categoria configurada em CATEGORY_SHORTCUTS, pegamos o produto
- * ativo mais recente que tenha imagem e exibimos a thumb. Categorias sem
- * produto sao omitidas — mantem consistencia com o resto do site.
+ * Atalhos editoriais por categoria com foto representativa de produto.
  */
 export async function CategoryShortcuts() {
   const supabase = await createSupabaseServerClient();
@@ -50,51 +46,57 @@ export async function CategoryShortcuts() {
 
   if (visible.length === 0) return null;
 
+  const featureCategories = visible.slice(0, 3);
+  const compactCategories = visible.slice(3);
+
   return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <div className="text-center mb-12">
-        <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-sage-deep">
-          <span aria-hidden="true" className="h-px w-8 bg-sage-deep/60" />
-          o que você procura
-          <span aria-hidden="true" className="h-px w-8 bg-sage-deep/60" />
-        </p>
-        <h2 className="mt-3 font-display text-4xl sm:text-5xl text-ink">
-          Escolha por categoria
-        </h2>
-        <p className="mt-3 text-sm text-ink-soft max-w-md mx-auto">
-          Começa pelo tipo de produto. Depois escolhe a marca e a fragrância.
+    <section className="mx-auto max-w-[92rem] px-6 py-20 sm:py-24">
+      <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sage-deep">
+            explorar por ritual
+          </p>
+          <h2 className="mt-3 max-w-2xl font-display text-4xl leading-[1.02] text-ink sm:text-5xl">
+            Encontre pelo gesto que a casa pede.
+          </h2>
+        </div>
+        <p className="max-w-sm text-sm leading-relaxed text-ink-soft">
+          Aromatizar, presentear, cuidar da pele ou renovar o ambiente: cada categoria entra como parte de um ritual.
         </p>
       </div>
-      <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
-        {visible.map((c) => {
+
+      <ul className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+        {featureCategories.map((c, index) => {
           const img = imageByCategorySlug.get(c.categorySlug)!;
           return (
             <li key={c.categorySlug}>
               <Link
                 href={buildProductsUrl({ categoria: c.categorySlug })}
-                className="group block overflow-hidden rounded-[8px] border border-cream-deep bg-cream-soft transition hover:border-coral focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+                className="group block overflow-hidden rounded-[8px] bg-ink transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep"
               >
-                <div className="relative aspect-[4/5] overflow-hidden bg-coral-soft/20">
+                <div className="relative aspect-[4/5] overflow-hidden md:aspect-[3/4]">
                   <Image
                     src={img.url}
                     alt={img.alt}
                     fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="object-cover transition duration-500 group-hover:scale-[1.04]"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition duration-700 group-hover:scale-[1.04]"
                   />
-                  {/* Gradient overlay sutil pra legibilidade do label */}
                   <div
                     aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-ink/55 via-ink/20 to-transparent"
+                    className="absolute inset-0 bg-gradient-to-t from-ink/72 via-ink/12 to-transparent"
                   />
-                  <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                    <p className="font-display text-lg sm:text-xl leading-tight text-cream-soft">
+                  <div className="absolute inset-x-0 bottom-0 p-6 text-cream-soft sm:p-7">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cream-soft/75">
+                      0{index + 1}
+                    </p>
+                    <p className="mt-2 font-display text-3xl leading-[0.98] sm:text-4xl">
                       {c.label}
                     </p>
-                    <span className="mt-1 inline-flex items-center text-[11px] uppercase tracking-widest text-cream-soft/85 group-hover:text-coral-soft transition">
-                      Ver tudo
+                    <span className="mt-4 inline-flex text-[11px] font-semibold uppercase tracking-[0.18em] text-cream-soft underline decoration-cream-soft/40 underline-offset-8 transition group-hover:decoration-cream-soft">
+                      Entrar na categoria
                       <span aria-hidden="true" className="ml-1.5">
-                        →
+                        -&gt;
                       </span>
                     </span>
                   </div>
@@ -104,6 +106,20 @@ export async function CategoryShortcuts() {
           );
         })}
       </ul>
+
+      {compactCategories.length > 0 && (
+        <div className="mt-7 flex flex-wrap gap-2">
+          {compactCategories.map((c) => (
+            <Link
+              key={c.categorySlug}
+              href={buildProductsUrl({ categoria: c.categorySlug })}
+              className="rounded-full border border-cream-deep bg-cream-soft px-4 py-2 text-sm text-ink-soft transition hover:border-sage-deep hover:text-sage-deep"
+            >
+              {c.label}
+            </Link>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

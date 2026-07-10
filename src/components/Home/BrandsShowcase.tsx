@@ -3,12 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { buildProductsUrl } from "@/lib/url";
 
 /**
- * Bloco "Explore nossas marcas" para a home.
- *
- * Renderiza todas as marcas ativas como cards compactos. Marcas sem produto
- * ativo aparecem com selo "Em breve" e nao linkam pra catalogo vazio.
- *
- * Visual segue paleta cream/coral/sage do resto da home.
+ * Biblioteca de marcas da curadoria.
  */
 export async function BrandsShowcase() {
   const supabase = await createSupabaseServerClient();
@@ -30,58 +25,63 @@ export async function BrandsShowcase() {
   if (!brands || brands.length === 0) return null;
 
   return (
-    <section className="border-t border-cream-deep/40 bg-cream-soft">
-      <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-8">
-          <div>
-            <p className="text-xs uppercase tracking-widest text-sage-deep">curadoria</p>
-            <h2 className="mt-2 font-display text-4xl text-ink">Explore nossas marcas</h2>
-            <p className="mt-2 text-sm text-ink-soft max-w-xl">
-              Marcas brasileiras e internacionais escolhidas a dedo. Clica em uma e vê
-              tudo dela.
-            </p>
-          </div>
+    <section className="bg-cream">
+      <div className="mx-auto grid max-w-[92rem] gap-10 px-6 py-20 md:grid-cols-[0.82fr_1.18fr] md:items-start">
+        <div className="md:sticky md:top-32">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sage-deep">
+            biblioteca olfativa
+          </p>
+          <h2 className="mt-3 max-w-md font-display text-4xl leading-[1.02] text-ink sm:text-5xl">
+            Marcas escolhidas com intenção.
+          </h2>
+          <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-soft">
+            Uma selecao de casas autorais, linhas decorativas e fragrancias para diferentes formas de habitar.
+          </p>
           <Link
             href="/marcas"
-            className="self-start md:self-auto text-sm text-ink-soft hover:text-coral-deep transition"
+            className="mt-7 inline-flex text-sm font-medium text-ink underline decoration-sage-deep/30 underline-offset-8 transition hover:text-sage-deep hover:decoration-sage-deep"
           >
-            Ver todas →
+            Ver todas as marcas
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-1 border-t border-cream-deep sm:grid-cols-2">
           {brands.map((b) => {
             const count = countByBrand.get(b.id) ?? 0;
             const available = count > 0;
-            if (available) {
+            const content = (
+              <>
+                <span className="font-display text-2xl leading-tight text-ink transition group-hover:text-sage-deep">
+                  {b.name}
+                </span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-mute">
+                  {available
+                    ? `${count} ${count === 1 ? "produto" : "produtos"}`
+                    : "Em breve"}
+                </span>
+              </>
+            );
+
+            if (!available) {
               return (
-                <Link
+                <div
                   key={b.id}
-                  href={buildProductsUrl({ marca: b.slug })}
-                  className="group relative rounded-[8px] border border-cream-deep bg-cream p-4 text-center transition hover:border-coral hover:bg-coral-soft/30"
+                  className="flex min-h-28 flex-col justify-between border-b border-cream-deep px-1 py-5 opacity-55 sm:odd:border-r sm:odd:pr-6 sm:even:pl-6"
+                  title="Em breve no catalogo"
                 >
-                  <p className="font-display text-lg text-ink group-hover:text-coral-deep transition leading-tight">
-                    {b.name}
-                  </p>
-                  <span className="mt-1.5 inline-block text-[10px] uppercase tracking-widest text-sage-deep">
-                    {count} {count === 1 ? "produto" : "produtos"}
-                  </span>
-                </Link>
+                  {content}
+                </div>
               );
             }
+
             return (
-              <div
+              <Link
                 key={b.id}
-                className="relative rounded-[8px] border border-cream-deep/60 bg-cream/40 p-4 text-center"
-                title="Em breve no catálogo"
+                href={buildProductsUrl({ marca: b.slug })}
+                className="group flex min-h-28 flex-col justify-between border-b border-cream-deep px-1 py-5 transition hover:bg-cream-soft sm:odd:border-r sm:odd:pr-6 sm:even:pl-6"
               >
-                <p className="font-display text-lg text-ink-mute leading-tight">
-                  {b.name}
-                </p>
-                <span className="mt-1.5 inline-block text-[10px] uppercase tracking-widest text-ink-mute/70">
-                  Em breve
-                </span>
-              </div>
+                {content}
+              </Link>
             );
           })}
         </div>

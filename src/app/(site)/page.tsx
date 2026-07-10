@@ -100,8 +100,8 @@ export default async function HomePage() {
 
       <FeaturedProducts
         kind="highlights"
-        eyebrow="mais queridos"
-        title="Os mais queridos"
+        eyebrow="sets"
+        title="best sellers"
         viewAllHref={buildProductsUrl({ sort: "price_desc" })}
         limit={12}
       />
@@ -109,7 +109,7 @@ export default async function HomePage() {
       <FeaturedProducts
         kind="recent"
         eyebrow="recém-chegados"
-        title="Novidades"
+        title="novidades"
         viewAllHref="/produtos"
         limit={12}
       />

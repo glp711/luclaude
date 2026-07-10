@@ -5,10 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { ProductCard, type ProductCardData } from "@/components/ProductCard";
 
 /**
- * Carrossel horizontal de produtos com setas (desktop) e scroll-snap (mobile).
- *
- * Recebe a lista pronta via prop — o fetch eh feito num server component pai
- * (ver FeaturedProducts.tsx).
+ * Carrossel horizontal de produtos com setas no desktop e scroll-snap no mobile.
  */
 export function ProductCarousel({
   products,
@@ -59,65 +56,75 @@ export function ProductCarousel({
   if (products.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-14">
-      <div className="flex items-end justify-between gap-3 mb-7">
-        <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-sage-deep">
-            {eyebrow}
-          </p>
-          <h2 className="mt-2 font-display text-4xl text-ink">{title}</h2>
+    <section className="border-y border-cream-deep/35 bg-cream-soft/70">
+      <div className="mx-auto max-w-[92rem] px-6 py-16 sm:py-20">
+        <div className="mb-9 flex items-end justify-between gap-3">
+          <div>
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h2 className="flex items-center gap-2 text-xl font-semibold lowercase tracking-[-0.01em] text-ink sm:text-2xl">
+                <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-ink" />
+                {title}
+              </h2>
+              <span className="text-xl font-medium lowercase tracking-[-0.01em] text-ink-mute sm:text-2xl">
+                {eyebrow}
+              </span>
+            </div>
+            <p className="mt-3 max-w-lg text-sm leading-relaxed text-ink-soft">
+              Uma selecao em destaque para descobrir fragrancias, texturas e presentes com calma.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link
+              href={viewAllHref}
+              className="hidden text-sm font-medium text-ink underline decoration-sage-deep/30 underline-offset-8 transition hover:text-sage-deep hover:decoration-sage-deep sm:inline-block"
+            >
+              {viewAllLabel}
+            </Link>
+            <div className="hidden gap-2 md:flex">
+              <button
+                type="button"
+                onClick={() => scroll("prev")}
+                disabled={!canScrollPrev}
+                aria-label="Anterior"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cream-deep bg-cream text-ink transition hover:border-sage-deep hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep disabled:cursor-not-allowed disabled:opacity-35"
+              >
+                <span aria-hidden="true">{"<"}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => scroll("next")}
+                disabled={!canScrollNext}
+                aria-label="Proximo"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cream-deep bg-cream text-ink transition hover:border-sage-deep hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep disabled:cursor-not-allowed disabled:opacity-35"
+              >
+                <span aria-hidden="true">{">"}</span>
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
+
+        <div
+          ref={scrollerRef}
+          className="hide-scrollbar -mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-6 pb-2 sm:gap-7"
+        >
+          {products.map((p) => (
+            <div
+              key={p.id}
+              className="w-[58%] flex-shrink-0 snap-start sm:w-[34%] lg:w-[18.5%]"
+            >
+              <ProductCard product={p} />
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 text-center sm:hidden">
           <Link
             href={viewAllHref}
-            className="hidden sm:inline-block text-sm text-ink-soft hover:text-coral-deep transition"
+            className="text-sm font-medium text-ink underline decoration-sage-deep/30 underline-offset-8 transition hover:text-sage-deep"
           >
-            {viewAllLabel} →
+            {viewAllLabel}
           </Link>
-          <div className="hidden md:flex gap-2">
-            <button
-              type="button"
-              onClick={() => scroll("prev")}
-              disabled={!canScrollPrev}
-              aria-label="Anterior"
-              className="h-10 w-10 rounded-full border border-cream-deep bg-cream-soft text-ink hover:border-coral hover:text-coral-deep disabled:opacity-40 disabled:cursor-not-allowed transition focus:outline-none focus-visible:ring-2 focus-visible:ring-coral inline-flex items-center justify-center"
-            >
-              <span aria-hidden="true">←</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => scroll("next")}
-              disabled={!canScrollNext}
-              aria-label="Proximo"
-              className="h-10 w-10 rounded-full border border-cream-deep bg-cream-soft text-ink hover:border-coral hover:text-coral-deep disabled:opacity-40 disabled:cursor-not-allowed transition focus:outline-none focus-visible:ring-2 focus-visible:ring-coral inline-flex items-center justify-center"
-            >
-              <span aria-hidden="true">→</span>
-            </button>
-          </div>
         </div>
-      </div>
-
-      <div
-        ref={scrollerRef}
-        className="hide-scrollbar flex gap-4 sm:gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory -mx-6 px-6 pb-2"
-      >
-        {products.map((p) => (
-          <div
-            key={p.id}
-            className="snap-start flex-shrink-0 w-[68%] sm:w-[42%] lg:w-[23.5%]"
-          >
-            <ProductCard product={p} />
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-6 sm:hidden text-center">
-        <Link
-          href={viewAllHref}
-          className="text-sm text-ink-soft hover:text-coral-deep transition"
-        >
-          {viewAllLabel} →
-        </Link>
       </div>
     </section>
   );

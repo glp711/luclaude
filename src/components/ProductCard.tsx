@@ -29,16 +29,16 @@ export function ProductCard({ product }: { product: ProductCardData }) {
   return (
     <Link
       href={`/produtos/${product.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-cream-deep bg-cream-soft shadow-sm shadow-ink/5 transition hover:-translate-y-0.5 hover:border-coral hover:shadow-xl hover:shadow-ink/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+      className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-transparent bg-transparent transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep"
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-cream">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[8px] bg-cream-soft shadow-sm shadow-ink/5 transition duration-500 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-ink/10">
         {product.cover_url ? (
           <Image
             src={product.cover_url}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover transition duration-700 group-hover:scale-[1.045]"
+            className="object-contain p-5 transition duration-700 group-hover:scale-[1.035] sm:p-6"
           />
         ) : (
           <ProductPlaceholder name={product.name} />
@@ -69,24 +69,24 @@ export function ProductCard({ product }: { product: ProductCardData }) {
         )}
       </div>
 
-      <div className="flex flex-1 flex-col p-4">
-        <h3 className="font-display text-lg leading-snug text-ink line-clamp-2 min-h-[3.05rem]">
+      <div className="flex flex-1 flex-col pt-4">
+        <h3 className="text-sm leading-relaxed text-ink line-clamp-2 min-h-[2.7rem]">
           {product.name}
         </h3>
 
-        <div className="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+        <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
           {hasPromo && (
             <span className="text-xs text-ink-mute line-through">
               {formatBRL(product.compare_at_price_cents!)}
             </span>
           )}
-          <span className="text-xl font-semibold tabular-nums text-coral-deep">
+          <span className="text-sm font-semibold tabular-nums text-ink">
             {formatBRL(product.price_cents)}
           </span>
         </div>
 
-        <div className="mt-auto pt-4">
-          <span className="inline-flex w-full items-center justify-center rounded-full border border-cream-deep bg-cream px-4 py-2 text-xs font-bold uppercase tracking-wide text-ink-soft transition group-hover:border-coral group-hover:bg-coral group-hover:text-white">
+        <div className="mt-auto pt-3">
+          <span className="inline-flex text-[11px] font-semibold uppercase tracking-[0.18em] text-sage-deep underline decoration-sage-deep/30 underline-offset-4 transition group-hover:text-ink group-hover:decoration-ink">
             Ver detalhes
           </span>
         </div>
