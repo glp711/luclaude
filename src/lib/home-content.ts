@@ -87,40 +87,6 @@ export const HERO_SLIDES: HeroSlide[] = [
     imageCaption: "Dani Fernandes dentro da curadoria Perfumes de Ambiente Decor.",
     imagePosition: "center center",
   },
-  {
-    theme: "warm",
-    eyebrow: "Perfume de Ambiente Decor - Desde 2020",
-    title: "Um universo de aromas",
-    titleAccent: "com curadoria.",
-    description: [
-      "Fragrancias, extratos e materias-primas selecionadas com olhar estetico, sensibilidade e respeito a arte de perfumar.",
-      "Dani Fernandes, M. Victoria, Lenvie, Maison Berger, Kailash e outras marcas reunidas em um so lugar.",
-      "Em cada frasco, uma historia. Em cada aroma, um gesto de arte.",
-    ],
-    primaryCta: { label: "Explorar catalogo", href: "/produtos" },
-    secondaryCta: { label: "Ver marcas", href: "/marcas" },
-    imageSrc: "/hero/universomarcas.jpg",
-    imageAlt:
-      "Selecao de difusores, vela e home spray de marcas diferentes reunidos em uma curadoria",
-    imageCaption: "Marcas originais reunidas em uma curadoria de aromas para casa.",
-    imagePosition: "center center",
-  },
-  {
-    theme: "cool",
-    eyebrow: "11 marcas, um so lugar",
-    title: "Tecnica, emocao e",
-    titleAccent: "memoria.",
-    description: [
-      "Uma curadoria olfativa feita com tecnica, emocao e memoria.",
-      "A escolha nasce do encontro entre estetica, sensibilidade e respeito as materias-primas.",
-    ],
-    primaryCta: { label: "Ver marcas", href: "/marcas" },
-    secondaryCta: { label: "Explorar catalogo", href: "/produtos" },
-    imageSrc: "/hero/lu-curadoria-difusor.jpeg",
-    imageAlt: "Lu avaliando um difusor em uma vitrine de curadoria olfativa",
-    imageCaption: "Curadoria olfativa com olhar estetico e sensivel.",
-    imagePosition: "center 42%",
-  },
 ];
 
 export const MARQUEE_ITEMS: string[] = [

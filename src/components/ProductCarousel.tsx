@@ -56,10 +56,22 @@ export function ProductCarousel({
   if (products.length === 0) return null;
 
   return (
-    <section className="border-y border-cream-deep/35 bg-cream-soft/70">
-      <div className="mx-auto max-w-[92rem] px-6 py-16 sm:py-20">
-        <div className="mb-9 flex items-end justify-between gap-3">
+    <section className="relative overflow-hidden border-b border-cream-deep/35 bg-cream-soft">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] bg-[url('/patterns/floral-cream-editorial-2026-07-10.jpg')] bg-cover bg-center opacity-55 mix-blend-multiply lg:block"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-cream-soft via-cream-soft/96 to-cream-soft/72"
+      />
+
+      <div className="relative mx-auto max-w-[92rem] px-6 py-12 sm:py-16">
+        <div className="mb-8 flex items-end justify-between gap-3">
           <div>
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.24em] text-sage-deep">
+              selecao essencial
+            </p>
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <h2 className="flex items-center gap-2 text-xl font-semibold lowercase tracking-[-0.01em] text-ink sm:text-2xl">
                 <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-ink" />
@@ -70,7 +82,7 @@ export function ProductCarousel({
               </span>
             </div>
             <p className="mt-3 max-w-lg text-sm leading-relaxed text-ink-soft">
-              Uma selecao em destaque para descobrir fragrancias, texturas e presentes com calma.
+              Poucas escolhas, boa presenca: fragrancias e presentes para entrar no catalogo sem pressa.
             </p>
           </div>
           <div className="flex items-center gap-3">

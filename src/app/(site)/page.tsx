@@ -14,7 +14,7 @@ const iconClass = "h-6 w-6";
 const PILLARS = [
   {
     title: "Curadoria pessoal",
-    text: "Cada marca entra pela combinação entre técnica, estética e memória olfativa.",
+    text: "Cada marca entra pela combinacao entre tecnica, estetica e memoria olfativa.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={iconClass} aria-hidden="true">
         <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
@@ -24,7 +24,7 @@ const PILLARS = [
   },
   {
     title: "Envio em 24h",
-    text: "Postamos no próximo dia útil. Você acompanha tudo por rastreio.",
+    text: "Postamos no proximo dia util. Voce acompanha tudo por rastreio.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={iconClass} aria-hidden="true">
         <path d="M16 16V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
@@ -36,7 +36,7 @@ const PILLARS = [
   },
   {
     title: "Trocas em 7 dias",
-    text: "Pelo Código de Defesa do Consumidor, com orientação clara no atendimento.",
+    text: "Pelo Codigo de Defesa do Consumidor, com orientacao clara no atendimento.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={iconClass} aria-hidden="true">
         <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
@@ -48,7 +48,7 @@ const PILLARS = [
   },
   {
     title: "Atendimento humano",
-    text: "Dúvida? A gente responde no WhatsApp, e-mail ou Instagram.",
+    text: "Duvida? A gente responde no WhatsApp, e-mail ou Instagram.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={iconClass} aria-hidden="true">
         <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z" />
@@ -94,26 +94,18 @@ export default async function HomePage() {
       <MarqueeBar />
       <HeroCarousel />
 
-      <BenefitsBar />
-      <CategoryShortcuts />
-      <BrandsShowcase />
-
       <FeaturedProducts
         kind="highlights"
         eyebrow="sets"
         title="best sellers"
         viewAllHref={buildProductsUrl({ sort: "price_desc" })}
-        limit={12}
+        viewAllLabel="Explorar catalogo"
+        limit={8}
       />
 
-      <FeaturedProducts
-        kind="recent"
-        eyebrow="recém-chegados"
-        title="novidades"
-        viewAllHref="/produtos"
-        limit={12}
-      />
-
+      <BenefitsBar />
+      <CategoryShortcuts />
+      <BrandsShowcase />
       <PromoTrio />
       <CurationBanner />
       <EditorialDuo />
