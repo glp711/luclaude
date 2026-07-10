@@ -9,9 +9,9 @@ const THEME_TINT: Record<HeroSlideConfig["theme"], string> = {
 };
 
 const THEME_MARK: Record<HeroSlideConfig["theme"], string> = {
-  warm: "border-coral-soft/80 bg-coral-soft/22 text-coral-deep",
-  cool: "border-sage/35 bg-sage-soft/38 text-sage-deep",
-  earthy: "border-cream-deep/90 bg-cream-soft/42 text-sage-deep",
+  warm: "text-coral-deep",
+  cool: "text-sage-deep",
+  earthy: "text-sage-deep",
 };
 
 export function HeroSlide({
@@ -101,50 +101,27 @@ export function HeroSlide({
 
 function BrandSideMark({ slide }: { slide: HeroSlideConfig }) {
   return (
-    <aside
+    <div
       aria-hidden="true"
-      className="absolute left-14 top-[21%] z-10 hidden w-56 min-[1360px]:block 2xl:left-[5.6vw]"
+      className="pointer-events-none absolute left-[4.8vw] top-[22%] z-10 hidden w-[18rem] select-none min-[1360px]:block"
     >
-      <div className="relative">
-        <div
-          className={`relative overflow-hidden rounded-[8px] border px-5 py-6 shadow-xl shadow-ink/8 backdrop-blur-md ${THEME_MARK[slide.theme]}`}
-        >
-          <div className="absolute -right-9 -top-9 h-28 w-28 rounded-full border border-current/20" />
-          <div className="absolute -bottom-12 left-8 h-32 w-32 rounded-full bg-cream-soft/34 blur-xl" />
-
-          <p className="text-[9px] font-semibold uppercase tracking-[0.28em] text-ink-soft">
-            marca curada
-          </p>
-          <div className="mt-5 flex items-center gap-4">
-            <span className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-full border border-current/24 bg-cream-soft/58 font-display text-4xl leading-none text-ink shadow-sm shadow-ink/8">
-              {slide.brand.monogram}
-            </span>
-            <span className="h-px min-w-0 flex-1 bg-current/28" />
-          </div>
-
-          <p className="mt-5 font-display text-3xl leading-[0.92] text-ink">
-            {slide.brand.name}
-          </p>
-          <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-current">
-            {slide.brand.note}
-          </p>
-
-          <div className="mt-5 flex flex-wrap gap-1.5">
-            {slide.brand.details.map((detail) => (
-              <span
-                key={detail}
-                className="rounded-full border border-current/18 bg-cream-soft/44 px-2.5 py-1 text-[10px] font-medium text-ink-soft"
-              >
-                {detail}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="absolute -left-5 top-7 h-28 w-px bg-sage-deep/30" />
-        <div className="absolute -left-6 top-5 h-2.5 w-2.5 rounded-full bg-coral/80 shadow-sm shadow-ink/10" />
-        <div className="absolute -left-6 top-40 h-2.5 w-2.5 rounded-full border border-sage-deep/40 bg-cream-soft" />
+      <p
+        className={`font-display text-[8.5rem] leading-none opacity-[0.055] ${THEME_MARK[slide.theme]}`}
+      >
+        {slide.brand.monogram}
+      </p>
+      <div className="-mt-6 flex items-center gap-4">
+        <span className="h-px w-16 bg-sage-deep/24" />
+        <span className="text-[10px] font-semibold uppercase tracking-[0.32em] text-sage-deep/55">
+          marca curada
+        </span>
       </div>
-    </aside>
+      <p className="mt-3 max-w-[13rem] font-display text-3xl leading-none text-ink/28">
+        {slide.brand.name}
+      </p>
+      <p className="mt-2 max-w-[12rem] text-[10px] font-semibold uppercase tracking-[0.24em] text-ink-soft/45">
+        {slide.brand.note}
+      </p>
+    </div>
   );
 }
