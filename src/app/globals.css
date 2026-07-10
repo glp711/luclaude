@@ -27,7 +27,10 @@ html {
 }
 
 body {
-  background: var(--color-cream);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(248, 211, 203, 0.26), transparent 28rem),
+    radial-gradient(circle at 90% 10%, rgba(229, 231, 215, 0.34), transparent 30rem),
+    var(--color-cream);
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;

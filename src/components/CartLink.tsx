@@ -31,7 +31,7 @@ export function CartLink() {
   return (
     <Link
       href="/carrinho"
-      className="relative inline-flex items-center gap-2 rounded-full border border-cream-deep bg-cream-soft px-4 py-1.5 text-sm text-ink hover:border-coral hover:bg-coral-soft/40 transition"
+      className="relative inline-flex h-11 items-center gap-2 rounded-full border border-cream-deep bg-cream-soft px-4 text-sm font-medium text-ink shadow-sm shadow-ink/5 transition hover:border-coral hover:bg-coral-soft/40 xl:h-12 xl:px-5"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

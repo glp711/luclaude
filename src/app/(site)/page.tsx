@@ -111,7 +111,7 @@ export default async function HomePage() {
       <EditorialDuo />
 
       <section className="border-t border-cream-deep/40 bg-cream">
-        <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="mx-auto max-w-[86rem] px-5 py-20 sm:px-8 xl:px-0">
           <div className="mb-12 text-center">
             <p className="text-xs font-semibold uppercase tracking-widest text-sage-deep">
               o que faz diferente
@@ -124,7 +124,7 @@ export default async function HomePage() {
             {PILLARS.map((p) => (
               <div
                 key={p.title}
-                className="rounded-[8px] border border-cream-deep bg-cream-soft p-6 shadow-sm shadow-ink/5 transition hover:border-coral-soft"
+                className="rounded-[8px] border border-cream-deep bg-cream-soft/78 p-6 shadow-sm shadow-ink/5 transition hover:-translate-y-0.5 hover:border-coral-soft hover:bg-cream-soft"
               >
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-coral-soft/60 text-coral-deep">
                   {p.icon}

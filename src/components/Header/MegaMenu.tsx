@@ -60,8 +60,8 @@ export function MegaMenu({
   return (
     <div ref={containerRef} className="hidden lg:block relative">
       <nav
-        aria-label="Navegação principal"
-        className="mx-auto max-w-7xl px-6 flex items-center justify-center gap-1"
+        aria-label="Navegacao principal"
+        className="mx-auto flex max-w-[96rem] items-center justify-center gap-1.5 px-6 xl:px-10"
         onMouseLeave={scheduleClose}
       >
         {navItems.map((item) => {
@@ -70,7 +70,7 @@ export function MegaMenu({
               <Link
                 key={item.slug}
                 href={item.href}
-                className="px-3 py-3 text-sm font-medium text-ink hover:text-coral-deep transition focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+                className="rounded-full px-4 py-3.5 text-[15px] font-medium text-ink transition hover:bg-cream-soft hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral xl:px-5"
                 onFocus={closeNow}
               >
                 {item.label}
@@ -92,14 +92,14 @@ export function MegaMenu({
                 onMouseEnter={() => open(item.slug)}
                 onFocus={() => open(item.slug)}
                 onClick={() => (isOpen ? closeNow() : open(item.slug))}
-                className={`px-3 py-3 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-coral ${
-                  isOpen ? "text-coral-deep" : "text-ink hover:text-coral-deep"
+                className={`rounded-full px-4 py-3.5 text-[15px] font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-coral xl:px-5 ${
+                  isOpen ? "bg-cream-soft text-coral-deep shadow-sm shadow-ink/5" : "text-ink hover:bg-cream-soft hover:text-coral-deep"
                 }`}
               >
                 {item.label}
                 <span
                   aria-hidden="true"
-                  className="ml-1 inline-block translate-y-[-1px] text-[10px] text-ink-mute"
+                  className="ml-1.5 inline-block translate-y-[-1px] text-[10px] text-ink-mute"
                 >
                   ▾
                 </span>
@@ -130,7 +130,7 @@ export function MegaMenu({
       {openSlug && (
         <div
           aria-hidden="true"
-          className="fixed inset-0 top-[var(--header-height,180px)] z-30 bg-ink/10 pointer-events-none"
+          className="fixed inset-0 top-[var(--header-height,180px)] z-30 bg-ink/10 pointer-events-none backdrop-blur-[1px]"
         />
       )}
     </div>
@@ -156,8 +156,8 @@ function MegaPanel({
   const previews = activeType?.previews ?? [];
 
   return (
-    <div className="border-y border-cream-deep bg-cream-soft shadow-xl shadow-ink/5">
-      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,0.78fr)_minmax(420px,1fr)] gap-10 px-6 py-8">
+    <div className="border-y border-cream-deep bg-cream-soft shadow-xl shadow-ink/8">
+      <div className="mx-auto grid max-w-[96rem] grid-cols-[minmax(0,0.72fr)_minmax(520px,1fr)] gap-12 px-8 py-9 xl:px-10">
         <div>
           <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-sage-deep">
             Escolha uma categoria
@@ -181,7 +181,7 @@ function MegaPanel({
               <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-coral-deep">
                 Prévia dos produtos
               </p>
-              <h3 className="mt-1 font-display text-3xl leading-tight text-ink">
+              <h3 className="mt-1 font-display text-4xl leading-tight text-ink">
                 {activeType?.label ?? group.label}
               </h3>
             </div>
@@ -189,7 +189,7 @@ function MegaPanel({
               <Link
                 href={buildProductsUrl({ categoria: activeType.categorySlug })}
                 onClick={onNavigate}
-                className="text-xs font-semibold uppercase tracking-widest text-sage-deep transition hover:text-coral-deep"
+                className="text-xs font-semibold uppercase tracking-[0.2em] text-sage-deep underline decoration-sage-deep/30 underline-offset-8 transition hover:text-coral-deep hover:decoration-coral-deep"
               >
                 Ver todos →
               </Link>
@@ -197,7 +197,7 @@ function MegaPanel({
           </div>
 
           {previews.length > 0 ? (
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-4">
               {previews.map((product) => (
                 <ProductPreviewCard
                   key={product.slug}
@@ -232,7 +232,7 @@ function MenuTypeColumn({
     <div
       onMouseEnter={onHover}
       onFocus={onHover}
-      className={`rounded-[8px] border px-4 py-3 transition ${
+      className={`rounded-[8px] border px-4 py-3.5 transition ${
         active
           ? "border-coral-soft bg-cream shadow-sm shadow-ink/5"
           : "border-transparent hover:border-cream-deep hover:bg-cream/60"
@@ -241,7 +241,7 @@ function MenuTypeColumn({
       <Link
         href={buildProductsUrl({ categoria: type.categorySlug })}
         onClick={onNavigate}
-        className="block font-display text-lg leading-tight text-ink transition hover:text-coral-deep"
+        className="block font-display text-xl leading-tight text-ink transition hover:text-coral-deep"
       >
         {type.label}
       </Link>
@@ -254,7 +254,7 @@ function MenuTypeColumn({
                 marca: brand.slug,
               })}
               onClick={onNavigate}
-              className="text-sm text-ink-soft transition hover:text-coral-deep"
+              className="text-[15px] text-ink-soft transition hover:text-coral-deep"
             >
               {brand.label}
             </Link>
@@ -281,16 +281,16 @@ function ProductPreviewCard({
     <Link
       href={`/produtos/${product.slug}`}
       onClick={onNavigate}
-      className="group block overflow-hidden rounded-[8px] border border-cream-deep bg-cream transition hover:border-coral hover:shadow-lg hover:shadow-ink/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+      className="group block overflow-hidden rounded-[8px] border border-cream-deep bg-cream transition hover:-translate-y-0.5 hover:border-coral hover:shadow-lg hover:shadow-ink/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
     >
-      <div className="relative aspect-[4/5] bg-coral-soft/20">
+      <div className="relative aspect-[4/5] bg-[radial-gradient(circle_at_50%_15%,rgba(250,244,233,0.98),rgba(235,224,204,0.74))]">
         {product.imageUrl ? (
           <Image
             src={product.imageUrl}
             alt={product.name}
             fill
             sizes="150px"
-            className="object-cover transition duration-500 group-hover:scale-[1.04]"
+            className="object-contain p-3 transition duration-500 group-hover:scale-[1.04]"
           />
         ) : (
           <div className="flex h-full items-center justify-center px-3 text-center text-xs uppercase tracking-widest text-ink-mute">

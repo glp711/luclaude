@@ -13,7 +13,7 @@ export function CurationBanner() {
         }}
       />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 py-20 sm:px-10 md:grid-cols-[0.88fr_1.12fr] md:py-24 lg:gap-16">
+      <div className="relative mx-auto grid max-w-[86rem] items-center gap-10 px-5 py-20 sm:px-8 md:grid-cols-[0.88fr_1.12fr] md:py-24 lg:gap-16 xl:px-0">
         <div className="relative order-2 md:order-1">
           <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[8px] border border-cream-deep bg-cream shadow-2xl shadow-ink/10">
             <Image
@@ -59,7 +59,7 @@ export function CurationBanner() {
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               href="/marcas"
-              className="inline-flex items-center rounded-full bg-ink px-7 py-3.5 text-sm font-semibold text-cream-soft shadow-lg shadow-ink/10 transition hover:bg-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+              className="inline-flex items-center rounded-full bg-ink px-7 py-3.5 text-sm font-semibold text-cream-soft shadow-lg shadow-ink/10 transition hover:-translate-y-0.5 hover:bg-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
             >
               Ver marcas
               <span aria-hidden="true" className="ml-2">
@@ -68,7 +68,7 @@ export function CurationBanner() {
             </Link>
             <Link
               href="/sobre"
-              className="inline-flex items-center rounded-full border border-ink/15 bg-cream-soft/70 px-6 py-3.5 text-sm font-semibold text-ink transition hover:border-coral-deep hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
+              className="inline-flex items-center rounded-full border border-ink/15 bg-cream-soft/70 px-6 py-3.5 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-coral-deep hover:text-coral-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-coral"
             >
               Nossa história
             </Link>

@@ -30,20 +30,20 @@ const ICONS: Record<Benefit["iconKey"], React.ReactNode> = {
 
 export function BenefitsBar() {
   return (
-    <section aria-label="Beneficios" className="bg-cream border-b border-cream-deep/40">
-      <div className="mx-auto max-w-7xl px-6 py-6">
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <section aria-label="Beneficios" className="border-b border-cream-deep/40 bg-cream">
+      <div className="mx-auto max-w-[86rem] px-5 py-7 sm:px-8 xl:px-0">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
           {BENEFITS.map((b) => (
             <li
               key={b.title}
-              className="flex items-start gap-3 rounded-2xl bg-cream-soft border border-cream-deep px-4 py-3"
+              className="group flex items-start gap-3 rounded-[8px] border border-cream-deep/75 bg-cream-soft/70 px-4 py-4 shadow-sm shadow-ink/4 transition hover:-translate-y-0.5 hover:border-coral-soft hover:bg-cream-soft sm:px-5"
             >
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-coral-soft/60 text-coral-deep">
+              <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-coral-soft/60 text-coral-deep transition group-hover:bg-coral-soft">
                 {ICONS[b.iconKey]}
               </span>
               <div className="min-w-0">
-                <p className="text-sm font-medium text-ink leading-tight">{b.title}</p>
-                <p className="text-xs text-ink-mute leading-snug mt-0.5">{b.description}</p>
+                <p className="text-[15px] font-medium leading-tight text-ink">{b.title}</p>
+                <p className="mt-1 text-xs leading-snug text-ink-mute">{b.description}</p>
               </div>
             </li>
           ))}

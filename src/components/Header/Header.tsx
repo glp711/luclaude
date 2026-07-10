@@ -56,31 +56,31 @@ export async function Header({ user }: { user: SessionUser | null }) {
   );
 
   return (
-    <header className="sticky top-0 z-30 border-b border-cream-deep/60 bg-cream-soft/95 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-cream-deep/70 bg-cream-soft/96 shadow-sm shadow-ink/5 backdrop-blur-xl">
       {/* Linha 1: barra promocional */}
       <PromoBar />
 
       {/* Linha 2: brand + busca + icones */}
-      <div className="mx-auto grid max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-2 px-3 py-2.5 sm:px-6 sm:py-3 lg:gap-6">
+      <div className="mx-auto grid max-w-[96rem] grid-cols-[auto_1fr_auto] items-center gap-2 px-3 py-3 sm:px-6 sm:py-4 lg:gap-8 xl:px-10">
         <div className="lg:hidden">
           <MobileMenuDrawer userArea={userArea} groups={menuGroups} navItems={navItems} />
         </div>
 
-        <Link href="/" className="flex min-w-0 items-center justify-center gap-2 group lg:justify-start">
+        <Link href="/" className="flex min-w-0 items-center justify-center gap-2.5 group lg:justify-start xl:gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo-mark.svg"
             alt=""
-            className="h-8 w-8 flex-shrink-0 transition group-hover:rotate-[-4deg] sm:h-10 sm:w-10"
+            className="h-9 w-9 flex-shrink-0 transition group-hover:rotate-[-4deg] sm:h-11 sm:w-11 xl:h-12 xl:w-12"
           />
-          <span className="truncate font-display text-[17px] tracking-tight text-ink sm:text-xl">
+          <span className="truncate font-display text-[18px] tracking-tight text-ink sm:text-[22px] xl:text-[24px]">
             perfumes de ambiente <span className="text-coral-deep">decor</span>
           </span>
         </Link>
 
         {/* Busca: ocupa centro no desktop, escondida no mobile */}
-        <div className="hidden lg:block lg:min-w-[360px]">
-          <SearchInput className="max-w-xl mx-auto" />
+        <div className="hidden lg:block lg:min-w-[440px]">
+          <SearchInput className="mx-auto max-w-2xl" inputClassName="py-3 text-[15px] shadow-inner shadow-cream-deep/30" />
         </div>
 
         {/* Icones do lado direito */}
@@ -91,7 +91,7 @@ export async function Header({ user }: { user: SessionUser | null }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Falar pelo WhatsApp"
-            className="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full text-ink-soft hover:text-coral-deep hover:bg-cream transition"
+            className="hidden h-11 w-11 items-center justify-center rounded-full text-ink-soft transition hover:bg-cream hover:text-coral-deep md:inline-flex xl:h-12 xl:w-12"
             title="Atendimento WhatsApp"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden="true">
@@ -104,7 +104,7 @@ export async function Header({ user }: { user: SessionUser | null }) {
             <Link
               href={user.role === "admin" ? "/admin" : "/minha-conta"}
               aria-label={user.role === "admin" ? "Painel admin" : "Minha conta"}
-              className="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-full text-ink-soft hover:text-coral-deep hover:bg-cream transition"
+              className="hidden h-11 w-11 items-center justify-center rounded-full text-ink-soft transition hover:bg-cream hover:text-coral-deep sm:inline-flex xl:h-12 xl:w-12"
               title={user.role === "admin" ? "Painel admin" : "Minha conta"}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
@@ -116,7 +116,7 @@ export async function Header({ user }: { user: SessionUser | null }) {
             <Link
               href="/login"
               aria-label="Entrar"
-              className="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-full text-ink-soft hover:text-coral-deep hover:bg-cream transition"
+              className="hidden h-11 w-11 items-center justify-center rounded-full text-ink-soft transition hover:bg-cream hover:text-coral-deep sm:inline-flex xl:h-12 xl:w-12"
               title="Entrar"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
@@ -134,12 +134,12 @@ export async function Header({ user }: { user: SessionUser | null }) {
       </div>
 
       {/* Busca mobile (segunda linha em telas pequenas) */}
-      <div className="lg:hidden px-3 pb-2">
+      <div className="px-3 pb-3 lg:hidden">
         <SearchInput />
       </div>
 
       {/* Linha 3: nav principal com mega menu (desktop) */}
-      <div className="hidden border-t border-cream-deep/40 lg:block">
+      <div className="hidden border-t border-cream-deep/45 bg-cream/42 lg:block">
         <MegaMenu groups={menuGroups} navItems={navItems} />
       </div>
     </header>

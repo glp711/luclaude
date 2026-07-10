@@ -50,17 +50,17 @@ export async function CategoryShortcuts() {
   const compactCategories = visible.slice(3);
 
   return (
-    <section className="mx-auto max-w-[92rem] px-6 py-20 sm:py-24">
+    <section className="relative mx-auto max-w-[86rem] px-5 py-20 sm:px-8 sm:py-24 xl:px-0">
       <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sage-deep">
             explorar por ritual
           </p>
-          <h2 className="mt-3 max-w-2xl font-display text-4xl leading-[1.02] text-ink sm:text-5xl">
+          <h2 className="mt-3 max-w-2xl text-balance font-display text-4xl leading-[1.02] text-ink sm:text-5xl">
             Encontre pelo gesto que a casa pede.
           </h2>
         </div>
-        <p className="max-w-sm text-sm leading-relaxed text-ink-soft">
+        <p className="max-w-sm text-sm leading-relaxed text-ink-soft sm:text-base">
           Aromatizar, presentear, cuidar da pele ou renovar o ambiente: cada categoria entra como parte de um ritual.
         </p>
       </div>
@@ -72,7 +72,7 @@ export async function CategoryShortcuts() {
             <li key={c.categorySlug}>
               <Link
                 href={buildProductsUrl({ categoria: c.categorySlug })}
-                className="group block overflow-hidden rounded-[8px] bg-ink transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep"
+                className="group block overflow-hidden rounded-[8px] bg-ink shadow-sm shadow-ink/5 transition hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep"
               >
                 <div className="relative aspect-[4/5] overflow-hidden md:aspect-[3/4]">
                   <Image
@@ -80,7 +80,7 @@ export async function CategoryShortcuts() {
                     alt={img.alt}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover transition duration-700 group-hover:scale-[1.04]"
+                    className="object-cover transition duration-700 group-hover:scale-[1.045]"
                   />
                   <div
                     aria-hidden="true"

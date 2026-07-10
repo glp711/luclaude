@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ProductCard, type ProductCardData } from "@/components/ProductCard";
 
 /**
@@ -23,13 +23,30 @@ export function ProductCarousel({
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+  const [activePage, setActivePage] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
 
-  const updateState = () => {
+  const getScrollStep = useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return 0;
+    const card = el.querySelector<HTMLElement>("[data-carousel-card]");
+    if (!card) return Math.round(el.clientWidth * 0.75);
+    const styles = window.getComputedStyle(el);
+    const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
+    return Math.round(card.getBoundingClientRect().width + gap);
+  }, []);
+
+  const updateState = useCallback(() => {
     const el = scrollerRef.current;
     if (!el) return;
+    const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
+    const step = Math.max(1, getScrollStep());
+    const pages = Math.max(1, Math.ceil(maxScroll / step) + 1);
     setCanScrollPrev(el.scrollLeft > 4);
-    setCanScrollNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
-  };
+    setCanScrollNext(el.scrollLeft < maxScroll - 4);
+    setPageCount(pages);
+    setActivePage(Math.min(pages - 1, Math.round(el.scrollLeft / step)));
+  }, [getScrollStep]);
 
   useEffect(() => {
     updateState();
@@ -37,18 +54,32 @@ export function ProductCarousel({
     if (!el) return;
     el.addEventListener("scroll", updateState, { passive: true });
     window.addEventListener("resize", updateState);
+    const resizeObserver = new ResizeObserver(updateState);
+    resizeObserver.observe(el);
+    const timeout = window.setTimeout(updateState, 350);
     return () => {
       el.removeEventListener("scroll", updateState);
       window.removeEventListener("resize", updateState);
+      resizeObserver.disconnect();
+      window.clearTimeout(timeout);
     };
-  }, [products.length]);
+  }, [products.length, updateState]);
 
   const scroll = (dir: "prev" | "next") => {
     const el = scrollerRef.current;
     if (!el) return;
-    const delta = Math.round(el.clientWidth * 0.85);
+    const delta = getScrollStep();
     el.scrollBy({
       left: dir === "next" ? delta : -delta,
+      behavior: "smooth",
+    });
+  };
+
+  const goToPage = (index: number) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollTo({
+      left: getScrollStep() * index,
       behavior: "smooth",
     });
   };
@@ -66,8 +97,8 @@ export function ProductCarousel({
         className="pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] bg-[url('/patterns/floral-cream-editorial-2026-07-10.jpg')] bg-cover bg-center opacity-20 mix-blend-multiply lg:block"
       />
 
-      <div className="relative mx-auto max-w-[92rem] px-6 py-14 sm:py-20">
-        <div className="mx-auto mb-12 max-w-3xl text-center">
+      <div className="relative mx-auto max-w-[86rem] px-5 py-14 sm:px-8 sm:py-20 xl:px-0">
+        <div className="mx-auto mb-11 max-w-3xl text-center">
           <div className="flex items-center justify-center gap-6">
             <span aria-hidden="true" className="hidden h-px w-40 bg-ink/28 sm:block" />
             <span className="inline-flex h-16 w-16 items-center justify-center rounded-full border border-coral/45 bg-cream-soft text-coral-deep shadow-md shadow-ink/10">
@@ -81,7 +112,7 @@ export function ProductCarousel({
           <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.28em] text-sage-deep">
             selecao essencial
           </p>
-          <h2 className="mt-3 font-display text-3xl uppercase tracking-[0.34em] text-ink sm:text-4xl">
+          <h2 className="mt-3 font-display text-3xl uppercase tracking-[0.34em] text-ink sm:text-4xl xl:text-[2.65rem]">
             {title}
           </h2>
           {eyebrow && (
@@ -94,46 +125,42 @@ export function ProductCarousel({
         <div className="relative">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-20 bg-gradient-to-r from-cream-soft to-transparent lg:block" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-20 bg-gradient-to-l from-cream-soft to-transparent lg:block" />
-          <div className="absolute left-0 top-[39%] z-20 hidden -translate-x-1/2 lg:block">
+          <div className="absolute -left-4 top-[43%] z-20 hidden lg:block xl:-left-16">
             <button
               type="button"
               onClick={() => scroll("prev")}
               disabled={!canScrollPrev}
               aria-label="Anterior"
-              className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/92 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:border-sage-deep hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep disabled:cursor-not-allowed disabled:opacity-35"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/94 text-ink shadow-lg shadow-ink/10 backdrop-blur transition hover:-translate-x-0.5 hover:border-sage-deep hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep disabled:cursor-not-allowed disabled:opacity-30 xl:h-14 xl:w-14"
             >
-              <span aria-hidden="true">{"<"}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
             </button>
           </div>
-          <div className="absolute right-0 top-[39%] z-20 hidden translate-x-1/2 lg:block">
+          <div className="absolute -right-4 top-[43%] z-20 hidden lg:block xl:-right-16">
             <button
               type="button"
               onClick={() => scroll("next")}
               disabled={!canScrollNext}
               aria-label="Proximo"
-              className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/92 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:border-sage-deep hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep disabled:cursor-not-allowed disabled:opacity-35"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/94 text-ink shadow-lg shadow-ink/10 backdrop-blur transition hover:translate-x-0.5 hover:border-sage-deep hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep disabled:cursor-not-allowed disabled:opacity-30 xl:h-14 xl:w-14"
             >
-              <span aria-hidden="true">{">"}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
             </button>
-          </div>
-
-          <div className="mb-5 flex items-center justify-end">
-            <Link
-              href={viewAllHref}
-              className="hidden text-sm font-medium text-ink underline decoration-sage-deep/30 underline-offset-8 transition hover:text-sage-deep hover:decoration-sage-deep sm:inline-block"
-            >
-              {viewAllLabel}
-            </Link>
           </div>
 
           <div
             ref={scrollerRef}
-            className="hide-scrollbar -mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-6 pb-2 sm:gap-7 lg:mx-0 lg:px-0"
+            className="hide-scrollbar -mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-5 pb-2 sm:-mx-8 sm:gap-6 sm:px-8 lg:mx-0 lg:px-0 xl:gap-7"
           >
             {products.map((p, index) => (
               <div
                 key={p.id}
-                className="w-[58%] flex-shrink-0 snap-start sm:w-[34%] lg:w-[22.5%]"
+                data-carousel-card
+                className="w-[66%] flex-shrink-0 snap-start min-[440px]:w-[56%] sm:w-[36%] lg:w-[23.5%]"
               >
                 <ProductCard product={p} rank={index + 1} />
               </div>
@@ -141,13 +168,32 @@ export function ProductCarousel({
           </div>
         </div>
 
-        <div className="mt-8 text-center sm:hidden">
-          <Link
-            href={viewAllHref}
-            className="text-sm font-medium text-ink underline decoration-sage-deep/30 underline-offset-8 transition hover:text-sage-deep"
-          >
-            {viewAllLabel}
-          </Link>
+        <div className="mt-8 flex flex-col items-center justify-center gap-5">
+          {pageCount > 1 && (
+            <div className="flex items-center justify-center gap-2" aria-label="Paginas do carrossel">
+              {Array.from({ length: pageCount }).map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => goToPage(index)}
+                  aria-label={`Ir para pagina ${index + 1}`}
+                  aria-pressed={activePage === index}
+                  className={`h-2 rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep focus-visible:ring-offset-2 focus-visible:ring-offset-cream-soft ${
+                    activePage === index ? "w-8 bg-sage-deep" : "w-2 bg-ink/24 hover:bg-ink/45"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+
+          <div className="text-center">
+            <Link
+              href={viewAllHref}
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-ink underline decoration-sage-deep/30 underline-offset-8 transition hover:text-sage-deep hover:decoration-sage-deep"
+            >
+              {viewAllLabel}
+            </Link>
+          </div>
         </div>
       </div>
     </section>
