@@ -23,6 +23,26 @@ export type HeroSlide = {
 
 export const HERO_SLIDES: HeroSlide[] = [
   {
+    theme: "earthy",
+    eyebrow: "Assinatura M.Victoria",
+    title: "Cuidado e",
+    titleAccent: "perfume.",
+    description: "Fragrancias delicadas para transformar a rotina em ritual.",
+    primaryCta: {
+      label: "Ver M.Victoria",
+      href: buildProductsUrl({ marca: "m-victoria" }),
+    },
+    secondaryCta: {
+      label: "Explorar fragrancias",
+      href: buildProductsUrl({ marca: "m-victoria" }),
+    },
+    imageSrc: "/hero/m-victoria-cha-branco-hero-2026-07-10.png",
+    imageAlt:
+      "Produtos M.Victoria Cha Branco com difusor, home spray, sabonete decorado e flores brancas",
+    imageCaption: "M.Victoria dentro da curadoria Perfumes de Ambiente Decor.",
+    imagePosition: "center center",
+  },
+  {
     theme: "cool",
     eyebrow: "Marca em destaque",
     title: "Lenvie, casa com",

@@ -49,7 +49,7 @@ export function HeroSlide({
             {slide.eyebrow}
           </p>
 
-          <h1 className="mt-3 max-w-[13ch] font-display text-[2.28rem] leading-[1] text-ink min-[390px]:text-[2.55rem] sm:mt-5 sm:text-6xl lg:text-7xl">
+          <h1 className="mt-3 max-w-[13ch] text-balance font-display text-[2.28rem] leading-[1] text-ink min-[390px]:text-[2.55rem] sm:mt-5 sm:text-6xl lg:text-7xl">
             {slide.title}{" "}
             <em className="not-italic text-coral-deep">{slide.titleAccent}</em>
           </h1>
@@ -74,7 +74,7 @@ export function HeroSlide({
             </Link>
             <Link
               href={slide.secondaryCta.href}
-              className="inline-flex items-center justify-center rounded-full border border-sage-deep/30 bg-cream-soft/80 px-5 py-3 text-sm font-semibold text-ink shadow-sm shadow-ink/5 backdrop-blur transition hover:border-sage-deep hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep sm:px-6 sm:py-3.5"
+              className="inline-flex items-center justify-center px-1 py-3 text-sm font-semibold text-ink underline decoration-sage-deep/40 underline-offset-8 transition hover:text-sage-deep hover:decoration-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep focus-visible:ring-offset-2 focus-visible:ring-offset-cream-soft sm:px-2 sm:py-3.5"
             >
               {slide.secondaryCta.label}
             </Link>
