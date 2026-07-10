@@ -59,74 +59,86 @@ export function ProductCarousel({
     <section className="relative overflow-hidden border-b border-cream-deep/35 bg-cream-soft">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] bg-[url('/patterns/floral-cream-editorial-2026-07-10.jpg')] bg-cover bg-center opacity-55 mix-blend-multiply lg:block"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.65),transparent_34%),radial-gradient(circle_at_18%_75%,rgba(248,211,203,0.18),transparent_32%)]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-cream-soft via-cream-soft/96 to-cream-soft/72"
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] bg-[url('/patterns/floral-cream-editorial-2026-07-10.jpg')] bg-cover bg-center opacity-20 mix-blend-multiply lg:block"
       />
 
-      <div className="relative mx-auto max-w-[92rem] px-6 py-12 sm:py-16">
-        <div className="mb-8 flex items-end justify-between gap-3">
-          <div>
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.24em] text-sage-deep">
-              selecao essencial
-            </p>
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h2 className="flex items-center gap-2 text-xl font-semibold lowercase tracking-[-0.01em] text-ink sm:text-2xl">
-                <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-ink" />
-                {title}
-              </h2>
-              <span className="text-xl font-medium lowercase tracking-[-0.01em] text-ink-mute sm:text-2xl">
-                {eyebrow}
-              </span>
-            </div>
-            <p className="mt-3 max-w-lg text-sm leading-relaxed text-ink-soft">
-              Poucas escolhas, boa presenca: fragrancias e presentes para entrar no catalogo sem pressa.
-            </p>
+      <div className="relative mx-auto max-w-[92rem] px-6 py-14 sm:py-20">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
+          <div className="flex items-center justify-center gap-6">
+            <span aria-hidden="true" className="hidden h-px w-40 bg-ink/28 sm:block" />
+            <span className="inline-flex h-16 w-16 items-center justify-center rounded-full border border-coral/45 bg-cream-soft text-coral-deep shadow-md shadow-ink/10">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.55" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8" aria-hidden="true">
+                <path d="m4 8 4 3 4-6 4 6 4-3-2 10H6L4 8Z" />
+                <path d="M7 21h10" />
+              </svg>
+            </span>
+            <span aria-hidden="true" className="hidden h-px w-40 bg-ink/28 sm:block" />
           </div>
-          <div className="flex items-center gap-3">
+          <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.28em] text-sage-deep">
+            selecao essencial
+          </p>
+          <h2 className="mt-3 font-display text-3xl uppercase tracking-[0.34em] text-ink sm:text-4xl">
+            {title}
+          </h2>
+          {eyebrow && (
+            <p className="mt-3 text-xs font-medium lowercase tracking-[0.16em] text-ink-mute">
+              {eyebrow}
+            </p>
+          )}
+        </div>
+
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-20 bg-gradient-to-r from-cream-soft to-transparent lg:block" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-20 bg-gradient-to-l from-cream-soft to-transparent lg:block" />
+          <div className="absolute left-0 top-[39%] z-20 hidden -translate-x-1/2 lg:block">
+            <button
+              type="button"
+              onClick={() => scroll("prev")}
+              disabled={!canScrollPrev}
+              aria-label="Anterior"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/92 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:border-sage-deep hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep disabled:cursor-not-allowed disabled:opacity-35"
+            >
+              <span aria-hidden="true">{"<"}</span>
+            </button>
+          </div>
+          <div className="absolute right-0 top-[39%] z-20 hidden translate-x-1/2 lg:block">
+            <button
+              type="button"
+              onClick={() => scroll("next")}
+              disabled={!canScrollNext}
+              aria-label="Proximo"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-cream-deep bg-cream-soft/92 text-ink shadow-md shadow-ink/10 backdrop-blur transition hover:border-sage-deep hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep disabled:cursor-not-allowed disabled:opacity-35"
+            >
+              <span aria-hidden="true">{">"}</span>
+            </button>
+          </div>
+
+          <div className="mb-5 flex items-center justify-end">
             <Link
               href={viewAllHref}
               className="hidden text-sm font-medium text-ink underline decoration-sage-deep/30 underline-offset-8 transition hover:text-sage-deep hover:decoration-sage-deep sm:inline-block"
             >
               {viewAllLabel}
             </Link>
-            <div className="hidden gap-2 md:flex">
-              <button
-                type="button"
-                onClick={() => scroll("prev")}
-                disabled={!canScrollPrev}
-                aria-label="Anterior"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cream-deep bg-cream text-ink transition hover:border-sage-deep hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep disabled:cursor-not-allowed disabled:opacity-35"
-              >
-                <span aria-hidden="true">{"<"}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => scroll("next")}
-                disabled={!canScrollNext}
-                aria-label="Proximo"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cream-deep bg-cream text-ink transition hover:border-sage-deep hover:text-sage-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep disabled:cursor-not-allowed disabled:opacity-35"
-              >
-                <span aria-hidden="true">{">"}</span>
-              </button>
-            </div>
           </div>
-        </div>
 
-        <div
-          ref={scrollerRef}
-          className="hide-scrollbar -mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-6 pb-2 sm:gap-7"
-        >
-          {products.map((p) => (
-            <div
-              key={p.id}
-              className="w-[58%] flex-shrink-0 snap-start sm:w-[34%] lg:w-[18.5%]"
-            >
-              <ProductCard product={p} />
-            </div>
-          ))}
+          <div
+            ref={scrollerRef}
+            className="hide-scrollbar -mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-6 pb-2 sm:gap-7 lg:mx-0 lg:px-0"
+          >
+            {products.map((p, index) => (
+              <div
+                key={p.id}
+                className="w-[58%] flex-shrink-0 snap-start sm:w-[34%] lg:w-[22.5%]"
+              >
+                <ProductCard product={p} rank={index + 1} />
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="mt-8 text-center sm:hidden">

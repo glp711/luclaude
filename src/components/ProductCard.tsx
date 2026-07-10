@@ -12,7 +12,13 @@ export type ProductCardData = {
   cover_url: string | null;
 };
 
-export function ProductCard({ product }: { product: ProductCardData }) {
+export function ProductCard({
+  product,
+  rank,
+}: {
+  product: ProductCardData;
+  rank?: number;
+}) {
   const outOfStock = product.stock_quantity <= 0;
   const lowStock = !outOfStock && product.stock_quantity <= 3;
   const hasPromo =
@@ -31,14 +37,20 @@ export function ProductCard({ product }: { product: ProductCardData }) {
       href={`/produtos/${product.slug}`}
       className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-transparent bg-transparent transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-deep"
     >
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[8px] bg-cream-soft shadow-sm shadow-ink/5 transition duration-500 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-ink/10">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[8px] border border-cream-deep/70 bg-[radial-gradient(circle_at_50%_16%,rgba(250,244,233,0.98),rgba(235,224,204,0.78))] shadow-sm shadow-ink/5 transition duration-500 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-ink/10">
+        {rank != null && (
+          <span className="absolute left-4 top-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full bg-coral/70 font-display text-lg leading-none text-cream-soft shadow-md shadow-ink/15 ring-1 ring-coral-deep/15">
+            {String(rank).padStart(2, "0")}
+          </span>
+        )}
+
         {product.cover_url ? (
           <Image
             src={product.cover_url}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain p-5 transition duration-700 group-hover:scale-[1.035] sm:p-6"
+            className="object-contain p-4 transition duration-700 group-hover:scale-[1.035] sm:p-5"
           />
         ) : (
           <ProductPlaceholder name={product.name} />
@@ -49,7 +61,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-ink/20 to-transparent opacity-0 transition group-hover:opacity-100"
         />
 
-        <div className="absolute left-3 top-3 z-10 flex flex-col gap-2">
+        <div className="absolute right-3 top-3 z-10 flex flex-col items-end gap-2">
           {hasPromo && (
             <span className="w-fit rounded-full bg-coral-deep px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
               -{discountPercent}%
