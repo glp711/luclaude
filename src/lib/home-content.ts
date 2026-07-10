@@ -9,6 +9,12 @@ import { buildProductsUrl } from "@/lib/url";
 
 export type HeroSlide = {
   theme: "warm" | "cool" | "earthy";
+  brand: {
+    name: string;
+    monogram: string;
+    note: string;
+    details: string[];
+  };
   eyebrow: string;
   title: string;
   titleAccent: string;
@@ -24,6 +30,12 @@ export type HeroSlide = {
 export const HERO_SLIDES: HeroSlide[] = [
   {
     theme: "earthy",
+    brand: {
+      name: "M.Victoria",
+      monogram: "MV",
+      note: "cuidado decorativo",
+      details: ["Cha branco", "perfumaria decor", "ritual suave"],
+    },
     eyebrow: "Assinatura M.Victoria",
     title: "Cuidado e",
     titleAccent: "perfume.",
@@ -44,6 +56,12 @@ export const HERO_SLIDES: HeroSlide[] = [
   },
   {
     theme: "cool",
+    brand: {
+      name: "Lenvie",
+      monogram: "LV",
+      note: "ritual da casa",
+      details: ["difusores", "refis", "atmosfera"],
+    },
     eyebrow: "Marca em destaque",
     title: "Lenvie, casa com",
     titleAccent: "assinatura.",
@@ -67,6 +85,12 @@ export const HERO_SLIDES: HeroSlide[] = [
   },
   {
     theme: "earthy",
+    brand: {
+      name: "Dani Fernandes",
+      monogram: "DF",
+      note: "fragrancias autorais",
+      details: ["Tenue", "floral suave", "presenteavel"],
+    },
     eyebrow: "Marca em destaque",
     title: "Dani Fernandes, perfume e",
     titleAccent: "aconchego.",

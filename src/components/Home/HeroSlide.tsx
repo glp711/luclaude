@@ -8,6 +8,12 @@ const THEME_TINT: Record<HeroSlideConfig["theme"], string> = {
   earthy: "from-sage-soft/65",
 };
 
+const THEME_MARK: Record<HeroSlideConfig["theme"], string> = {
+  warm: "border-coral-soft/80 bg-coral-soft/22 text-coral-deep",
+  cool: "border-sage/35 bg-sage-soft/38 text-sage-deep",
+  earthy: "border-cream-deep/90 bg-cream-soft/42 text-sage-deep",
+};
+
 export function HeroSlide({
   slide,
   priority,
@@ -41,6 +47,8 @@ export function HeroSlide({
         aria-hidden="true"
         className={`absolute inset-0 bg-gradient-to-br ${THEME_TINT[slide.theme]} via-transparent to-transparent opacity-25 lg:opacity-40`}
       />
+
+      <BrandSideMark slide={slide} />
 
       <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-20 pt-8 sm:px-10 sm:pb-16 lg:items-center lg:py-16">
         <div className="max-w-xl">
@@ -88,5 +96,55 @@ export function HeroSlide({
         </p>
       )}
     </div>
+  );
+}
+
+function BrandSideMark({ slide }: { slide: HeroSlideConfig }) {
+  return (
+    <aside
+      aria-hidden="true"
+      className="absolute left-14 top-[21%] z-10 hidden w-56 min-[1360px]:block 2xl:left-[5.6vw]"
+    >
+      <div className="relative">
+        <div
+          className={`relative overflow-hidden rounded-[8px] border px-5 py-6 shadow-xl shadow-ink/8 backdrop-blur-md ${THEME_MARK[slide.theme]}`}
+        >
+          <div className="absolute -right-9 -top-9 h-28 w-28 rounded-full border border-current/20" />
+          <div className="absolute -bottom-12 left-8 h-32 w-32 rounded-full bg-cream-soft/34 blur-xl" />
+
+          <p className="text-[9px] font-semibold uppercase tracking-[0.28em] text-ink-soft">
+            marca curada
+          </p>
+          <div className="mt-5 flex items-center gap-4">
+            <span className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-full border border-current/24 bg-cream-soft/58 font-display text-4xl leading-none text-ink shadow-sm shadow-ink/8">
+              {slide.brand.monogram}
+            </span>
+            <span className="h-px min-w-0 flex-1 bg-current/28" />
+          </div>
+
+          <p className="mt-5 font-display text-3xl leading-[0.92] text-ink">
+            {slide.brand.name}
+          </p>
+          <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-current">
+            {slide.brand.note}
+          </p>
+
+          <div className="mt-5 flex flex-wrap gap-1.5">
+            {slide.brand.details.map((detail) => (
+              <span
+                key={detail}
+                className="rounded-full border border-current/18 bg-cream-soft/44 px-2.5 py-1 text-[10px] font-medium text-ink-soft"
+              >
+                {detail}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="absolute -left-5 top-7 h-28 w-px bg-sage-deep/30" />
+        <div className="absolute -left-6 top-5 h-2.5 w-2.5 rounded-full bg-coral/80 shadow-sm shadow-ink/10" />
+        <div className="absolute -left-6 top-40 h-2.5 w-2.5 rounded-full border border-sage-deep/40 bg-cream-soft" />
+      </div>
+    </aside>
   );
 }
