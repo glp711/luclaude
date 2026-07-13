@@ -3,7 +3,13 @@ import { CampaignPopup } from "@/components/CampaignPopup";
 import { Header } from "@/components/Header/Header";
 import { Newsletter } from "@/components/Newsletter";
 import { WhatsappFab } from "@/components/WhatsappFab";
-import { INSTAGRAM_HANDLE } from "@/lib/contact";
+import {
+  INSTAGRAM_HANDLE,
+  STORE_ADDRESS,
+  STORE_MAPS_URL,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_NUMBER,
+} from "@/lib/contact";
 import { getCurrentUser } from "@/lib/auth/guards";
 
 function TrustItem({ icon, title, sub }: { icon: string; title: string; sub: string }) {
@@ -65,6 +71,27 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             >
               <span>📷</span> @{INSTAGRAM_HANDLE}
             </a>
+            <address className="mt-4 max-w-xs text-xs not-italic leading-relaxed text-ink-mute">
+              {STORE_ADDRESS.full}
+            </address>
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-xs">
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink-soft transition hover:text-coral-deep"
+              >
+                WhatsApp {WHATSAPP_DISPLAY}
+              </a>
+              <a
+                href={STORE_MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink-soft transition hover:text-coral-deep"
+              >
+                Ver no mapa
+              </a>
+            </div>
           </div>
           <div>
             <h3 className="font-display text-lg text-ink mb-3">Loja</h3>

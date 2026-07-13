@@ -1,5 +1,6 @@
 import { buildProductsUrl } from "@/lib/url";
 import { SITE_BRAND_NAME, SITE_DESCRIPTION, SOCIAL_LINKS, siteUrl } from "@/lib/seo";
+import { STORE_ADDRESS, WHATSAPP_NUMBER } from "@/lib/contact";
 import { BenefitsBar } from "@/components/Home/BenefitsBar";
 import { BrandsShowcase } from "@/components/Home/BrandsShowcase";
 import { CategoryShortcuts } from "@/components/Home/CategoryShortcuts";
@@ -66,6 +67,15 @@ export default async function HomePage() {
     description: SITE_DESCRIPTION,
     url: baseUrl,
     logo: `${baseUrl}/logo-mark.svg`,
+    telephone: `+${WHATSAPP_NUMBER}`,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: STORE_ADDRESS.streetAddress,
+      addressLocality: STORE_ADDRESS.addressLocality,
+      addressRegion: STORE_ADDRESS.addressRegion,
+      postalCode: STORE_ADDRESS.postalCode,
+      addressCountry: STORE_ADDRESS.addressCountry,
+    },
     sameAs: SOCIAL_LINKS,
   };
   const websiteJsonLd = {
