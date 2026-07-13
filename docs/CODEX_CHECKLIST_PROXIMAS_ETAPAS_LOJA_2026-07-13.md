@@ -4,33 +4,45 @@ Data: 2026-07-13
 
 Este documento organiza as proximas entregas da Perfumes de Ambiente Decor em uma ordem segura de execucao. Os itens devem ser marcados somente depois de testados em desktop, mobile e producao.
 
+**Prioridade comercial atual:** concluir primeiro o catalogo de produtos individuais das marcas Dani Fernandes e Lenvie. Os kits autorais entram depois, fotografados pela propria Lu, dona da loja, para construir uma imagem original e reconhecivel da Perfumes de Ambiente Decor.
+
 ## Ordem recomendada
 
-### 1. Adicionar os produtos restantes
+### 1. Adicionar os produtos individuais de Dani Fernandes e Lenvie
 
-- [ ] Reunir nome, marca, categoria, descricao, preco, estoque, SKU, peso e dimensoes de cada produto.
-- [ ] Separar e nomear as fotos por produto.
+- [ ] Priorizar os produtos individuais da Dani Fernandes.
+- [ ] Priorizar os produtos individuais da Lenvie.
+- [ ] Montar uma lista separada por marca para evitar produtos duplicados ou associados a marca errada.
+- [ ] Reunir nome, categoria, descricao, preco, estoque, SKU, peso e dimensoes de cada produto individual.
+- [ ] Separar e nomear as fotos por produto e por marca.
 - [ ] Confirmar com a cliente os precos e estoques antes da publicacao.
 - [ ] Cadastrar cada produto com a marca original correta.
 - [ ] Associar cada produto a categoria correta do menu.
 - [ ] Conferir imagem principal, galeria, descricao e valor na pagina do produto.
-- [ ] Testar filtros por categoria e marca no desktop e mobile.
+- [ ] Testar os filtros `Dani Fernandes` e `Lenvie` no desktop e mobile.
+- [ ] Testar cada produto nos menus de Aromatizacao, Difusores, Sabonetes e demais categorias aplicaveis.
 - [ ] Remover produtos de teste ou manter estoque zero ate a confirmacao comercial.
 
-**Concluido quando:** todos os produtos enviados pela cliente aparecem corretamente no catalogo e podem ser encontrados pelos filtros esperados.
+**Concluido quando:** os produtos individuais de Dani Fernandes e Lenvie enviados pela cliente aparecem corretamente no catalogo e podem ser encontrados por marca e categoria.
 
 ### 2. Montar kits com a identidade da Perfumes de Ambiente Decor
 
+- [ ] A Lu deve selecionar pessoalmente as combinacoes que representam a curadoria da loja.
 - [ ] Definir quais produtos de marcas diferentes podem compor cada kit.
 - [ ] Confirmar disponibilidade e custo de cada item do kit.
 - [ ] Definir nome, proposta, embalagem, preco e quantidade disponivel.
-- [ ] Criar fotos proprias dos kits com a identidade visual da curadoria.
+- [ ] A Lu deve montar fisicamente cada kit antes do cadastro.
+- [ ] A Lu deve tirar fotos reais dos kits montados pela loja.
+- [ ] Fotografar imagem principal, detalhes da embalagem e todos os itens que acompanham o kit.
+- [ ] Manter fundo, iluminacao, enquadramento e acabamento coerentes entre os kits.
+- [ ] Usar elementos da identidade visual da Perfumes de Ambiente Decor nas fotos e embalagens.
+- [ ] Evitar imagens genericas ou geradas que nao representem exatamente o kit entregue ao cliente.
 - [ ] Deixar claro na descricao quais marcas e produtos fazem parte de cada composicao.
 - [ ] Configurar o estoque do kit sem perder o controle dos produtos individuais.
 - [ ] Criar uma categoria ou colecao chamada `Kits da Curadoria`.
 - [ ] Destacar os kits na pagina inicial e em campanhas sazonais.
 
-**Concluido quando:** cada kit possui composicao, preco, estoque, fotos e embalagem aprovados pela cliente, sem alterar o nome das marcas originais.
+**Concluido quando:** cada kit foi montado e fotografado pela Lu, possui composicao, preco, estoque e embalagem aprovados e fortalece a identidade propria da Perfumes de Ambiente Decor sem alterar o nome das marcas originais.
 
 ### 3. Automatizar notificacoes de venda pelo webhook do Mercado Pago
 
@@ -120,7 +132,7 @@ Este documento organiza as proximas entregas da Perfumes de Ambiente Decor em um
 
 ## Sequencia de execucao sugerida
 
-1. Produtos restantes.
+1. Produtos individuais de Dani Fernandes e Lenvie.
 2. Painel administrativo com selecao de marca.
 3. Credenciais oficiais.
 4. Webhook e notificacoes de venda.
@@ -131,6 +143,8 @@ Este documento organiza as proximas entregas da Perfumes de Ambiente Decor em um
 ## Validacao final antes do lancamento
 
 - [ ] Catalogo revisado pela cliente.
+- [ ] Produtos individuais de Dani Fernandes e Lenvie conferidos.
+- [ ] Kits reais montados e fotografados pela Lu.
 - [ ] Estoques e precos confirmados.
 - [ ] Compra real controlada concluida.
 - [ ] Webhook confirmado nos logs.
