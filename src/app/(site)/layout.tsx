@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CampaignPopup } from "@/components/CampaignPopup";
 import { Header } from "@/components/Header/Header";
 import { Newsletter } from "@/components/Newsletter";
 import { WhatsappFab } from "@/components/WhatsappFab";
@@ -26,6 +27,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
     <>
       <a href="#main" className="skip-link">Pular para o conteudo</a>
       <Header user={user} />
+      <CampaignPopup />
 
       <div id="main" className="flex-1">{children}</div>
 
